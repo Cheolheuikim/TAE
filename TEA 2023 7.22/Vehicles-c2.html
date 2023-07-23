@@ -1,0 +1,3706 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Search Car</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+    th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+
+
+</style>
+</head>
+<body>
+	<h1>Search Car</h1>
+	<img src="">
+
+  <canvas id="matrix-canvas"></canvas>
+
+	<form onsubmit="search(); return false;">
+		<input type="text" id="car_type" placeholder="car type">
+<input type="text" id="model" placeholder="model">
+<input type="text" id="company" placeholder="company">
+<input type="text" id="safety_features" placeholder="safety features">
+<input type="text" id="transmission" placeholder="transmission">
+<input type="text" id="driving_mode" placeholder="driving mode">
+<input type="text" id="fuel_type" placeholder="fuel type">
+<input type="number" id="rating" placeholder="rating(0~100)">
+<input type="number" id="driving_stability" placeholder="driving stability(0~100)">
+<input type="number" id="braking_performance" placeholder="braking performance(0~100)">
+<input type="number" id="durability" placeholder="durability(0~100)">
+<input type="number" id="seating_capacity" placeholder="seating capacity">
+<input type="number" id="total_sales" placeholder="total sales">
+<input type="number" id="release_date" placeholder="release date(year)">
+<input type="number" id="price" placeholder="price($)">
+<input type="number" id="co2_emissions" placeholder="CO2 emissions(g/km)">
+<input type="number" id="top_speed" placeholder="top speed(km/h)">
+<input type="number" id="acceleration" placeholder="acceleration(s)">
+<input type="number" id="engine_displacement" placeholder="engine displacement(cc)">
+<input type="number" id="fuel_efficiency" placeholder="fuel efficiency(xL/100km)">
+<input type="number" id="maximum_power_output" placeholder="maximum power output(kW)">
+<input type="number" id="maximum_torque" placeholder="maximum torque(Nm)">
+
+<input type="number" id="maximum_trunk_space" placeholder="maximum trunk space(L)">
+<input type="number" id="wheel_size" placeholder="wheel size(inches)">
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+<thead>
+<tr>
+  <th onclick="sortTable(0)">Car Type<span id="sortIndicator0">▲▼</span></th>
+  <th onclick="sortTable(1)">Model<span id="sortIndicator1">▲▼</span></th>
+  <th onclick="sortTable(2)">Company<span id="sortIndicator2">▲▼</span></th>
+  <th onclick="sortTable(3)">Safety Features<span id="sortIndicator3">▲▼</span></th>
+  <th onclick="sortTable(4)">Transmission<span id="sortIndicator4">▲▼</span></th>
+  <th onclick="sortTable(5)">Driving Mode<span id="sortIndicator5">▲▼</span></th>
+  <th onclick="sortTable(6)">Fuel Type<span id="sortIndicator6">▲▼</span></th>
+  <th onclick="sortTable(7)">Rating(0~100)<span id="sortIndicator7">▲▼</span></th>
+  <th onclick="sortTable(8)">Driving Stability(0~100)<span id="sortIndicator8">▲▼</span></th>
+  <th onclick="sortTable(9)">Braking Performance(0~100)<span id="sortIndicator9">▲▼</span></th>
+  <th onclick="sortTable(10)">Durability(0~100)<span id="sortIndicator10">▲▼</span></th>
+  <th onclick="sortTable(11)">Seating Capacity<span id="sortIndicator11">▲▼</span></th>
+  <th onclick="sortTable(12)">Total Sales<span id="sortIndicator12">▲▼</span></th>
+  <th onclick="sortTable(13)">Release Date<span id="sortIndicator13">▲▼</span></th>
+  <th onclick="sortTable(14)">Price($)<span id="sortIndicator14">▲▼</span></th>
+  <th onclick="sortTable(15)">CO2 Emissions(g/km)<span id="sortIndicator15">▲▼</span></th>
+  <th onclick="sortTable(16)">Top Speed(km/h)<span id="sortIndicator16">▲▼</span></th>
+  <th onclick="sortTable(17)">Acceleration(s)<span id="sortIndicator17">▲▼</span></th>
+  <th onclick="sortTable(18)">Engine Displacement(cc)<span id="sortIndicator18">▲▼</span></th>
+  <th onclick="sortTable(19)">Fuel Efficiency(xL/100km)<span id="sortIndicator19">▲▼</span></th>
+  <th onclick="sortTable(20)">Maximum Power Output(kW)<span id="sortIndicator20">▲▼</span></th>
+  <th onclick="sortTable(21)">Maximum Torque(Nm)<span id="sortIndicator21">▲▼</span></th>
+  
+  <th onclick="sortTable(22)">Maximum Trunk Space(L)<span id="sortIndicator22">▲▼</span></th>  
+  <th onclick="sortTable(23)">Wheel Size(inches)<span id="sortIndicator23">▲▼</span></th>
+  </tr>
+  </thead>
+  <tbody id="search-results-body"></tbody>
+  </table>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<script>
+var cars = [
+{
+"car_type": "Pickup Truck",
+"model": "Chevrolet Silverado HD",
+"company": "Chevrolet",
+"safety_features": "Forward Collision Alert, Lane Departure Warning, Automatic Emergency Braking, Rear Cross Traffic Alert",
+"transmission": "10-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Diesel",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 94,
+"seating_capacity": 6,
+"total_sales": 0,
+"release_date": "2022-01-01",
+"price": 34400,
+"co2_emissions": 0,
+"top_speed": 177,
+"acceleration": 8.2,
+"engine_displacement": 6599,
+"fuel_efficiency": 14,
+"maximum_power_output": 445,
+"maximum_torque": 910,
+
+"maximum_trunk_space": 83.5,
+"wheel_size": 20
+},
+{
+"car_type": "Hatchback",
+"model": "Honda Civic Type R",
+"company": "Honda",
+"safety_features": "Adaptive Cruise Control, Lane Keeping Assist, Collision Mitigation Braking System, Forward Collision Warning",
+"transmission": "6-speed manual",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 90,
+"driving_stability": 88,
+"braking_performance": 85,
+"durability": 89,
+"seating_capacity": 4,
+"total_sales": 12345,
+"release_date": "2021-03-11",
+"price": 37850,
+"co2_emissions": 170,
+"top_speed": 272,
+"acceleration": 5.7,
+"engine_displacement": 1996,
+"fuel_efficiency": 25,
+"maximum_power_output": 306,
+"maximum_torque": 400,
+
+"maximum_trunk_space": 414,
+"wheel_size": 20
+},
+{
+"car_type": "Pickup Truck",
+"model": "GMC Sierra 3500HD",
+"company": "GMC",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Forward Collision Alert, Rear Cross Traffic Alert",
+"transmission": "10-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Diesel",
+"rating": 85,
+"driving_stability": 87,
+"braking_performance": 82,
+"durability": 95,
+"seating_capacity": 6,
+"total_sales": 0,
+"release_date": "2022-02-15",
+"price": 56700,
+"co2_emissions": 0,
+"top_speed": 177,
+"acceleration": 8.5,
+"engine_displacement": 6599,
+"fuel_efficiency": 14,
+"maximum_power_output": 445,
+"maximum_torque": 910,
+
+"maximum_trunk_space": 76.3,
+"wheel_size": 20
+},
+
+{
+"car_type": "Coupe",
+"model": "Toyota Supra A91-CF Edition",
+"company": "Toyota",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Lane Departure Warning with Steering Assist, Automatic High Beams, Full-Speed Range Dynamic Radar Cruise Control",
+"transmission": "8-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 88,
+"driving_stability": 91,
+"braking_performance": 85,
+"durability": 90,
+"seating_capacity": 2,
+"total_sales": 5500,
+"release_date": "2021-11-01",
+"price": 65560,
+"co2_emissions": 193,
+"top_speed": 250,
+"acceleration": 3.9,
+"engine_displacement": 2998,
+"fuel_efficiency": 30,
+"maximum_power_output": 382,
+"maximum_torque": 369,
+
+"maximum_trunk_space": 196,
+"wheel_size": 19
+},
+{
+"car_type": "Pickup Truck",
+"model": "Ford Ranger Raptor",
+"company": "Ford",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Forward Collision Warning, Rearview Camera",
+"transmission": "10-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 84,
+"driving_stability": 86,
+"braking_performance": 80,
+"durability": 93,
+"seating_capacity": 5,
+"total_sales": 12200,
+"release_date": "2019-05-01",
+"price": 45900,
+"co2_emissions": 294,
+"top_speed": 170,
+"acceleration": 10.5,
+"engine_displacement": 1996,
+"fuel_efficiency": 20,
+"maximum_power_output": 270,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 846,
+"wheel_size": 17
+},
+{
+"car_type": "Hatchback",
+"model": "Audi RS3 Sportback",
+"company": "Audi",
+"safety_features": "Audi Pre-Sense Basic, Rearview Camera, Audi Side Assist, Audi Pre-Sense Rear",
+"transmission": "7-speed S tronic dual-clutch automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 90,
+"driving_stability": 91,
+"braking_performance": 87,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 6800,
+"release_date": "2021-09-01",
+"price": 59700,
+"co2_emissions": 202,
+"top_speed": 290,
+"acceleration": 3.8,
+"engine_displacement": 2480,
+"fuel_efficiency": 27,
+"maximum_power_output": 401,
+"maximum_torque": 354,
+"maximum_trunk_space": 340,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Hyundai Tucson N Line Long Range",
+"company": "Hyundai",
+"safety_features": "Forward Collision Warning, Lane Keeping Assist, Blind-Spot Collision Warning, Driver Attention Warning",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 89,
+"braking_performance": 84,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 11000,
+"release_date": "2022-01-01",
+"price": 38350,
+"co2_emissions": 190,
+"top_speed": 205,
+"acceleration": 7.8,
+"engine_displacement": 1995,
+"fuel_efficiency": 28,
+"maximum_power_output": 290,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 620,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Jeep Grand Wagoneer Series III",
+"company": "Jeep",
+"safety_features": "Adaptive Cruise Control with Stop and Go, Automatic Emergency Braking with Pedestrian and Cyclist Detection, Lane Departure Warning with Lane Keep Assist, Rear Cross Path Detection",
+"transmission": "8-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 94,
+"seating_capacity": 7,
+"total_sales": 4800,
+"release_date": "2021-10-01",
+"price": 88200,
+"co2_emissions": 350,
+"top_speed": 208,
+"acceleration": 6.1,
+"engine_displacement": 5950,
+"fuel_efficiency": 14,
+"maximum_power_output": 471,
+"maximum_torque": 455,
+
+"maximum_trunk_space": 814,
+"wheel_size": 22
+},
+{
+"car_type": "Coupe",
+"model": "Nissan GT-R Nismo Special Edition",
+"company": "Nissan",
+"safety_features": "Intelligent Forward Collision Warning, Blind Spot Warning, Rear Cross Traffic Alert, Intelligent Driver Alertness",
+"transmission": "6-speed dual-clutch automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 92,
+"driving_stability": 94,
+"braking_performance": 89,
+"durability": 92,
+"seating_capacity": 4,
+"total_sales": 500,
+"release_date": "2022-04-01",
+"price": 215540,
+"co2_emissions": 293,
+"top_speed": 330,
+"acceleration": 2.5,
+"engine_displacement": 3799,
+"fuel_efficiency": 16,
+"maximum_power_output": 600,
+"maximum_torque": 481,
+
+"maximum_trunk_space": 315,
+"wheel_size": 20
+},
+{
+"car_type": "Hatchback",
+"model": "Volkswagen Golf GTI Clubsport",
+"company": "Volkswagen",
+"safety_features": "Adaptive Cruise Control, Front Assist, Lane Assist, Park Assist",
+"transmission": "7-speed DSG dual-clutch automatic",
+"driving_mode": "Front Wheel",
+"fuel_type": "Gasoline",
+"rating": 89,
+"driving_stability": 91,
+"braking_performance": 88,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 25000,
+"release_date": "2021-07-01",
+"price": 44500,
+"co2_emissions": 186,
+"top_speed": 250,
+"acceleration": 5.6,
+"engine_displacement": 1984,
+"fuel_efficiency": 30,
+"maximum_power_output": 300,
+"maximum_torque": 295,
+
+"maximum_trunk_space": 380,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "BMW X3 M",
+"company": "BMW",
+"safety_features": "Frontal Collision Warning, Pedestrian Warning, Lane Departure Warning, Blind Spot Detection",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 90,
+"driving_stability": 93,
+"braking_performance": 87,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 170000,
+"release_date": "2019-04-01",
+"price": 69650,
+"co2_emissions": 241,
+"top_speed": 285,
+"acceleration": 4.1,
+"engine_displacement": 2993,
+"fuel_efficiency": 21,
+"maximum_power_output": 473,
+"maximum_torque": 442,
+
+"maximum_trunk_space": 550,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "Lexus GXOR",
+"company": "Lexus",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Lane Departure Alert, Automatic High Beams, Dynamic Radar Cruise Control",
+"transmission": "6-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 94,
+"seating_capacity": 7,
+"total_sales": null,
+"release_date": "2021-12-01",
+"price": 70000,
+"co2_emissions": 303,
+"top_speed": 175,
+"acceleration": 7.8,
+"engine_displacement": 4663,
+"fuel_efficiency": 15,
+"maximum_power_output": 301,
+"maximum_torque": 329,
+
+"maximum_trunk_space": 1227,
+"wheel_size": 18
+},
+{
+"car_type": "Sedan",
+"model": "Mercedes-Benz AMG GT 63 S E Performance",
+"company": "Mercedes-Benz",
+"safety_features": "Active Brake Assist, Blind Spot Assist, Lane Keeping Assist, Rear Cross Traffic Alert",
+"transmission": "9-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 91,
+"driving_stability": 93,
+"braking_performance": 89,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 3000,
+"release_date": "2022-02-01",
+"price": 184800,
+"co2_emissions": 284,
+"top_speed": 315,
+"acceleration": 3.1,
+"engine_displacement": 3982,
+"fuel_efficiency": 17,
+"maximum_power_output": 639,
+"maximum_torque": 664,
+
+"maximum_trunk_space": 456,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "Kia EV6 GT-Line",
+"company": "Kia",
+"safety_features": "Forward Collision Warning, Blind Spot Detection, Lane Departure Warning, Smart Cruise Control with Stop and Go",
+"transmission": "Single Speed",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Electric",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 86,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": null,
+"release_date": "2021-12-15",
+"price": 58000,
+"co2_emissions": 0,
+"top_speed": 260,
+"acceleration": 3.5,
+"engine_displacement": null,
+"fuel_efficiency": 3.5,
+"maximum_power_output": 576,
+"maximum_torque": 546,
+
+"maximum_trunk_space": 520,
+"wheel_size": 19
+},
+{
+"car_type": "Electric Van",
+"model": "Chevrolet Bolt EUV",
+"company": "Chevrolet",
+"safety_features": "Automatic Emergency Braking, Forward Collision Alert, Lane Keep Assist with Lane Departure Warning, Rear Cross Traffic Alert",
+"transmission": "Single Speed",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Electric",
+"rating": 85,
+"driving_stability": 86,
+"braking_performance": 82,
+"durability": 89,
+"seating_capacity": 5,
+"total_sales": 50000,
+"release_date": "2021-02-14",
+"price": 33995,
+"co2_emissions": 0,
+"top_speed": 155,
+"acceleration": 6.7,
+"engine_displacement": null,
+"fuel_efficiency": 3.9,
+"maximum_power_output": 200,
+"maximum_torque": 266,
+
+"maximum_trunk_space": 462,
+"wheel_size": 17
+},
+{
+"car_type": "SUV",
+"model": "Mazda CX-3 Turbo",
+"company": "Mazda",
+"safety_features": "Smart City Brake Support, Blind Spot Monitoring, Rear Cross Traffic Alert, Lane Departure Warning",
+"transmission": "6-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 84,
+"braking_performance": 79,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 100000,
+"release_date": "2019-06-01",
+"price": 27500,
+"co2_emissions": 199,
+"top_speed": 200,
+"acceleration": 7.2,
+"engine_displacement": 1998,
+"fuel_efficiency": 28,
+"maximum_power_output": 227,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 408,
+"wheel_size": 18
+},
+{
+"car_type": "Minivan",
+"model": "Honda Odyssey LX",
+"company": "Honda",
+"safety_features": "Collision Mitigation Braking System, Lane Keeping Assist System, Adaptive Cruise Control, Road Departure Mitigation System",
+"transmission": "10-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 91,
+"seating_capacity": 8,
+"total_sales": 150000,
+"release_date": "2020-07-01",
+"price": 31600,
+"co2_emissions": 244,
+"top_speed": 175,
+"acceleration": 7.6,
+"engine_displacement": 3498,
+"fuel_efficiency": 22,
+"maximum_power_output": 280,
+"maximum_torque": 262,
+
+"maximum_trunk_space": 1550,
+"wheel_size": 18
+},
+{
+"car_type": "Pickup Truck",
+"model": "GMC Sierra Denali Ultimate",
+"company": "GMC",
+"safety_features": "Automatic Emergency Braking, Forward Collision Alert, Lane Keep Assist with Lane Departure Warning, Front and Rear Park Assist",
+"transmission": "10-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 88,
+"driving_stability": 90,
+"braking_performance": 87,
+"durability": 94,
+"seating_capacity": 5,
+"total_sales": 80000,
+"release_date": "2021-01-01",
+"price": 64380,
+"co2_emissions": 315,
+"top_speed": 185,
+"acceleration": 6.2,
+"engine_displacement": 6200,
+"fuel_efficiency": 16,
+"maximum_power_output": 420,
+"maximum_torque": 460,
+
+"maximum_trunk_space": 1253,
+"wheel_size": 20
+},
+{
+"car_type": "Crossover SUV",
+"model": "Subaru WRX STI TC 380",
+"company": "Subaru",
+"safety_features": "Subaru EyeSight Driver Assist Technology, Blind-Spot Detection, Rear Cross-Traffic Alert, Reverse Automatic Braking",
+"transmission": "6-speed manual",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 85,
+"driving_stability": 87,
+"braking_performance": 82,
+"durability": 89,
+"seating_capacity": 5,
+"total_sales": 25000,
+"release_date": "2022-03-01",
+"price": 45495,
+"co2_emissions": 245,
+"top_speed": 249,
+"acceleration": 5.0,
+"engine_displacement": 1998,
+"fuel_efficiency": 22,
+"maximum_power_output": 380,
+"maximum_torque": 380,
+
+"maximum_trunk_space": 340,
+"wheel_size": 19
+},
+{
+"car_type": "Pickup Truck",
+"model": "Toyota Hilux Invincible X",
+"company": "Toyota",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Lane Departure Alert, Road Sign Assist, Automatic High Beam",
+"transmission": "6-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Diesel",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 83,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 1000000,
+"release_date": "2018-06-01",
+"price": 44230,
+"co2_emissions": 185,
+"top_speed": 170,
+"acceleration": 10.1,
+"engine_displacement": 2393,
+"fuel_efficiency": 29,
+"maximum_power_output": 190,
+"maximum_torque": 243,
+
+"maximum_trunk_space": 1040,
+"wheel_size": 18
+},
+{
+"car_type": "Crossover SUV",
+"model": "Ford Ranger Tremor",
+"company": "Ford",
+"safety_features": "Pre-Collision Assist with Automatic Emergency Braking, Blind Spot Information System with Cross-Traffic Alert, Lane-Keeping System, Rear View Camera",
+"transmission": "10-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 84,
+"driving_stability": 86,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 120000,
+"release_date": "2021-04-01",
+"price": 45730,
+"co2_emissions": 252,
+"top_speed": 169,
+"acceleration": 6.5,
+"engine_displacement": 2300,
+"fuel_efficiency": 21,
+"maximum_power_output": 270,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 986,
+"wheel_size": 17
+},
+{
+"car_type": "Luxury Sport Sedan",
+"model": "Audi RS Q3 Sportback",
+"company": "Audi",
+"safety_features": "Audi pre sense front, Audi pre sense basic, Adaptive Cruise Control, Lane Departure Warning",
+"transmission": "7-speed S tronic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 89,
+"driving_stability": 91,
+"braking_performance": 88,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 35000,
+"release_date": "2021-06-01",
+"price": 59100,
+"co2_emissions": 192,
+"top_speed": 280,
+"acceleration": 4.5,
+"engine_displacement": 2480,
+"fuel_efficiency": 26,
+"maximum_power_output": 401,
+"maximum_torque": 480,
+
+"maximum_trunk_space": 1230,
+"wheel_size": 21
+},
+{
+"car_type": "Compact SUV",
+"model": "Hyundai Elantra N TCR",
+"company": "Hyundai",
+"safety_features": "Forward Collision-Avoidance Assist with Pedestrian Detection, Lane Keeping Assist, Driver Attention Warning, High Beam Assist",
+"transmission": "7-speed DCT",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 84,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 50000,
+"release_date": "2021-09-01",
+"price": 33900,
+"co2_emissions": 192,
+"top_speed": 250,
+"acceleration": 5.1,
+"engine_displacement": 1998,
+"fuel_efficiency": 25,
+"maximum_power_output": 275,
+"maximum_torque": 260,
+
+"maximum_trunk_space": 1725,
+"wheel_size": 18
+},
+{
+"car_type": "SUV",
+"model": "Jeep Wrangler 4xe Sahara",
+"company": "Jeep",
+"safety_features": "Forward Collision Warning with Active Braking, Adaptive Cruise Control with Stop, Blind Spot Monitoring, Rear Cross Path Detection",
+"transmission": "8-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Plug-in Hybrid",
+"rating": 82,
+"driving_stability": 84,
+"braking_performance": 80,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 15000,
+"release_date": "2021-03-01",
+"price": 47500,
+"co2_emissions": 50,
+"top_speed": 177,
+"acceleration": 6.0,
+"engine_displacement": 1998,
+"fuel_efficiency": 20,
+"maximum_power_output": 375,
+"maximum_torque": 470,
+
+"maximum_trunk_space": 2030,
+"wheel_size": 18
+},
+{
+"car_type": "Sports Car",
+"model": "Nissan GT-R T-Spec",
+"company": "Nissan",
+"safety_features": "Automatic Emergency Braking with Pedestrian Detection, Blind Spot Warning, Rear Cross Traffic Alert, Lane Departure Warning",
+"transmission": "6-speed dual-clutch transmission",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 90,
+"braking_performance": 88,
+"durability": 90,
+"seating_capacity": 4,
+"total_sales": 5000,
+"release_date": "2021-07-01",
+"price": 138895,
+"co2_emissions": 311,
+"top_speed": 315,
+"acceleration": 2.5,
+"engine_displacement": 3799,
+"fuel_efficiency": 16,
+"maximum_power_output": 710,
+"maximum_torque": 780,
+
+"maximum_trunk_space": 315,
+"wheel_size": 20
+},
+{
+"car_type": "Hatchback",
+"model": "Volkswagen Polo GTI",
+"company": "Volkswagen",
+"safety_features": "Front Assist with City Emergency Braking, Adaptive Cruise Control, Lane Assist, Park Assist",
+"transmission": "7-speed DSG",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 85,
+"driving_stability": 87,
+"braking_performance": 83,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 65000,
+"release_date": "2021-02-01",
+"price": 31810,
+"co2_emissions": 134,
+"top_speed": 240,
+"acceleration": 6.7,
+"engine_displacement": 1995,
+"fuel_efficiency": 41,
+"maximum_power_output": 207,
+"maximum_torque": 320,
+
+"maximum_trunk_space": 1125,
+"wheel_size": 17
+},
+{
+"car_type": "Luxury SUV",
+"model": "BMW X3 M",
+"company": "BMW",
+"safety_features": "Frontal Collision Warning with City Collision Mitigation, Lane Departure Warning, Active Blind Spot Detection, Rear Cross Traffic Alert",
+"transmission": "8-speed M Steptronic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 88,
+"driving_stability": 91,
+"braking_performance": 87,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 100000,
+"release_date": "2019-09-01",
+"price": 76850,
+"co2_emissions": 234,
+"top_speed": 280,
+"acceleration": 4.1,
+"engine_displacement": 2993,
+"fuel_efficiency": 22,
+"maximum_power_output": 473,
+"maximum_torque": 442,
+
+"maximum_trunk_space": 1600,
+"wheel_size": 20
+},
+{
+"car_type": "Luxury SUV",
+"model": "Lexus GXOR",
+"company": "Lexus",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Lane Departure Alert, Automatic High Beams, Dynamic Radar Cruise Control",
+"transmission": "6-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 92,
+"seating_capacity": 7,
+"total_sales": 9000,
+"release_date": "2021-01-01",
+"price": 82550,
+"co2_emissions": 291,
+"top_speed": 185,
+"acceleration": 7.8,
+"engine_displacement": 4608,
+"fuel_efficiency": 15,
+"maximum_power_output": 301,
+"maximum_torque": 329,
+
+"maximum_trunk_space": 1266,
+"wheel_size": 18
+},
+{
+"car_type": "Sports Car",
+"model": "Toyota Supra A91-CF Edition",
+"company": "Toyota",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Full-Speed Range Dynamic Radar Cruise Control, Lane Departure Alert with Steering Assist, Automatic High Beams",
+"transmission": "8-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 89,
+"driving_stability": 91,
+"braking_performance": 88,
+"durability": 87,
+"seating_capacity": 2,
+"total_sales": 1500,
+"release_date": "2021-04-01",
+"price": 59595,
+"co2_emissions": 225,
+"top_speed": 250,
+"acceleration": 3.9,
+"engine_displacement": 2998,
+"fuel_efficiency": 24,
+"maximum_power_output": 382,
+"maximum_torque": 369,
+
+"maximum_trunk_space": 290,
+"wheel_size": 19
+},
+{
+"car_type": "Luxury SUV",
+"model": "Mercedes-Benz AMG GT 63 S E Performance",
+"company": "Mercedes-Benz",
+"safety_features": "Active Distance Assist DISTRONIC, Active Steering Assist, Active Brake Assist with Cross-Traffic Function, Lane Keeping Assist",
+"transmission": "9-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Plug-in Hybrid",
+"rating": 91,
+"driving_stability": 94,
+"braking_performance": 90,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 2500,
+"release_date": "2021-05-01",
+"price": 201900,
+"co2_emissions": 64,
+"top_speed": 316,
+"acceleration": 2.9,
+"engine_displacement": 3982,
+"fuel_efficiency": 10,
+"maximum_power_output": 831,
+"maximum_torque": 1050,
+
+"maximum_trunk_space": 461,
+"wheel_size": 21
+},
+{
+"car_type": "Electric SUV",
+"model": "Kia EV6 GT-Line",
+"company": "Kia",
+"safety_features": "Forward Collision Avoidance Assist, Blind-Spot View Monitor, Lane Keeping Assist, Smart Cruise Control with Stop & Go",
+"transmission": "Single-speed reduction gear",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Electric",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 84,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 15000,
+"release_date": "2021-07-01",
+"price": 58790,
+"co2_emissions": 0,
+"top_speed": 260,
+"acceleration": 3.5,
+"engine_displacement": null,
+"fuel_efficiency": 0,
+"maximum_power_output": 577,
+"maximum_torque": 546,
+
+"maximum_trunk_space": 520,
+"wheel_size": 20
+},
+{
+"car_type": "Electric SUV",
+"model": "Chevrolet Bolt EUV",
+"company": "Chevrolet",
+"safety_features": "Forward Collision Alert, Automatic Emergency Braking, Lane Keep Assist with Lane Departure Warning, Following Distance Indicator",
+"transmission": "Single-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Electric",
+"rating": 81,
+"driving_stability": 83,
+"braking_performance": 79,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 3000,
+"release_date": "2021-02-01",
+"price": 33995,
+"co2_emissions": 0,
+"top_speed": 155,
+"acceleration": 6.5,
+"engine_displacement": null,
+"fuel_efficiency": 118,
+"maximum_power_output": 200,
+"maximum_torque": 266,
+
+"maximum_trunk_space": 462,
+"wheel_size": 17
+},
+{
+"car_type": "Compact SUV",
+"model": "Mazda CX-3 Turbo",
+"company": "Mazda",
+"safety_features": "Smart Brake Support, Lane Departure Warning System, Adaptive Front-lighting System, Blind Spot Monitoring with Rear Cross-Traffic Alert",
+"transmission": "6-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 78,
+"driving_stability": 81,
+"braking_performance": 77,
+"durability": 85,
+"seating_capacity": 5,
+"total_sales": 6500,
+"release_date": "2021-03-01",
+"price": 27790,
+"co2_emissions": 175,
+"top_speed": 202,
+"acceleration": 8.2,
+"engine_displacement": 1998,
+"fuel_efficiency": 27,
+"maximum_power_output": 227,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 287,
+"wheel_size": 18
+},
+{
+"car_type": "Minivan",
+"model": "Honda Odyssey LX",
+"company": "Honda",
+"safety_features": "Collision Mitigation Braking System, Adaptive Cruise Control with Low-Speed Follow, Lane Keeping Assist System, Road Departure Mitigation System",
+"transmission": "10-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 82,
+"driving_stability": 84,
+"braking_performance": 80,
+"durability": 89,
+"seating_capacity": 8,
+"total_sales": 55000,
+"release_date": "2020-08-01",
+"price": 32790,
+"co2_emissions": 222,
+"top_speed": 190,
+"acceleration": 7.5,
+"engine_displacement": 3498,
+"fuel_efficiency": 28,
+"maximum_power_output": 280,
+"maximum_torque": 262,
+
+"maximum_trunk_space": 144,
+"wheel_size": 18
+},
+{
+"car_type": "Electric SUV",
+"model": "Ford Mustang Mach-E GT",
+"company": "Ford",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring",
+"transmission": "Single-speed",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Electric",
+"rating": 84,
+"driving_stability": 87,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 12000,
+"release_date": "2021-05-01",
+"price": 59900,
+"co2_emissions": 0,
+"top_speed": 250,
+"acceleration": 3.5,
+"engine_displacement": null,
+"fuel_efficiency": 0,
+"maximum_power_output": 459,
+"maximum_torque": 612,
+
+"maximum_trunk_space": 820,
+"wheel_size": 20
+},
+{
+"car_type": "Luxury Sedan",
+"model": "Mercedes-Benz S-Class S680 4Matic",
+"company": "Mercedes-Benz",
+"safety_features": "Active Distance Assist DISTRONIC, Active Lane Keeping Assist, Active Blind Spot Assist, Active Steering Assist",
+"transmission": "9-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 92,
+"driving_stability": 93,
+"braking_performance": 90,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 5000,
+"release_date": "2022-01-01",
+"price": 172450,
+"co2_emissions": 247,
+"top_speed": 250,
+"acceleration": 4.4,
+"engine_displacement": 5980,
+"fuel_efficiency": 20,
+"maximum_power_output": 621,
+"maximum_torque": 738,
+
+"maximum_trunk_space": 510,
+"wheel_size": 20
+},
+{
+"car_type": "Compact SUV",
+"model": "Hyundai Ioniq 5 Long Range",
+"company": "Hyundai",
+"safety_features": "Blind-Spot Collision-Avoidance Assist, Rear Cross-Traffic Collision-Avoidance Assist, Forward Collision-Avoidance Assist, Lane Following Assist",
+"transmission": "Single-speed reduction gear",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Electric",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2021-06-01",
+"price": 47900,
+"co2_emissions": 0,
+"top_speed": 185,
+"acceleration":
+5.2,
+"engine_displacement": null,
+"fuel_efficiency": 0,
+"maximum_power_output": 225,
+"maximum_torque": 258,
+
+"maximum_trunk_space": 527,
+"wheel_size": 20
+},
+{
+"car_type": "Luxury Sedan",
+"model": "Lexus LS 500 Inspiration Series",
+"company": "Lexus",
+"safety_features": "Lexus Safety System+ 2.0, Blind Spot Monitor with Rear Cross-Traffic Alert, Pre-Collision System with Pedestrian Detection, Lane Departure Alert with Steering Assist",
+"transmission": "10-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 88,
+"driving_stability": 90,
+"braking_performance": 85,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 12000,
+"release_date": "2021-08-01",
+"price": 103750,
+"co2_emissions": 250,
+"top_speed": 250,
+"acceleration": 4.6,
+"engine_displacement": 3444,
+"fuel_efficiency": 23,
+"maximum_power_output": 416,
+"maximum_torque": 442,
+
+"maximum_trunk_space": 400,
+"wheel_size": 19
+},
+{
+"car_type": "Luxury SUV",
+"model": "Mercedes-Benz EQB",
+"company": "Mercedes-Benz",
+"safety_features": "Active Distance Assist DISTRONIC, Active Steering Assist, Active Lane Keeping Assist, Active Brake Assist",
+"transmission": "Single-speed",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Electric",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 84,
+"durability": 89,
+"seating_capacity": 7,
+"total_sales": 0,
+"release_date": "2022-06-01",
+"price": null,
+"co2_emissions": 0,
+"top_speed": 160,
+"acceleration": 8,
+"engine_displacement": null,
+"fuel_efficiency": 0,
+"maximum_power_output": 225,
+"maximum_torque": 300,
+
+"maximum_trunk_space": 1710,
+"wheel_size": 19
+},
+{
+"car_type": "Mid-Size Sedan",
+"model": "Kia K5",
+"company": "Kia",
+"safety_features": "Forward Collision Warning, Lane Departure Warning, Driver Attention Warning, Blind Spot Warning",
+"transmission": "8-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 86,
+"braking_performance": 82,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 40000,
+"release_date": "2020-07-01",
+"price": 23790,
+"co2_emissions": 155,
+"top_speed": 209,
+"acceleration": 7.6,
+"engine_displacement": 1998,
+"fuel_efficiency": 32,
+"maximum_power_output": 180,
+"maximum_torque": 195,
+
+"maximum_trunk_space": 433,
+"wheel_size": 18
+},
+{
+"car_type": "Van",
+"model": "Chevrolet Express",
+"company": "Chevrolet",
+"safety_features": "Forward Collision Alert, Lane Departure Warning, Rear Park Assist, Rear Cross Traffic Alert",
+"transmission": "8-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 75,
+"driving_stability": 78,
+"braking_performance": 70,
+"durability": 90,
+"seating_capacity": 12,
+"total_sales": null,
+"release_date": "2022-01-01",
+"price": 34350,
+"co2_emissions": 382,
+"top_speed": 140,
+"acceleration": 11.5,
+"engine_displacement": 5300,
+"fuel_efficiency": 14,
+"maximum_power_output": 401,
+"maximum_torque": 464,
+
+"maximum_trunk_space": 11500,
+"wheel_size": 16
+},
+{
+"car_type": "SUV",
+"model": "Mazda CX-90",
+"company": "Mazda",
+"safety_features": "Adaptive Front-Lighting System, Lane Departure Warning System, High Beam Control, Smart Brake Support",
+"transmission": "6-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 85,
+"driving_stability": 88,
+"braking_performance": 82,
+"durability": 89,
+"seating_capacity": 7,
+"total_sales": 45000,
+"release_date": "2016-12-01",
+"price": 38710,
+"co2_emissions": 239,
+"top_speed": 218,
+"acceleration": 7.3,
+"engine_displacement": 2488,
+"fuel_efficiency": 24,
+"maximum_power_output": 250,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 2302,
+"wheel_size": 20
+},
+{
+"car_type": "Sedan",
+"model": "Honda Insight",
+"company": "Honda",
+"safety_features": "Collision Mitigation Braking System, Adaptive Cruise Control with Low-Speed Follow, Lane Keeping Assist System, Road Departure Mitigation System",
+"transmission": "Continuously Variable Transmission (CVT)",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 82,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 89,
+"seating_capacity": 5,
+"total_sales": 30000,
+"release_date": "2021-05-01",
+"price": 24270,
+"co2_emissions": 110,
+"top_speed": 188,
+"acceleration": 7.7,
+"engine_displacement": 1498,
+"fuel_efficiency": 55,
+"maximum_power_output": 129,
+"maximum_torque": 197,
+
+"maximum_trunk_space": 428,
+"wheel_size": 16
+},
+{
+"car_type": "Pickup Truck",
+"model": "GMC Syclone",
+"company": "GMC",
+"safety_features": "Forward Collision Alert, Lane Departure Warning, Front and Rear Park Assist, HD Rear Vision Camera",
+"transmission": "6-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 85,
+"driving_stability": 88,
+"braking_performance": 80,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": null,
+"release_date": "2022-02-01",
+"price": 80100,
+"co2_emissions": 321,
+"top_speed": 251,
+"acceleration": 4.5,
+"engine_displacement": 3300,
+"fuel_efficiency": 18,
+"maximum_power_output": 480,
+"maximum_torque": 649,
+
+"maximum_trunk_space": 2000,
+"wheel_size": 22
+},
+{
+"car_type": "SUV",
+"model": "Lexus LM",
+"company": "Lexus",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Dynamic Radar Cruise Control, Lane Tracing Assist, Automatic High Beam",
+"transmission": "10-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 91,
+"seating_capacity": 7,
+"total_sales": 12000,
+"release_date": "2019-12-01",
+"price": 216990,
+"co2_emissions": 200,
+"top_speed": 220,
+"acceleration": 8.5,
+"engine_displacement": 3456,
+"fuel_efficiency": 9,
+"maximum_power_output": 290,
+"maximum_torque": 361,
+
+"maximum_trunk_space": 1400,
+"wheel_size": 20
+},
+{
+"car_type": "Sedan",
+"model": "Mercedes-Benz AMG GT Black Series",
+"company": "Mercedes-Benz",
+"safety_features": "Active Distance Assist DISTRONIC, Active Steering Assist, Active Brake Assist with cross-traffic function, Active Lane Keeping Assist",
+"transmission": "7-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 92,
+"driving_stability": 95,
+"braking_performance": 90,
+"durability": 94,
+"seating_capacity": 2,
+"total_sales": 2000,
+"release_date": "2020-11-01",
+"price": 389900,
+"co2_emissions": 320,
+"top_speed": 325,
+"acceleration": 3.2,
+"engine_displacement": 3982,
+"fuel_efficiency": 15,
+"maximum_power_output": 720,
+"maximum_torque": 800,
+
+"maximum_trunk_space": 145,
+"wheel_size": 19
+},
+{
+"car_type": "Sedan",
+"model": "Kia K5",
+"company": "Kia",
+"safety_features": "Forward Collision Warning, Lane Departure Warning, Lane Keeping Assist, Driver Attention Warning",
+"transmission": "8-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 80,
+"driving_stability": 82,
+"braking_performance": 75,
+"durability": 86,
+"seating_capacity": 5,
+"total_sales": 75000,
+"release_date": "2020-08-01",
+"price": 24435,
+"co2_emissions": 161,
+"top_speed": 230,
+"acceleration": 6.6,
+"engine_displacement": 1998,
+"fuel_efficiency": 33,
+"maximum_power_output": 180,
+"maximum_torque": 195,
+
+"maximum_trunk_space": 433,
+"wheel_size": 18
+},
+
+{
+"car_type": "SUV",
+"model": "Mazda CX-90",
+"company": "Mazda",
+"safety_features": "Smart City Brake Support with Pedestrian Detection, Blind Spot Monitoring with Rear Cross Traffic Alert, Mazda Radar Cruise Control with Stop & Go, Lane Departure Warning System",
+"transmission": "6-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 89,
+"driving_stability": 90,
+"braking_performance": 87,
+"durability": 93,
+"seating_capacity": 7,
+"total_sales": 96000,
+"release_date": "2017-02-01",
+"price": 34480,
+"co2_emissions": 191,
+"top_speed": 220,
+"acceleration": 7.3,
+"engine_displacement": 2488,
+"fuel_efficiency": 25,
+"maximum_power_output": 227,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 407,
+"wheel_size": 20
+},
+{
+"car_type": "Sedan",
+"model": "Honda Insight",
+"company": "Honda",
+"safety_features": "Collision Mitigation Braking System, Adaptive Cruise Control with Low-Speed Follow, Lane Keeping Assist System, Traffic Sign Recognition System",
+"transmission": "CVT",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline Hybrid",
+"rating": 82,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 87,
+"seating_capacity": 5,
+"total_sales": 52000,
+"release_date": "2018-11-01",
+"price": 23940,
+"co2_emissions": 103,
+"top_speed": 190,
+"acceleration": 8.3,
+"engine_displacement": 1498,
+"fuel_efficiency": 52,
+"maximum_power_output": 107,
+"maximum_torque": 99,
+
+"maximum_trunk_space": 430,
+"wheel_size": 16
+},
+{
+"car_type": "Pickup Truck",
+"model": "GMC Syclone",
+"company": "GMC",
+"safety_features": "Automatic Emergency Braking, Forward Collision Alert, Lane Departure Warning, Rear Vision Camera",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 90,
+"driving_stability": 92,
+"braking_performance": 87,
+"durability": 94,
+"seating_capacity": 2,
+"total_sales": 100,
+"release_date": "2021-01-01",
+"price": 79995,
+"co2_emissions": 273,
+"top_speed": 256,
+"acceleration": 4.3,
+"engine_displacement": 3600,
+"fuel_efficiency": 19,
+"maximum_power_output": 315,
+"maximum_torque": 350,
+
+"maximum_trunk_space": 725,
+"wheel_size": 20
+}
+,
+{
+"car_type": "SUV",
+"model": "Chevrolet Blazer RS",
+"company": "Chevrolet",
+"safety_features": "Automatic Emergency Braking, Forward Collision Alert, Lane Keep Assist with Lane Departure Warning, Rear Vision Camera",
+"transmission": "9-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 86,
+"braking_performance": 80,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 118822,
+"release_date": "2019-03-01",
+"price": 36495,
+"co2_emissions": 239,
+"top_speed": 200,
+"acceleration": 6.5,
+"engine_displacement": 2300,
+"fuel_efficiency": 23,
+"maximum_power_output": 227,
+"maximum_torque": 258,
+
+"maximum_trunk_space": 716,
+"wheel_size": 20
+},
+{
+"car_type": "Sedan",
+"model": "Maserati Ghibli Trofeo",
+"company": "Maserati",
+"safety_features": "Forward Collision Warning Plus, Adaptive Cruise Control with Stop & Go, Lane Departure Warning, Blind Spot Alert",
+"transmission": "8-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 88,
+"driving_stability": 91,
+"braking_performance": 85,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 7000,
+"release_date": "2021-03-01",
+"price": 107800,
+"co2_emissions": 264,
+"top_speed": 326,
+"acceleration": 4.3,
+"engine_displacement": 3799,
+"fuel_efficiency": 19,
+"maximum_power_output": 580,
+"maximum_torque": 538,
+
+"maximum_trunk_space": 500,
+"wheel_size": 21
+},
+{
+"car_type": "SUV",
+"model": "Jeep Grand Cherokee SRT",
+"company": "Jeep",
+"safety_features": "Forward Collision Warning with Active Braking, Blind Spot Monitoring with Rear Cross Path Detection, Lane Departure Warning with Lane Keep Assist, Rearview Camera",
+"transmission": "8-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 83,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 91000,
+"release_date": "2018-06-01",
+"price": 69995,
+"co2_emissions": 374,
+"top_speed": 257,
+"acceleration": 4.3,
+"engine_displacement": 6400,
+"fuel_efficiency": 13,
+"maximum_power_output": 475,
+"maximum_torque": 470,
+
+"maximum_trunk_space": 1027,
+"wheel_size": 20
+},
+{
+"car_type": "Sedan",
+"model": "Toyota Avalon Hybrid",
+"company": "Toyota",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Lane Departure Alert with Steering Assist, Automatic High Beams, Dynamic Radar Cruise Control",
+"transmission": "CVT",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline Hybrid",
+"rating": 85,
+"driving_stability": 87,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 35000,
+"release_date": "2021-02-01",
+"price": 37950,
+"co2_emissions": 97,
+"top_speed": 180,
+"acceleration": 8.1,
+"engine_displacement": 2500,
+"fuel_efficiency": 44,
+"maximum_power_output": 176,
+"maximum_torque": 163,
+
+"maximum_trunk_space": 456,
+"wheel_size": 17
+},
+{
+"car_type": "Pickup Truck",
+"model": "Ram 1500 TRX",
+"company": "Ram",
+"safety_features": "Adaptive Cruise Control with Stop, Go and Hold, Lane Departure Warning with Lane Keep Assist, Automatic Emergency Braking, 360 Surround View Camera",
+"transmission": "8-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 15000,
+"release_date": "2021-02-01",
+"price": 71245,
+"co2_emissions": 465,
+"top_speed": 190,
+"acceleration": 4.5,
+"engine_displacement": 6200,
+"fuel_efficiency": 12,
+"maximum_power_output": 702,
+"maximum_torque": 650,
+
+"maximum_trunk_space": 1738,
+"wheel_size": 18
+},
+{
+"car_type": "SUV",
+"model": "Cadillac Escalade ESV",
+"company": "Cadillac",
+"safety_features": "Forward Collision Alert, Automatic Emergency Braking, Lane Departure Warning, Lane Change Alert with Side Blind Zone Alert",
+"transmission": "10-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 84,
+"durability": 90,
+"seating_capacity": 7,
+"total_sales": 25000,
+"release_date": "2020-08-01",
+"price": 83895,
+"co2_emissions": 427,
+"top_speed": 190,
+"acceleration": 6.1,
+"engine_displacement": 6200,
+"fuel_efficiency": 18,
+"maximum_power_output": 420,
+"maximum_torque": 460,
+
+"maximum_trunk_space": 4109,
+"wheel_size": 22
+}
+,
+{
+"car_type": "Sedan",
+"model": "Acura TLX",
+"company": "Acura",
+"safety_features": "Adaptive Cruise Control, Lane Departure Warning, Automatic Emergency Braking, Forward Collision Warning",
+"transmission": "10-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 85,
+"durability": 89,
+"seating_capacity": 5,
+"total_sales": 42000,
+"release_date": "2021-05-01",
+"price": 37725,
+"co2_emissions": 211,
+"top_speed": 205,
+"acceleration": 5.7,
+"engine_displacement": 2000,
+"fuel_efficiency": 30,
+"maximum_power_output": 272,
+"maximum_torque": 280,
+
+"maximum_trunk_space": 377,
+"wheel_size": 18
+},
+{
+"car_type": "Pickup Truck",
+"model": "GMC Hummer EV Edition 1",
+"company": "GMC",
+"safety_features": "Automatic Emergency Braking, Adaptive Cruise Control, Forward Collision Alert, Rear Cross Traffic Alert",
+"transmission": "Electric",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Electric",
+"rating": 89,
+"driving_stability": 92,
+"braking_performance": 88,
+"durability": 93,
+"seating_capacity": 5,
+"total_sales": 9000,
+"release_date": "2022-02-01",
+"price": 112595,
+"co2_emissions": null,
+"top_speed": 160,
+"acceleration": 3.5,
+"engine_displacement": null,
+"fuel_efficiency": 0,
+"maximum_power_output": 1000,
+"maximum_torque": 1155,
+
+"maximum_trunk_space": 828,
+"wheel_size": 35
+},
+{
+"car_type": "SUV",
+"model": "Lincoln Navigator",
+"company": "Lincoln",
+"safety_features": "Automatic Emergency Braking, Blind Spot Detection, Lane Departure Warning, Rearview Camera",
+"transmission": "10-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 91,
+"seating_capacity": 7,
+"total_sales": 19000,
+"release_date": "2021-01-01",
+"price": 78600,
+"co2_emissions": 392,
+"top_speed": 180,
+"acceleration": 6.1,
+"engine_displacement": 3500,
+"fuel_efficiency": 19,
+"maximum_power_output": 450,
+"maximum_torque": 510,
+
+"maximum_trunk_space": 2587,
+"wheel_size": 22
+},
+{
+"car_type": "Sedan",
+"model": "Impreza WRX",
+"company": "Subaru",
+"safety_features": "Automatic Emergency Braking, Blind Spot Detection, Rear Cross Traffic Alert, Lane Departure Warning",
+"transmission": "6-speed manual",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 81,
+"driving_stability": 84,
+"braking_performance": 78,
+"durability": 87,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2022-03-01",
+"price": 29500,
+"co2_emissions": 240,
+"top_speed": 245,
+"acceleration": 6.2,
+"engine_displacement": 2457,
+"fuel_efficiency": 23,
+"maximum_power_output": 310,
+"maximum_torque": 290,
+
+"maximum_trunk_space": 320,
+"wheel_size": 18
+},
+{
+"car_type": "SUV",
+"model": "Land Cruiser 70 Series",
+"company": "Toyota",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Adaptive Cruise Control, Rearview Camera",
+"transmission": "5-speed manual",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Diesel",
+"rating": 79,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 95,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2023-01-15",
+"price": 68000,
+"co2_emissions": 250,
+"top_speed": 150,
+"acceleration": 10.0,
+"engine_displacement": 4164,
+"fuel_efficiency": 10,
+"maximum_power_output": 202,
+"maximum_torque": 430,
+
+"maximum_trunk_space": 1200,
+"wheel_size": 16
+},
+{
+"car_type": "SUV",
+"model": "Maverick Hybrid",
+"company": "Ford",
+"safety_features": "Automatic Emergency Braking, Blind Spot Detection, Rear Cross Traffic Alert, Lane Departure Warning",
+"transmission": "Continuously Variable Transmission (CVT)",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Hybrid",
+"rating": 82,
+"driving_stability": 83,
+"braking_performance": 79,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": null,
+"release_date": "2022-07-01",
+"price": 23995,
+"co2_emissions": 118,
+"top_speed": 185,
+"acceleration": 9.0,
+"engine_displacement": 2500,
+"fuel_efficiency": 40,
+"maximum_power_output": 191,
+"maximum_torque": 155,
+
+"maximum_trunk_space": 1750,
+"wheel_size": 17
+},
+
+{
+"car_type": "Sedan",
+"model": "Prophecy",
+"company": "Hyundai",
+"safety_features": "Automatic Emergency Braking, Lane Keeping Assist, Blind Spot Detection, Rear Cross Traffic Alert",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Electric",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 86,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": null,
+"release_date": "2023-02-01",
+"price": null,
+"co2_emissions": 0,
+"top_speed": 210,
+"acceleration": 5.2,
+"engine_displacement": null,
+"fuel_efficiency": 0,
+"maximum_power_output": 310,
+"maximum_torque": 350,
+
+"maximum_trunk_space": 420,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Wrangler Unlimited",
+"company": "Jeep",
+"safety_features": "Automatic Emergency Braking, Blind Spot Monitoring, Rear Cross Path Detection, Adaptive Cruise Control",
+"transmission": "8-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 80,
+"driving_stability": 83,
+"braking_performance": 79,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2023-04-01",
+"price": 37000,
+"co2_emissions": 286,
+"top_speed": 193,
+"acceleration": 7.2,
+"engine_displacement": 2995,
+"fuel_efficiency": 22,
+"maximum_power_output": 285,
+"maximum_torque": 260,
+
+"maximum_trunk_space": 897,
+"wheel_size": 18
+},
+{
+"car_type": "Sedan",
+"model": "Maxima Nismo",
+"company": "Nissan",
+"safety_features": "Automatic Emergency Braking, Blind Spot Warning, Lane Departure Warning, Rear Cross Traffic Alert",
+"transmission": "Xtronic CVT",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 87,
+"seating_capacity": 5,
+"total_sales": null,
+"release_date": "2023-03-15",
+"price": 48000,
+"co2_emissions": 229,
+"top_speed": 283,
+"acceleration": 6.0,
+"engine_displacement": 3498,
+"fuel_efficiency": 25,
+"maximum_power_output": 300,
+"maximum_torque": 261,
+
+"maximum_trunk_space": 405,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Atlas Cross Sport",
+"company": "Volkswagen",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Adaptive Cruise Control",
+"transmission": "8-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 85,
+"driving_stability": 88,
+"braking_performance": 81,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 123456,
+"release_date": "2022-08-01",
+"price": 32100,
+"co2_emissions": 215,
+"top_speed": 220,
+"acceleration": 7.2,
+"engine_displacement": 1984,
+"fuel_efficiency": 28,
+"maximum_power_output": 235,
+"maximum_torque": 258,
+
+"maximum_trunk_space": 1105,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "X2",
+"company": "BMW",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 83,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 25000,
+"release_date": "2022-06-01",
+"price": 38500,
+"co2_emissions": 178,
+"top_speed": 238,
+"acceleration": 6.3,
+"engine_displacement": 1998,
+"fuel_efficiency": 27,
+"maximum_power_output": 301,
+"maximum_torque": 332,
+
+"maximum_trunk_space": 470,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "RX L",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring, Rear Cross Traffic Alert",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Hybrid",
+"rating": 88,
+"driving_stability": 90,
+"braking_performance": 84,
+"durability": 92,
+"seating_capacity": 7,
+"total_sales": 150000,
+"release_date": "2022-02-01",
+"price": 53000,
+"co2_emissions": 179,
+"top_speed": 200,
+"acceleration": 7.8,
+"engine_displacement": 3456,
+"fuel_efficiency": 30,
+"maximum_power_output": 308,
+"maximum_torque": 247,
+
+"maximum_trunk_space": 432,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "GLB-Class",
+"company": "Mercedes-Benz",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 84,
+"durability": 91,
+"seating_capacity": 7,
+"total_sales": 90000,
+"release_date": "2021-09-01",
+"price": 38900,
+"co2_emissions": 182,
+"top_speed": 210,
+"acceleration":
+7.2,
+"engine_displacement": 1991,
+"fuel_efficiency": 26,
+"maximum_power_output": 302,
+"maximum_torque": 295,
+
+"maximum_trunk_space": 570,
+"wheel_size": 19
+},
+{
+"car_type": "Sedan",
+"model": "Rio 5-Door",
+"company": "Kia",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection",
+"transmission": "7-speed dual-clutch",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 87,
+"seating_capacity": 5,
+"total_sales": 100000,
+"release_date": "2021-03-01",
+"price": 18100,
+"co2_emissions": 139,
+"top_speed": 195,
+"acceleration": 8.8,
+"engine_displacement": 998,
+"fuel_efficiency": 36,
+"maximum_power_output": 120,
+"maximum_torque": 172,
+
+"maximum_trunk_space": 493,
+"wheel_size": 16
+},
+{
+"car_type": "SUV",
+"model": "Suburban",
+"company": "Chevrolet",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Rear Cross Traffic Alert",
+"transmission": "10-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 83,
+"durability": 92,
+"seating_capacity": 9,
+"total_sales": 85000,
+"release_date": "2021-05-01",
+"price": 54700,
+"co2_emissions": 320,
+"top_speed": 180,
+"acceleration": 7.5,
+"engine_displacement": 5300,
+"fuel_efficiency": 17,
+"maximum_power_output": 355,
+"maximum_torque": 383,
+
+"maximum_trunk_space": 2678,
+"wheel_size": 22
+},
+{
+"car_type": "Minivan",
+"model": "Odyssey Elite",
+"company": "Honda",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring",
+"transmission": "10-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 90,
+"driving_stability": 92,
+"braking_performance": 87,
+"durability": 94,
+"seating_capacity": 8,
+"total_sales": 60000,
+"release_date": "2022-01-01",
+"price": 48800,
+"co2_emissions": 268,
+"top_speed": 235,
+"acceleration": 6.6,
+"engine_displacement": 3471,
+"fuel_efficiency": 22,
+"maximum_power_output": 280,
+"maximum_torque": 262,
+
+"maximum_trunk_space": 320,
+"wheel_size": 19
+},
+
+{
+"car_type": "Sedan",
+"model": "Impreza 22B STi",
+"company": "Subaru",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection",
+"transmission": "6-speed manual",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 84,
+"driving_stability": 87,
+"braking_performance": 80,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 400,
+"release_date": "1998-03-01",
+"price": 100000,
+"co2_emissions": null,
+"top_speed": 250,
+"acceleration": 4.7,
+"engine_displacement": 2212,
+"fuel_efficiency": 10,
+"maximum_power_output": 280,
+"maximum_torque": 363,
+
+"maximum_trunk_space": 320,
+"wheel_size": 17
+},
+{
+"car_type": "Minivan",
+"model": "Alphard",
+"company": "Toyota",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring, Rear Cross Traffic Alert",
+"transmission": "CVT",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 88,
+"driving_stability": 90,
+"braking_performance": 85,
+"durability": 92,
+"seating_capacity": 8,
+"total_sales": 120000,
+"release_date": "2022-03-01",
+"price": 47000,
+"co2_emissions": 170,
+"top_speed": 180,
+"acceleration": 8.2,
+"engine_displacement": 2494,
+"fuel_efficiency": 15,
+"maximum_power_output": 182,
+"maximum_torque": 231,
+
+"maximum_trunk_space": 310,
+"wheel_size": 17
+},
+{
+"car_type": "Sedan",
+"model": "Mondeo",
+"company": "Ford",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring",
+"transmission": "6-speed manual",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Diesel",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 83,
+"durability": 89,
+"seating_capacity": 5,
+"total_sales": 1700000,
+"release_date": "2014-03-01",
+"price": 30100,
+"co2_emissions": 124,
+"top_speed": 225,
+"acceleration": 8.3,
+"engine_displacement": 1997,
+"fuel_efficiency": 45,
+"maximum_power_output": 180,
+"maximum_torque": 400,
+
+"maximum_trunk_space": 550,
+"wheel_size": 18
+},
+{
+"car_type": "Wagon",
+"model": "RS6 Avant",
+"company": "Audi",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 91,
+"driving_stability": 93,
+"braking_performance": 88,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 2500,
+"release_date": "2021-07-01",
+"price": 110000,
+"co2_emissions": 249,
+"top_speed": 305,
+"acceleration": 3.5,
+"engine_displacement": 3996,
+"fuel_efficiency": 18,
+"maximum_power_output": 591,
+"maximum_torque": 590,
+
+"maximum_trunk_space": 1680,
+"wheel_size": 21
+},
+{
+"car_type": "Sedan",
+"model": "Prophecy",
+"company": "Hyundai",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring, Rear Cross Traffic Alert",
+"transmission": "Single-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Electric",
+"rating": 90,
+"driving_stability": 92,
+"braking_performance": 87,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": null,
+"release_date": "2023-01-01",
+"price": 65000,
+"co2_emissions": 0,
+"top_speed": 200,
+"acceleration": 5.2,
+"engine_displacement": null,
+"fuel_efficiency": 4.4,
+"maximum_power_output": 310,
+"maximum_torque": 450,
+
+"maximum_trunk_space": 500,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "Maxima Nismo",
+"company": "Nissan",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring",
+"transmission": "CVT",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 87,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2020-05-01",
+"price": 45000,
+"co2_emissions": 243,
+"top_speed": 248,
+"acceleration": 6.5,
+"engine_displacement": 3498,
+"fuel_efficiency": 19,
+"maximum_power_output": 300,
+"maximum_torque": 261,
+
+"maximum_trunk_space": 405,
+"wheel_size": 19
+},
+
+{
+"car_type": "SUV",
+"model": "RX L",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring, Rear Cross Traffic Alert",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 89,
+"driving_stability": 91,
+"braking_performance": 87,
+"durability": 93,
+"seating_capacity": 7,
+"total_sales": 50000,
+"release_date": "2017-11-01",
+"price": 52000,
+"co2_emissions": 246,
+"top_speed": 180,
+"acceleration": 7.8,
+"engine_displacement": 3456,
+"fuel_efficiency": 22,
+"maximum_power_output": 290,
+"maximum_torque": 263,
+
+"maximum_trunk_space": 432,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "GLB-Class",
+"company": "Mercedes-Benz",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring, Rear Cross Traffic Alert",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 88,
+"driving_stability": 90,
+"braking_performance": 85,
+"durability": 91,
+"seating_capacity": 7,
+"total_sales": 70000,
+"release_date": "2019-11-01",
+"price": 38500,
+"co2_emissions": 191,
+"top_speed": 210,
+"acceleration": 6.8,
+"engine_displacement": 1991,
+"fuel_efficiency": 26,
+"maximum_power_output": 221,
+"maximum_torque": 258,
+
+"maximum_trunk_space": 1700,
+"wheel_size": 19
+},
+{
+"car_type": "Hatchback",
+"model": "Rio 5-Door",
+"company": "Kia",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring",
+"transmission": "IVT",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 81,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 100000,
+"release_date": "2020-03-01",
+"price": 17100,
+"co2_emissions": 116,
+"top_speed": 192,
+"acceleration": 8.3,
+"engine_displacement": 1496,
+"fuel_efficiency": 36,
+"maximum_power_output": 120,
+"maximum_torque": 112,
+
+"maximum_trunk_space": 493,
+"wheel_size": 15
+},
+
+{
+"car_type": "Minivan",
+"model": "Odyssey Elite",
+"company": "Honda",
+"safety_features": "Adaptive Cruise Control, Lane Keeping Assist, Automatic Emergency Braking, Forward Collision Warning",
+"transmission": "10-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 91,
+"driving_stability": 93,
+"braking_performance": 88,
+"durability": 90,
+"seating_capacity": 8,
+"total_sales": 55000,
+"release_date": "2018-11-01",
+"price": 48170,
+"co2_emissions": 202,
+"top_speed": 185,
+"acceleration": 7.2,
+"engine_displacement": 3471,
+"fuel_efficiency": 22,
+"maximum_power_output": 280,
+"maximum_torque": 262,
+
+"maximum_trunk_space": 4300,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Acadia Denali",
+"company": "GMC",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Monitoring, Rear Cross Traffic Alert",
+"transmission": "9-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 89,
+"braking_performance": 84,
+"durability": 92,
+"seating_capacity": 6,
+"total_sales": 75000,
+"release_date": "2019-02-01",
+"price": 50500,
+"co2_emissions": 240,
+"top_speed": 210,
+"acceleration": 6.1,
+"engine_displacement": 3649,
+"fuel_efficiency": 23,
+"maximum_power_output": 310,
+"maximum_torque": 271,
+
+"maximum_trunk_space": 2077,
+"wheel_size": 20
+},
+{
+"car_type": "Hatchback",
+"model": "Impreza 22B STi",
+"company": "Subaru",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning",
+"transmission": "5-speed manual",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 80,
+"driving_stability": 82,
+"braking_performance": 79,
+"durability": 87,
+"seating_capacity": 5,
+"total_sales": 1000,
+"release_date": "1998-03-01",
+"price": 100000,
+"co2_emissions": 250,
+"top_speed": 270,
+"acceleration": 4.7,
+"engine_displacement": 2212,
+"fuel_efficiency": 10,
+"maximum_power_output": 280,
+"maximum_torque": 363,
+
+"maximum_trunk_space": 343,
+"wheel_size": 17
+},
+
+{
+"car_type": "Sedan",
+"model": "Mondeo",
+"company": "Ford",
+"safety_features": "Adaptive Cruise Control, Lane Keeping System, Automatic Emergency Braking, Blind Spot Information System",
+"transmission": "6-speed manual",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 1500000,
+"release_date": "1993-01-01",
+"price": 27200,
+"co2_emissions": 142,
+"top_speed": 233,
+"acceleration": 7.3,
+"engine_displacement": 1999,
+"fuel_efficiency": 32,
+"maximum_power_output": 247,
+"maximum_torque": 269,
+
+"maximum_trunk_space": 541,
+"wheel_size": 17
+},
+{
+"car_type": "Sedan",
+"model": "S3",
+"company": "Audi",
+"safety_features": "Audi Pre Sense Basic, Adaptive Cruise Control, Lane Departure Warning, Rearview Camera",
+"transmission": "7-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 89,
+"driving_stability": 92,
+"braking_performance": 87,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 250000,
+"release_date": "2013-01-01",
+"price": 44900,
+"co2_emissions": 148,
+"top_speed": 250,
+"acceleration": 4.6,
+"engine_displacement": 1984,
+"fuel_efficiency": 29,
+"maximum_power_output": 306,
+"maximum_torque": 295,
+
+"maximum_trunk_space": 325,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Tucson Hybrid",
+"company": "Hyundai",
+"safety_features": "Forward Collision-Avoidance Assist with Pedestrian Detection, Lane Keeping Assist, Blind-Spot Collision Warning, Rear Cross-Traffic Collision Warning",
+"transmission": "6-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 85,
+"driving_stability": 87,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 50000,
+"release_date": "2021-02-01",
+"price": 33850,
+"co2_emissions": 128,
+"top_speed": 193,
+"acceleration": 8.0,
+"engine_displacement": 1999,
+"fuel_efficiency": 38,
+"maximum_power_output": 227,
+"maximum_torque": 258,
+
+"maximum_trunk_space": 979,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Grand Cherokee SRT",
+"company": "Jeep",
+"safety_features": "Forward Collision Warning with Active Braking, Adaptive Cruise Control, Lane Departure Warning with Lane Keep Assist, Blind Spot Monitoring with Rear Cross Path Detection",
+"transmission": "8-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 84,
+"driving_stability": 87,
+"braking_performance": 85,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 200000,
+"release_date": "2016-06-01",
+"price": 70885,
+"co2_emissions": 365,
+"top_speed": 257,
+"acceleration": 4.3,
+"engine_displacement": 6424,
+"fuel_efficiency": 13,
+"maximum_power_output": 475,
+"maximum_torque": 470,
+
+"maximum_trunk_space": 1020,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "Terra",
+"company": "Nissan",
+"safety_features": "Intelligent Emergency Braking with Pedestrian Detection, Intelligent Forward Collision Warning, Intelligent Lane Intervention, Rear Intelligent Emergency Braking",
+"transmission": "6-speed manual",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Diesel",
+"rating": 78,
+"driving_stability": 81,
+"braking_performance": 75,
+"durability": 85,
+"seating_capacity": 7,
+"total_sales": 100000,
+"release_date": "2018-04-01",
+"price": 33940,
+"co2_emissions": 208,
+"top_speed": 180,
+"acceleration": 10.9,
+"engine_displacement": 2488,
+"fuel_efficiency": 16,
+"maximum_power_output": 187,
+"maximum_torque": 332,
+
+"maximum_trunk_space": 475,
+"wheel_size": 17
+},
+{
+"car_type": "SUV",
+"model": "Golf R Variant",
+"company": "Volkswagen",
+"safety_features": "Lane Assist, Adaptive Cruise Control, Park Assist, Emergency Assist",
+"transmission": "7-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 89,
+"seating_capacity": 5,
+"total_sales": 150000,
+"release_date": "2014-01-01",
+"price": 47700,
+"co2_emissions": 181,
+"top_speed": 250,
+"acceleration": 4.7,
+"engine_displacement": 1984,
+"fuel_efficiency": 33,
+"maximum_power_output": 315,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 605,
+"wheel_size": 18
+},
+{
+"car_type": "Sedan",
+"model": "M2",
+"company": "BMW",
+"safety_features": "Adaptive Cruise Control, Lane Departure Warning, Forward Collision Warning, Automatic Emergency Braking",
+"transmission": "7-speed dual-clutch",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 89,
+"seating_capacity": 4,
+"total_sales": 100000,
+"release_date": "2016-04-01",
+"price": 58700,
+"co2_emissions": 206,
+"top_speed": 280,
+"acceleration": 4.2,
+"engine_displacement": 2979,
+"fuel_efficiency": 24,
+"maximum_power_output": 365,
+"maximum_torque": 500,
+
+"maximum_trunk_space": 390,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "RX 450hL",
+"company": "Lexus",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Lane Departure Alert with Steering Assist, All-Speed Dynamic Radar Cruise Control, Intelligent High Beams",
+"transmission": "Continuously Variable Transmission (CVT)",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Hybrid",
+"rating": 88,
+"driving_stability": 90,
+"braking_performance": 86,
+"durability": 91,
+"seating_capacity": 7,
+"total_sales": 100000,
+"release_date": "2018-05-01",
+"price": 55800,
+"co2_emissions": 147,
+"top_speed": 200,
+"acceleration": 7.7,
+"engine_displacement": 3456,
+"fuel_efficiency": 29,
+"maximum_power_output": 308,
+"maximum_torque": 247,
+
+"maximum_trunk_space": 500,
+"wheel_size": 20
+},
+{
+"car_type": "Sedan",
+"model": "S-Class Maybach",
+"company": "Mercedes-Benz",
+"safety_features": "Active Distance Assist DISTRONIC, Active Steering Assist, Active Lane Keeping Assist, Active Lane Change Assist",
+"transmission": "9-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 92,
+"driving_stability": 94,
+"braking_performance": 90,
+"durability": 94,
+"seating_capacity": 4,
+"total_sales": 50000,
+"release_date": "2018-11-01",
+"price": 182000,
+"co2_emissions": 270,
+"top_speed": 250,
+"acceleration": 4.8,
+"engine_displacement": 5980,
+"fuel_efficiency": 19,
+"maximum_power_output": 621,
+"maximum_torque": 738,
+
+"maximum_trunk_space": 550,
+"wheel_size": 20
+},
+{
+"car_type": "Hatchback",
+"model": "CX-4",
+"company": "Mazda",
+"safety_features": "Mazda Radar Cruise Control, Lane Departure Warning System, Smart Brake Support, Traffic Sign Recognition",
+"transmission": "6-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 85,
+"driving_stability": 88,
+"braking_performance": 82,
+"durability": 87,
+"seating_capacity": 5,
+"total_sales": 120000,
+"release_date": "2016-03-01",
+"price": 29350,
+"co2_emissions": 165,
+"top_speed": 200,
+"acceleration": 8.2,
+"engine_displacement": 1998,
+"fuel_efficiency": 31,
+"maximum_power_output": 162,
+"maximum_torque": 213,
+
+"maximum_trunk_space": 402,
+"wheel_size": 18
+},
+
+{
+"car_type": "Pickup Truck",
+"model": "Ranger",
+"company": "Ford",
+"safety_features": "Pre-Collision Assist with Automatic Emergency Braking, Blind Spot Information System with Cross-Traffic Alert, Lane-Keeping System, Rear View Camera",
+"transmission": "10-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 84,
+"driving_stability": 86,
+"braking_performance": 81,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 250000,
+"release_date": "2018-01-01",
+"price": 24385,
+"co2_emissions": 247,
+"top_speed": 201,
+"acceleration": 6.5,
+"engine_displacement": 2300,
+"fuel_efficiency": 23,
+"maximum_power_output": 270,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 1319,
+"wheel_size": 18
+},
+{
+"car_type": "Hatchback",
+"model": "Leaf",
+"company": "Nissan",
+"safety_features": "Intelligent Forward Collision Warning, Automatic Emergency Braking with Pedestrian Detection, Blind Spot Warning, Rear Cross Traffic Alert",
+"transmission": "Single Speed Reduction Gear",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Electric",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 180000,
+"release_date": "2017-10-01",
+"price": 32990,
+"co2_emissions": null,
+"top_speed": 150,
+"acceleration": 7.5,
+"engine_displacement": null,
+"fuel_efficiency": 112,
+"maximum_power_output": 147,
+"maximum_torque": 236,
+
+"maximum_trunk_space": 668,
+"wheel_size": 17
+},
+{
+"car_type": "Crossover SUV",
+"model": "Bolt",
+"company": "Chevrolet",
+"safety_features": "Forward Collision Alert, Automatic Emergency Braking, Lane Keep Assist with Lane Departure Warning, Following Distance Indicator",
+"transmission": "Single Speed Automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Electric",
+"rating": 82,
+"driving_stability": 84,
+"braking_performance": 80,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 100000,
+"release_date": "2016-12-01",
+"price": 31295,
+"co2_emissions": null,
+"top_speed": 145,
+"acceleration": 6.5,
+"engine_displacement": null,
+"fuel_efficiency": 118,
+"maximum_power_output": 200,
+"maximum_torque": 266,
+
+"maximum_trunk_space": 1603,
+"wheel_size": 17
+},
+
+{
+"car_type": "Mid-Size SUV",
+"model": "Atlas Cross Sport",
+"company": "Volkswagen",
+"safety_features": "Forward Collision Warning, Autonomous Emergency Braking with Pedestrian Monitoring, Blind Spot Monitor, Rear Traffic Alert",
+"transmission": "8-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 84,
+"driving_stability": 86,
+"braking_performance": 80,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 87000,
+"release_date": "2020-05-01",
+"price": 30545,
+"co2_emissions": 212,
+"top_speed": 130,
+"acceleration": 8.3,
+"engine_displacement": 2000,
+"fuel_efficiency": 24,
+"maximum_power_output": 235,
+"maximum_torque": 258,
+
+"maximum_trunk_space": 1882,
+"wheel_size": 18
+},
+{
+"car_type": "Compact SUV",
+"model": "X2",
+"company": "BMW",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Adaptive Cruise Control",
+"transmission": "8-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 84,
+"durability": 89,
+"seating_capacity": 5,
+"total_sales": 98000,
+"release_date": "2017-11-01",
+"price": 36800,
+"co2_emissions": 149,
+"top_speed": 225,
+"acceleration": 6.3,
+"engine_displacement": 2000,
+"fuel_efficiency": 28,
+"maximum_power_output": 228,
+"maximum_torque": 258,
+
+"maximum_trunk_space": 1218,
+"wheel_size": 18
+},
+
+{
+"car_type": "Luxury Sedan",
+"model": "S-Class Cabriolet",
+"company": "Mercedes-Benz",
+"safety_features": "Active Brake Assist, Adaptive Highbeam Assist, Active Distance Assist DISTRONIC, Active Steering Assist",
+"transmission": "9-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 92,
+"driving_stability": 94,
+"braking_performance": 90,
+"durability": 91,
+"seating_capacity": 4,
+"total_sales": 15000,
+"release_date": "2018-09-01",
+"price": 134300,
+"co2_emissions": 203,
+"top_speed": 250,
+"acceleration": 4.2,
+"engine_displacement": 4694,
+"fuel_efficiency": 18,
+"maximum_power_output": 463,
+"maximum_torque": 516,
+
+"maximum_trunk_space": 320,
+"wheel_size": 19
+},
+{
+"car_type": "Compact Sedan",
+"model": "Stinger GT",
+"company": "Kia",
+"safety_features": "Forward Collision Warning, Blind Spot Detection, Lane Keeping Assist, Rear Cross-Traffic Alert",
+"transmission": "8-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 81,
+"durability": 87,
+"seating_capacity": 5,
+"total_sales": 65000,
+"release_date": "2017-12-01",
+"price": 40000,
+"co2_emissions": 200,
+"top_speed": 269,
+"acceleration": 4.7,
+"engine_displacement": 3300,
+"fuel_efficiency": 22,
+"maximum_power_output": 365,
+"maximum_torque": 376,
+
+"maximum_trunk_space": 660,
+"wheel_size": 18
+},
+{
+"car_type": "Subcompact SUV",
+"model": "Trax",
+"company": "Chevrolet",
+"safety_features": "Forward Collision Alert, Lane Departure Warning, Rear Park Assist, Rear Cross Traffic Alert",
+"transmission": "6-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 79,
+"driving_stability": 82,
+"braking_performance": 76,
+"durability": 85,
+"seating_capacity": 5,
+"total_sales": 150000,
+"release_date": "2016-12-01",
+"price": 21795,
+"co2_emissions": 159,
+"top_speed": 160,
+"acceleration": 9.3,
+"engine_displacement": 1400,
+"fuel_efficiency": 29,
+"maximum_power_output": 138,
+"maximum_torque": 148,
+
+"maximum_trunk_space": 530,
+"wheel_size": 16
+},
+{
+"car_type": "Compact SUV",
+"model": "CX-4 Diesel",
+"company": "Mazda",
+"safety_features": "Smart Brake Support, Advanced Smart City Brake Support with Pedestrian Detection, Blind Spot Monitoring, Lane Departure Warning",
+"transmission": "6-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Diesel",
+"rating": 85,
+"driving_stability": 88,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 20000,
+"release_date": "2020-01-01",
+"price": 29000,
+"co2_emissions": 139,
+"top_speed": 200,
+"acceleration": 8.5,
+"engine_displacement": 2191,
+"fuel_efficiency": 46,
+"maximum_power_output": 173,
+"maximum_torque": 310,
+
+"maximum_trunk_space": 489,
+"wheel_size": 18
+},
+{
+"car_type": "Kei Car",
+"model": "N-WGN",
+"company": "Honda",
+"safety_features": "Collision Mitigation Braking System, Adaptive Cruise Control, Lane Departure Warning, Road Departure Mitigation",
+"transmission": "CVT",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 77,
+"driving_stability": 78,
+"braking_performance": 75,
+"durability": 85,
+"seating_capacity": 4,
+"total_sales": 30000,
+"release_date": "2021-04-01",
+"price": 14000,
+"co2_emissions": 88,
+"top_speed": 140,
+"acceleration": 12.5,
+"engine_displacement": 658,
+"fuel_efficiency": 32,
+"maximum_power_output": 57,
+"maximum_torque": 63,
+
+"maximum_trunk_space": 223,
+"wheel_size": 14
+},
+{
+"car_type": "Mid-size Pickup Truck",
+"model": "Sierra All Terrain X",
+"company": "GMC",
+"safety_features": "Lane Departure Warning, Automatic Emergency Braking, Forward Collision Alert, Following Distance Indicator",
+"transmission": "8-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 82,
+"durability": 93,
+"seating_capacity": 5,
+"total_sales": 20000,
+"release_date": "2017-12-01",
+"price": 48695,
+"co2_emissions": 346,
+"top_speed": 193,
+"acceleration": 6.4,
+"engine_displacement": 6200,
+"fuel_efficiency": 18,
+"maximum_power_output": 420,
+"maximum_torque": 460,
+
+"maximum_trunk_space": 1440,
+"wheel_size": 18
+},
+{
+"car_type": "Luxury SUV",
+"model": "GLB-Class",
+"company": "Mercedes-Benz",
+"safety_features": "Active Brake Assist, ATTENTION ASSIST, Adaptive Highbeam Assist, Adaptive Cruise Control",
+"transmission": "8-speed dual-clutch",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 88,
+"driving_stability": 91,
+"braking_performance": 86,
+"durability": 90,
+"seating_capacity": 7,
+"total_sales": 50000,
+"release_date": "2019-01-01",
+"price": 38200,
+"co2_emissions": 152,
+"top_speed": 209,
+"acceleration": 6.9,
+"engine_displacement": 1991,
+"fuel_efficiency": 25,
+"maximum_power_output": 221,
+"maximum_torque": 258,
+
+"maximum_trunk_space":
+560,
+"wheel_size": 18
+},
+{
+"car_type": "Hatchback",
+"model": "Rio 5-Door",
+"company": "Kia",
+"safety_features": "Forward Collision Warning, Lane Departure Warning, Rear Cross Traffic Alert, Blind Spot Detection",
+"transmission": "6-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 80,
+"driving_stability": 82,
+"braking_performance": 78,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 120000,
+"release_date": "2019-01-01",
+"price": 16250,
+"co2_emissions": 144,
+"top_speed": 188,
+"acceleration": 9.5,
+"engine_displacement": 1591,
+"fuel_efficiency": 36,
+"maximum_power_output": 120,
+"maximum_torque": 112,
+
+"maximum_trunk_space": 493,
+"wheel_size": 15
+},
+{
+"car_type": "Convertible",
+"model": "S-Class Cabriolet",
+"company": "Mercedes-Benz",
+"safety_features": "Active Brake Assist, ATTENTION ASSIST, Active Distance Assist DISTRONIC, Adaptive Highbeam Assist",
+"transmission": "9-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 92,
+"driving_stability": 94,
+"braking_performance": 90,
+"durability": 90,
+"seating_capacity": 4,
+"total_sales": 5000,
+"release_date": "2019-04-01",
+"price": 147350,
+"co2_emissions": 225,
+"top_speed": 250,
+"acceleration": 4.9,
+"engine_displacement": 2999,
+"fuel_efficiency": 22,
+"maximum_power_output": 362,
+"maximum_torque": 369,
+
+"maximum_trunk_space": 235,
+"wheel_size": 19
+},
+{
+"car_type": "Subcompact SUV",
+"model": "Trax",
+"company": "Chevrolet",
+"safety_features": "Forward Collision Alert, Lane Departure Warning, Rear Park Assist, Side Blind Zone Alert",
+"transmission": "6-speed automatic",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 78,
+"driving_stability": 80,
+"braking_performance": 76,
+"durability": 86,
+"seating_capacity": 5,
+"total_sales": 150000,
+"release_date": "2019-01-01",
+"price": 21995,
+"co2_emissions": 160,
+"top_speed": 183,
+"acceleration": 9.3,
+"engine_displacement": 1364,
+"fuel_efficiency": 29,
+"maximum_power_output": 138,
+"maximum_torque": 148,
+
+"maximum_trunk_space": 530,
+"wheel_size": 16
+},
+{
+"car_type": "Crossover SUV",
+"model": "CX-4 Diesel",
+"company": "Mazda",
+"safety_features": "Blind Spot Monitoring, Rear Cross Traffic Alert, Lane Departure Warning, Smart Brake Support",
+"transmission": "6-speed automatic",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Diesel",
+"rating": 84,
+"driving_stability": 86,
+"braking_performance": 82,
+"durability":
+90,
+"seating_capacity": 5,
+"total_sales": 50000,
+"release_date": "2020-09-01",
+"price": 27900,
+"co2_emissions": 139,
+"top_speed": 205,
+"acceleration": 8.5,
+"engine_displacement": 1998,
+"fuel_efficiency": 42,
+"maximum_power_output": 148,
+"maximum_torque": 280,
+
+"maximum_trunk_space": 430,
+"wheel_size": 18
+},
+{
+"car_type": "Kei Car",
+"model": "N-WGN",
+"company": "Honda",
+"safety_features": "Hill Start Assist, Emergency Stop Signal, Vehicle Stability Assist, Multi-angle Rearview Camera",
+"transmission": "CVT",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 75,
+"driving_stability": 77,
+"braking_performance": 73,
+"durability": 85,
+"seating_capacity": 4,
+"total_sales": 100000,
+"release_date": "2019-02-01",
+"price": 13600,
+"co2_emissions": 88,
+"top_speed": 140,
+"acceleration": 13.1,
+"engine_displacement": 658,
+"fuel_efficiency": 27,
+"maximum_power_output": 58,
+"maximum_torque": 49,
+
+"maximum_trunk_space": 287,
+"wheel_size": 14
+},
+{
+"car_type": "Pickup Truck",
+"model": "Sierra All Terrain X",
+"company": "GMC",
+"safety_features": "Front and Rear Park Assist, Lane Departure Warning, Forward Collision Alert, Rear Cross Traffic Alert",
+"transmission": "8-speed automatic",
+"driving_mode": "Four Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 85,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 75000,
+"release_date": "2018-07-01",
+"price": 44895,
+"co2_emissions": 332,
+"top_speed": 190,
+"acceleration": 6.7,
+"engine_displacement": 5354,
+"fuel_efficiency": 18,
+"maximum_power_output": 365,
+"maximum_torque": 383,
+
+"maximum_trunk_space": 2296,
+"wheel_size": 18
+},
+
+{
+"car_type": "SUV",
+"model": "Ascent",
+"company": "Subaru",
+"safety_features": "EyeSight Driver Assist Technology, Blind-Spot Detection, Rear Cross-Traffic Alert, Reverse Automatic Braking",
+"transmission": "CVT",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 86,
+"driving_stability": 88,
+"braking_performance": 83,
+"durability": 90,
+"seating_capacity": 7,
+"total_sales": 100000,
+"release_date": "2018-06-01",
+"price": 32295,
+"co2_emissions": 196,
+"top_speed": 208,
+"acceleration": 7.6,
+"engine_displacement": 2498,
+"fuel_efficiency": 23,
+"maximum_power_output": 260,
+"maximum_torque": 277,
+
+"maximum_trunk_space": 2245,
+"wheel_size": 18
+},
+{
+"car_type": "Sports Car",
+"model": "Supra",
+"company": "Toyota",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Lane Departure Alert with Steering Assist, Automatic High Beams, Dynamic Radar Cruise Control",
+"transmission": "8-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 88,
+"driving_stability": 92,
+"braking_performance": 86,
+"durability": 92,
+"seating_capacity": 2,
+"total_sales": 35000,
+"release_date": "2019-05-01",
+"price": 50800,
+"co2_emissions": 177,
+"top_speed": 250,
+"acceleration": 4.1,
+"engine_displacement": 2998,
+"fuel_efficiency": 26,
+"maximum_power_output": 382,
+"maximum_torque": 368,
+
+"maximum_trunk_space": 290,
+"wheel_size": 19
+},
+{
+"car_type": "Luxury Sedan",
+"model": "S-Class Maybach",
+"company": "Mercedes-Benz",
+"safety_features": "Active Blind Spot Assist, Active Lane Keeping Assist, Rear Cross-Traffic Alert, Surround View Camera System",
+"transmission": "9-speed automatic",
+"driving_mode": "Rear Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 92,
+"driving_stability": 94,
+"braking_performance": 90,
+"durability": 95,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2021-03-01",
+"price": 180500,
+"co2_emissions": 211,
+"top_speed": 250,
+"acceleration": 4.8,
+"engine_displacement": 5980,
+"fuel_efficiency": 18,
+"maximum_power_output": 621,
+"maximum_torque": 738,
+
+"maximum_trunk_space": 500,
+"wheel_size": 20
+},
+{
+"car_type": "Subcompact SUV",
+"model": "Kicks",
+"company": "Nissan",
+"safety_features": "Intelligent Forward Collision Warning, Automatic Emergency Braking with Pedestrian Detection, Rear Automatic Braking, Lane Departure Warning",
+"transmission": "Xtronic CVT",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 80,
+"driving_stability": 82,
+"braking_performance": 78,
+"durability": 82,
+"seating_capacity": 5,
+"total_sales": 120000,
+"release_date": "2018-01-01",
+"price": 20550,
+"co2_emissions": 155,
+"top_speed": 179,
+"acceleration": 9.7,
+"engine_displacement": 1498,
+"fuel_efficiency": 33,
+"maximum_power_output": 122,
+"maximum_torque": 114,
+
+"maximum_trunk_space": 915,
+"wheel_size": 17
+},
+{
+"car_type": "Mid-Size SUV",
+"model": "Venza",
+"company": "Toyota",
+"safety_features": "Pre-Collision System with Pedestrian Detection, Lane Departure Alert with Steering Assist, Automatic High Beams, Full-Speed Range Dynamic Radar Cruise Control",
+"transmission": "CVT",
+"driving_mode": "All Wheel Drive",
+"fuel_type": "Gasoline",
+"rating": 87,
+"driving_stability": 89,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 50000,
+"release_date": "2020-06-01",
+"price": 32750,
+"co2_emissions": 165,
+"top_speed": 190,
+"acceleration": 7.5,
+"engine_displacement": 2487,
+"fuel_efficiency": 39,
+"maximum_power_output": 219,
+"maximum_torque": 163,
+
+"maximum_trunk_space": 1068,
+"wheel_size": 18
+},
+{
+"car_type": "Compact SUV",
+"model": "Niro",
+"company": "Kia",
+"safety_features": "Forward Collision Warning, Automatic Emergency Braking, Lane Departure Warning, Lane Keeping Assist",
+"transmission": "6-speed dual-clutch",
+"driving_mode": "Front Wheel Drive",
+"fuel_type": "Hybrid",
+"rating": 83,
+"driving_stability": 85,
+"braking_performance": 80,
+"durability": 86,
+"seating_capacity": 5,
+"total_sales": 100000,
+"release_date": "2016-07-01",
+"price": 24990,
+"co2_emissions": 88,
+"top_speed": 176,
+"acceleration": 8.6,
+"engine_displacement": 1580,
+"fuel_efficiency": 51,
+"maximum_power_output": 139,
+"maximum_torque": 195,
+
+"maximum_trunk_space": 1624,
+"wheel_size": 16
+},
+
+
+];
+
+
+function search() {
+  var input_car_type = document.getElementById("car_type").value.toLowerCase();
+  var input_model = document.getElementById("model").value.toLowerCase();
+  var input_company = document.getElementById("company").value.toLowerCase();
+  var input_safety_features = document.getElementById("safety_features").value.toLowerCase();
+  var input_transmission = document.getElementById("transmission").value.toLowerCase();
+  var input_driving_mode = document.getElementById("driving_mode").value.toLowerCase();
+  var input_fuel_type = document.getElementById("fuel_type").value.toLowerCase();
+  var input_rating = document.getElementById("rating").value;
+  var input_driving_stability = document.getElementById("driving_stability").value;
+  var input_braking_performance = document.getElementById("braking_performance").value;
+  var input_durability = document.getElementById("durability").value;
+  var input_seating_capacity = document.getElementById("seating_capacity").value;
+  var input_total_sales = document.getElementById("total_sales").value;
+  var input_release_date = document.getElementById("release_date").value;
+  var input_price = document.getElementById("price").value;
+  var input_co2_emissions = document.getElementById("co2_emissions").value;
+  var input_top_speed = document.getElementById("top_speed").value;
+  var input_acceleration = document.getElementById("acceleration").value;
+  var input_engine_displacement = document.getElementById("engine_displacement").value;
+  var input_fuel_efficiency = document.getElementById("fuel_efficiency").value;
+  var input_maximum_power_output = document.getElementById("maximum_power_output").value;
+  var input_maximum_torque = document.getElementById("maximum_torque").value;
+  var input_maximum_trunk_space = document.getElementById("maximum_trunk_space").value;
+  var input_wheel_size = document.getElementById("wheel_size").value;
+
+  var results = [];
+
+  for (var i = 0; i < cars.length; i++) {
+    var car = cars[i];
+    if (input_car_type && !car.car_type.toLowerCase().includes(input_car_type)) {
+    continue;
+  }
+  if (input_model && !car.model.toLowerCase().includes(input_model)) {
+    continue;
+  }
+  if (input_company && !car.company.toLowerCase().includes(input_company)) {
+    continue;
+  }
+  if (input_safety_features && !car.safety_features.toLowerCase().includes(input_safety_features)) {
+    continue;
+  }
+  if (input_transmission && !car.transmission.toLowerCase().includes(input_transmission)) {
+    continue;
+  }
+  if (input_driving_mode && !car.driving_mode.toLowerCase().includes(input_driving_mode)) {
+    continue;
+  }
+  if (input_fuel_type && !car.fuel_type.toLowerCase().includes(input_fuel_type)) {
+    continue;
+  }
+  if (input_rating && car.rating < Number(input_rating)) {
+    continue;
+  }
+  if (input_driving_stability && car.driving_stability < Number(input_driving_stability)) {
+    continue;
+  }
+  if (input_braking_performance && car.braking_performance < Number(input_braking_performance)) {
+    continue;
+  }
+  if (input_durability && car.durability < Number(input_durability)) {
+    continue;
+  }
+  if (input_seating_capacity && car.seating_capacity < Number(input_seating_capacity)) {
+    continue;
+  }
+  if (input_total_sales && car.total_sales < Number(input_total_sales)) {
+    continue;
+  }
+  if (input_release_date && !String(car.release_date).startsWith(input_release_date)) {
+    continue;
+  }
+  if (input_price && car.price < Number(input_price)) {
+    continue;
+  }
+  if (input_co2_emissions && car.co2_emissions < Number(input_co2_emissions)) {
+    continue;
+  }
+  if (input_top_speed && car.top_speed < Number(input_top_speed)) {
+    continue;
+  }
+  if (input_acceleration && car.acceleration < Number(input_acceleration)) {
+    continue;
+  }
+  if (input_engine_displacement && car.engine_displacement < Number(input_engine_displacement)) {
+    continue;
+  }
+  if (input_fuel_efficiency && car.fuel_efficiency < Number(input_fuel_efficiency)) {
+    continue;
+  }
+  if (input_maximum_power_output && car.maximum_power_output < Number(input_maximum_power_output)) {
+    continue;
+  }
+  if (input_maximum_torque && car.maximum_torque < Number(input_maximum_torque)) {
+    continue;
+  }
+  
+  if (input_maximum_trunk_space && car.maximum_trunk_space < Number(input_maximum_trunk_space)) {
+    continue;
+  }
+  if (input_wheel_size && car.wheel_size < Number(input_wheel_size)) {
+    continue;
+  }
+
+
+
+  if (
+        !input_car_type && 
+        !input_model && 
+        !input_company && 
+        !input_safety_features && 
+        !input_transmission && 
+        !input_driving_mode && 
+        !input_fuel_type && 
+        !input_rating && 
+        !input_driving_stability && 
+        !input_braking_performance && 
+        !input_durability && 
+        !input_seating_capacity && 
+        !input_total_sales && 
+        !input_release_date &&
+        !input_price &&
+        !input_co2_emissions &&
+        !input_top_speed &&
+        !input_acceleration &&
+        !input_engine_displacement &&
+        !input_fuel_efficiency &&
+        !input_maximum_power_output &&
+        !input_maximum_torque &&
+        !input_maximum_trunk_space &&
+        !input_wheel_size
+
+
+    ) {
+        
+        var tableBody = document.querySelector("#search-results tbody");
+        tableBody.innerHTML = "";
+        return;
+    }
+
+    
+
+
+
+
+results.push(car);
+}
+
+
+
+
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+          if (results[i].model.toLowerCase() === uniqueResults[j].model.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+for (var i = 0; i < results.length; i++) {
+var car = results[i];
+var row = document.createElement("tr");
+row.innerHTML = 
+"<td>" + car.car_type+ "</td>" +
+"<td>" + car.model+ "</td>" +
+"<td>" + car.company+ "</td>" +
+"<td>" + car.safety_features + "</td>" +
+"<td>" + car.transmission + "</td>" +
+"<td>" + car.driving_mode + "</td>" +
+"<td>" + car.fuel_type + "</td>" +
+"<td>" + car.rating + "</td>" +
+"<td>" + car.driving_stability + "</td>" +
+"<td>" + car.braking_performance + "</td>" +
+"<td>" + car.durability + "</td>" +
+"<td>" + car.seating_capacity + "</td>" +
+"<td>" + car.total_sales + "</td>" +
+"<td>" + car.release_date + "</td>" +
+"<td>" + car.price + "</td>" +
+"<td>" + car.co2_emissions + "</td>" +
+"<td>" + car.top_speed + "</td>" +
+"<td>" + car.acceleration + "</td>" +
+"<td>" + car.engine_displacement + "</td>" +
+"<td>" + car.fuel_efficiency + "</td>" +
+"<td>" + car.maximum_power_output + "</td>" +
+"<td>" + car.maximum_torque + "</td>" +
+"<td>" + car.maximum_trunk_space + "</td>" +
+"<td>" + car.wheel_size + "</td>";
+tableBody.appendChild(row);
+}
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = parseFloat(x.innerHTML);
+        y = parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+
+
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+
+
+    
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+
+
+</script>
+
+</body>
+</html>

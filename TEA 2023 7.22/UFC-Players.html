@@ -1,0 +1,3374 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>UFC</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+
+    th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+
+    
+	</style>
+</head>
+<body>
+	<h1>UFC</h1>
+	<img src="">
+
+    <canvas id="matrix-canvas"></canvas>
+    
+	<form onsubmit="search(); return false;">
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="weight_class" placeholder="Weight Class">
+<input type="text" id="fighting_style" placeholder="Fighting Style">
+<input type="text" id="team" placeholder="Team">
+<input type="text" id="coach" placeholder="Coach">
+<input type="text" id="nationality" placeholder="Nationality">
+<input type="number" step="0.01" id="wins" placeholder="Wins">
+<input type="number" step="0.01" id="losses" placeholder="Losses">
+<input type="number" step="0.01" id="draws" placeholder="Draws">
+<input type="number" step="0.01" id="overall" placeholder="Overall(0~100)">
+<input type="number" step="0.01" id="knockouts" placeholder="Knockouts">
+<input type="number" step="0.01" id="submissions" placeholder="Submissions">
+<input type="number" step="0.01" id="decision_victory" placeholder="Decision Victory">
+<input type="number" step="0.01" id="age" placeholder="Age">
+<input type="number" step="0.01" id="height" placeholder="Height(inches)">
+<input type="number" step="0.01" id="weight" placeholder="Weight(pounds)">
+<input type="number" step="0.01" id="slpm" placeholder="SLPM(Strikes Landed per Minute)">
+<input type="number" step="0.01" id="striking_accuracy" placeholder="Striking Accuracy">
+<input type="number" step="0.01" id="sapm" placeholder="SAPM">
+<input type="number" step="0.01" id="striking_defense" placeholder="Striking Defense">
+<input type="number" step="0.01" id="takedowns_per_15_minutes" placeholder="Takedowns per 15 Minutes">
+<input type="number" step="0.01" id="takedown_accuracy" placeholder="Takedown Accuracy">
+<input type="number" step="0.01" id="takedown_defense" placeholder="Takedown Defense">
+<input type="number" step="0.01" id="submission_attempts_per_15_minutes" placeholder="Submission Attempts per 15 Minutes">
+<input type="number" step="0.01" id="average_fight_time" placeholder="Average Fight Time(Minutes)">
+<input type="number" step="0.01" id="standing" placeholder="Standing(%)">
+<input type="number" step="0.01" id="clinch" placeholder="Clinch(%)">
+<input type="number" step="0.01" id="ground" placeholder="Ground(%)">
+		
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+
+<thead>
+  <tr>
+
+    <th onclick="sortTable(0)">Name<span id="sortIndicator0">▲▼</span></th>
+    <th onclick="sortTable(1)">Weight Class<span id="sortIndicator1">▲▼</span></th>
+    <th onclick="sortTable(2)">Fighting Style<span id="sortIndicator2">▲▼</span></th>
+    <th onclick="sortTable(3)">Team<span id="sortIndicator3">▲▼</span></th>
+    <th onclick="sortTable(4)">Coach<span id="sortIndicator4">▲▼</span></th>
+    <th onclick="sortTable(5)">Nationality<span id="sortIndicator5">▲▼</span></th>
+    <th onclick="sortTable(6)">Wins<span id="sortIndicator6">▲▼</span></th>
+    <th onclick="sortTable(7)">Losses<span id="sortIndicator7">▲▼</span></th>
+    <th onclick="sortTable(8)">Draws<span id="sortIndicator8">▲▼</span></th>
+    <th onclick="sortTable(9)">Overall(0~100)<span id="sortIndicator9">▲▼</span></th>
+    <th onclick="sortTable(10)">Knockouts<span id="sortIndicator10">▲▼</span></th>
+    <th onclick="sortTable(11)">Submissions<span id="sortIndicator11">▲▼</span></th>
+    <th onclick="sortTable(12)">Decision Victory<span id="sortIndicator12">▲▼</span></th>
+    <th onclick="sortTable(13)">Age<span id="sortIndicator13">▲▼</span></th>
+    <th onclick="sortTable(14)">Height(inches)<span id="sortIndicator14">▲▼</span></th>
+    <th onclick="sortTable(15)">Weight(pounds)<span id="sortIndicator15">▲▼</span></th>
+    <th onclick="sortTable(16)">SLpM(Strikes Landed per Minute)<span id="sortIndicator16">▲▼</span></th>
+    <th onclick="sortTable(17)">Striking Accuracy<span id="sortIndicator17">▲▼</span></th>
+    <th onclick="sortTable(18)">SApM(Strikes Absorbed per Minute)<span id="sortIndicator18">▲▼</span></th>
+    <th onclick="sortTable(19)">Striking Defense<span id="sortIndicator19">▲▼</span></th>
+    <th onclick="sortTable(20)">Takedowns per 15 Minutes<span id="sortIndicator20">▲▼</span></th>
+    <th onclick="sortTable(21)">Takedown Accuracy<span id="sortIndicator21">▲▼</span></th>
+    <th onclick="sortTable(22)">Takedown Defense<span id="sortIndicator22">▲▼</span></th>
+    <th onclick="sortTable(23)">Submission Attempts per 15 Minutes<span id="sortIndicator23">▲▼</span></th>
+    <th onclick="sortTable(24)">Average Fight Time(Minutes)<span id="sortIndicator24">▲▼</span></th>
+    <th onclick="sortTable(25)">Standing(%)<span id="sortIndicator25">▲▼</span></th>
+    <th onclick="sortTable(26)">Clinch(%)<span id="sortIndicator26">▲▼</span></th>
+    <th onclick="sortTable(27)">Ground(%)<span id="sortIndicator27">▲▼</span></th>
+  
+  </tr>
+  </thead>
+  
+  
+<tbody></tbody>
+</table>
+<script>
+
+var players = [
+{
+"name": "Demetrious Johnson",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Wrestling, Kickboxing",
+"team": "American Top Team",
+"coach": "Matt Hume",
+"nationality": "American",
+"wins": 30,
+"losses": 3,
+"draws": 1,
+"overall": 95,
+"knockouts": 11,
+"submissions": 12,
+"decision_victory": 7,
+"age": 35,
+"height": 63,
+"weight": 125,
+"slpm": 3.64,
+"striking_accuracy": 0.48,
+"sapm": 1.93,
+"striking_defense": 0.66,
+"takedowns_per_15_minutes": 3.23,
+"takedown_accuracy": 0.57,
+"takedown_defense": 0.86,
+"submission_attempts_per_15_minutes": 1.8,
+"average_fight_time": 20,
+"standing": 45,
+"clinch": 30,
+"ground": 25
+},
+{
+"name": "Joseph Benavidez",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Wrestling, Muay Thai",
+"team": "Alpha Male",
+"coach": "Urijah Faber",
+"nationality": "American",
+"wins": 28,
+"losses": 8,
+"draws": 0,
+"overall": 86,
+"knockouts": 7,
+"submissions": 10,
+"decision_victory": 11,
+"age": 34,
+"height": 64,
+"weight": 125,
+"slpm": 3.41,
+"striking_accuracy": 0.44,
+"sapm": 2.05,
+"striking_defense": 0.61,
+"takedowns_per_15_minutes": 2.74,
+"takedown_accuracy": 0.47,
+"takedown_defense": 0.75,
+"submission_attempts_per_15_minutes": 1.2,
+"average_fight_time": 18,
+"standing": 40,
+"clinch": 35,
+"ground": 25
+},
+{
+"name": "Henry Cejudo",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Wrestling, Boxing",
+"team": "Fight Ready",
+"coach": "Eric Albarracin",
+"nationality": "American",
+"wins": 16,
+"losses": 2,
+"draws": 0,
+"overall": 92,
+"knockouts": 8,
+"submissions": 2,
+"decision_victory": 6,
+"age": 35,
+"height": 64,
+"weight": 125,
+"slpm": 3.12,
+"striking_accuracy": 0.42,
+"sapm": 2.06,
+"striking_defense": 0.62,
+"takedowns_per_15_minutes": 3.5,
+"takedown_accuracy": 0.64,
+"takedown_defense": 0.89,
+"submission_attempts_per_15_minutes": 0.6,
+"average_fight_time": 16,
+"standing": 35,
+"clinch": 40,
+"ground": 25
+},
+{
+"name": "Deiveson Figueiredo",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Muay Thai",
+"team": "Team Alpha Male",
+"coach": "Cleiton 'Predator'",
+"nationality": "Brazilian",
+"wins": 20,
+"losses": 2,
+"draws": 1,
+"overall": 92,
+"knockouts": 9,
+"submissions": 7,
+"decision_victory": 4,
+"age": 33,
+"height": 63,
+"weight": 125,
+"slpm": 3.67,
+"striking_accuracy": 0.52,
+"sapm": 2.12,
+"striking_defense": 0.65,
+"takedowns_per_15_minutes": 1.8,
+"takedown_accuracy": 0.38,
+"takedown_defense": 0.76,
+"submission_attempts_per_15_minutes": 1.5,
+"average_fight_time": 19,
+"standing": 40,
+"clinch": 30,
+"ground": 30
+},
+{
+"name": "John Moraga",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Wrestling, Boxing",
+"team": "Arizona Combat Sports",
+"coach": "Trevor Lally",
+"nationality": "American",
+"wins": 19,
+"losses": 7,
+"draws": 0,
+"overall": 78,
+"knockouts": 4,
+"submissions": 9,
+"decision_victory": 6,
+"age": 38,
+"height": 65,
+"weight": 125,
+"slpm": 3.15,
+"striking_accuracy": 0.43,
+"sapm": 2.55,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 1.89,
+"takedown_accuracy": 0.48,
+"takedown_defense": 0.68,
+"submission_attempts_per_15_minutes": 1.1,
+"average_fight_time": 17,
+"standing": 40,
+"clinch": 25,
+"ground": 35
+},
+{
+"name": "Jussier Formiga",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Boxing",
+"team": "Nova Uniao",
+"coach": "Andre Pederneiras",
+"nationality": "Brazilian",
+"wins": 23,
+"losses": 9,
+"draws": 0,
+"overall": 79,
+"knockouts": 2,
+"submissions": 9,
+"decision_victory": 12,
+"age": 36,
+"height": 64,
+"weight": 125,
+"slpm": 2.19,
+"striking_accuracy": 0.37,
+"sapm": 1.76,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 2.53,
+"takedown_accuracy": 0.32,
+"takedown_defense": 0.6,
+"submission_attempts_per_15_minutes": 1.3,
+"average_fight_time": 16,
+"standing": 35,
+"clinch": 35,
+"ground": 30
+},
+{
+"name": "Alexandre Pantoja",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Muay Thai",
+"team": "American Top Team",
+"coach": "Katel Kubis",
+"nationality": "Brazilian",
+"wins": 23,
+"losses": 6,
+"draws": 0,
+"overall": 84,
+"knockouts": 9,
+"submissions": 7,
+"decision_victory": 7,
+"age": 31,
+"height": 65,
+"weight": 125,
+"slpm": 2.53,
+"striking_accuracy": 0.43,
+"sapm": 2.21,
+"striking_defense": 0.59,
+"takedowns_per_15_minutes": 2.07,
+"takedown_accuracy": 0.44,
+"takedown_defense": 0.79,
+"submission_attempts_per_15_minutes": 1.1,
+"average_fight_time": 17,
+"standing": 40,
+"clinch": 25,
+"ground": 35
+},
+{
+"name": "Ray Borg",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Boxing",
+"team": "Jackson Wink MMA",
+"coach": "Brandon Gibson",
+"nationality": "American",
+"wins": 13,
+"losses": 5,
+"draws": 0,
+"overall": 65,
+"knockouts": 1,
+"submissions": 6,
+"decision_victory": 6,
+"age": 28,
+"height": 64,
+"weight": 125,
+"slpm": 2.36,
+"striking_accuracy": 0.37,
+"sapm": 2.77,
+"striking_defense": 0.56,
+"takedowns_per_15_minutes": 2.5,
+"takedown_accuracy": 0.41,
+"takedown_defense": 0.52,
+"submission_attempts_per_15_minutes": 1.5,
+"average_fight_time": 16,
+"standing": 30,
+"clinch": 40,
+"ground": 30
+},
+{
+"name": "Tim Elliott",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Wrestling, Jiu-Jitsu",
+"team": "Glory MMA & Fitness",
+"coach": "James Krause",
+"nationality": "American",
+"wins": 18,
+"losses": 12,
+"draws": 1,
+"overall": 78,
+"knockouts": 2,
+"submissions": 8,
+"decision_victory": 8,
+"age": 35,
+"height": 68,
+"weight": 125,
+"slpm": 2.5,
+"striking_accuracy": 0.41,
+"sapm": 3.53,
+"striking_defense": 0.54,
+"takedowns_per_15_minutes": 3.73,
+"takedown_accuracy": 0.44,
+"takedown_defense": 0.48,
+"submission_attempts_per_15_minutes": 2.2,
+"average_fight_time": 18,
+"standing": 40,
+"clinch": 25,
+"ground": 35
+},
+{
+"name": "Brandon Moreno",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Boxing",
+"team": "Entram Gym",
+"coach": "Juvenal Avila",
+"nationality": "Mexican",
+"wins": 20,
+"losses": 6,
+"draws": 2,
+"overall": 88,
+"knockouts": 5,
+"submissions": 9,
+"decision_victory": 6,
+"age": 28,
+"height": 65,
+"weight": 125,
+"slpm": 2.65,
+"striking_accuracy": 0.43,
+"sapm": 2.5,
+"striking_defense": 0.61,
+"takedowns_per_15_minutes": 2.7,
+"takedown_accuracy": 0.42,
+"takedown_defense": 0.76,
+"submission_attempts_per_15_minutes": 2.1,
+"average_fight_time": 19,
+"standing": 40,
+"clinch": 30,
+"ground": 30
+},
+{
+"name": "Wilson Reis",
+"weight_class": "Flyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Boxing",
+"team": "Alliance MMA",
+"coach": "Lloyd Irvin",
+"nationality": "Brazilian",
+"wins": 23,
+"losses": 10,
+"draws": 0,
+"overall": 79,
+"knockouts": 3,
+"submissions": 9,
+"decision_victory": 11,
+"age": 34,
+"height": 64,
+"weight": 125,
+"slpm": 1.97,
+"striking_accuracy": 0.35,
+"sapm": 1.95,
+"striking_defense": 0.54,
+"takedowns_per_15_minutes": 3.07,
+"takedown_accuracy": 0.41,
+"takedown_defense": 0.71,
+"submission_attempts_per_15_minutes": 1.6,
+"average_fight_time": 16,
+"standing": 35,
+"clinch": 30,
+"ground": 35
+},
+{
+"name": "TJ Dillashaw",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Muay Thai, Wrestling",
+"team": "Elevation Fight Team",
+"coach": "Duane Ludwig",
+"nationality": "American",
+"wins": 16,
+"losses": 4,
+"draws": 0,
+"overall": 84,
+"knockouts": 8,
+"submissions": 3,
+"decision_victory": 5,
+"age": 35,
+"height": 66,
+"weight": 135,
+"slpm": 4.54,
+"striking_accuracy": 0.43,
+"sapm": 2.95,
+"striking_defense": 0.62,
+"takedowns_per_15_minutes": 2.67,
+"takedown_accuracy": 0.39,
+"takedown_defense": 0.75,
+"submission_attempts_per_15_minutes": 0.9,
+"average_fight_time": 18,
+"standing": 45,
+"clinch": 25,
+"ground": 30
+},
+{
+"name": "Aljamain Sterling",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Wrestling, Brazilian Jiu-Jitsu",
+"team": "Serra-Longo Fight Team",
+"coach": "Matt Serra, Ray Longo",
+"nationality": "American",
+"wins": 20,
+"losses": 3,
+"draws": 0,
+"overall": 90,
+"knockouts": 3,
+"submissions": 9,
+"decision_victory": 8,
+"age": 32,
+"height": 67,
+"weight": 135,
+"slpm": 3.22,
+"striking_accuracy": 0.49,
+"sapm": 2.58,
+"striking_defense": 0.66,
+"takedowns_per_15_minutes": 2.89,
+"takedown_accuracy": 0.42,
+"takedown_defense": 0.85,
+"submission_attempts_per_15_minutes": 1.8,
+"average_fight_time": 17,
+"standing": 35,
+"clinch": 30,
+"ground": 35
+},
+{
+"name": "Petr Yan",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Boxing, Muay Thai",
+"team": "Tiger Muay Thai",
+"coach": "Mike Brown",
+"nationality": "Russian",
+"wins": 16,
+"losses": 2,
+"draws": 0,
+"overall": 92,
+"knockouts": 8,
+"submissions": 1,
+"decision_victory": 7,
+"age": 29,
+"height": 67,
+"weight": 135,
+"slpm": 5.04,
+"striking_accuracy": 0.45,
+"sapm": 2.36,
+"striking_defense": 0.65,
+"takedowns_per_15_minutes": 0.79,
+"takedown_accuracy": 0.32,
+"takedown_defense": 0.88,
+"submission_attempts_per_15_minutes": 0.3,
+"average_fight_time": 15,
+"standing": 45,
+"clinch": 25,
+"ground": 30
+},
+{
+"name": "Cory Sandhagen",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Striking, Brazilian Jiu-Jitsu",
+"team": "Elevation Fight Team",
+"coach": "Marc Montoya",
+"nationality": "American",
+"wins": 14,
+"losses": 3,
+"draws": 0,
+"overall": 86,
+"knockouts": 8,
+"submissions": 3,
+"decision_victory": 3,
+"age": 29,
+"height": 70,
+"weight": 135,
+"slpm": 6.18,
+"striking_accuracy": 0.52,
+"sapm": 4.4,
+"striking_defense": 0.62,
+"takedowns_per_15_minutes": 1.75,
+"takedown_accuracy": 0.38,
+"takedown_defense": 0.7,
+"submission_attempts_per_15_minutes": 1.4,
+"average_fight_time": 16,
+"standing": 55,
+"clinch": 20,
+"ground": 25
+},
+{
+"name": "Rob Font",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Boxing, Muay Thai",
+"team": "New England Cartel",
+"coach": "Tyson Chartier",
+"nationality": "American",
+"wins": 19,
+"losses": 5,
+"draws": 0,
+"overall": 79,
+"knockouts": 9,
+"submissions": 3,
+"decision_victory": 7,
+"age": 34,
+"height": 68,
+"weight": 135,
+"slpm": 5.1,
+"striking_accuracy": 0.43,
+"sapm": 3.38,
+"striking_defense": 0.62,
+"takedowns_per_15_minutes": 0.75,
+"takedown_accuracy": 0.31,
+"takedown_defense": 0.88,
+"submission_attempts_per_15_minutes": 0.2,
+"average_fight_time": 17,
+"standing": 55,
+"clinch": 30,
+"ground": 15
+},
+{
+"name": "Jose Aldo",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Muay Thai, Brazilian Jiu-Jitsu",
+"team": "Nova Uniao",
+"coach": "Andre Pederneiras",
+"nationality": "Brazilian",
+"wins": 30,
+"losses": 7,
+"draws": 0,
+"overall": 90,
+"knockouts": 17,
+"submissions": 2,
+"decision_victory": 11,
+"age": 35,
+"height": 67,
+"weight": 135,
+"slpm": 3.42,
+"striking_accuracy": 0.45,
+"sapm": 2.79,
+"striking_defense": 0.66,
+"takedowns_per_15_minutes": 0.77,
+"takedown_accuracy": 0.46,
+"takedown_defense": 0.74,
+"submission_attempts_per_15_minutes": 0.4,
+"average_fight_time": 17,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Pedro Munhoz",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Muay Thai, Brazilian Jiu-Jitsu",
+"team": "American Top Team",
+"coach": "Conan Silveira",
+"nationality": "Brazilian",
+"wins": 19,
+"losses": 6,
+"draws": 0,
+"overall": 80,
+"knockouts": 6,
+"submissions": 7,
+"decision_victory": 6,
+"age": 34,
+"height": 65,
+"weight": 135,
+"slpm": 4.36,
+"striking_accuracy": 0.42,
+"sapm": 3.59,
+"striking_defense": 0.58,
+"takedowns_per_15_minutes": 1.25,
+"takedown_accuracy": 0.37,
+"takedown_defense": 0.58,
+"submission_attempts_per_15_minutes": 1.6,
+"average_fight_time": 16,
+"standing": 45,
+"clinch": 35,
+"ground": 20
+},
+{
+"name": "Frankie Edgar",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Boxing, Wrestling",
+"team": "Ricardo Almeida Jiu-Jitsu",
+"coach": "Mark Henry",
+"nationality": "American",
+"wins": 24,
+"losses": 9,
+"draws": 1,
+"overall": 86,
+"knockouts": 7,
+"submissions": 7,
+"decision_victory": 10,
+"age": 40,
+"height": 66,
+"weight": 135,
+"slpm": 3.09,
+"striking_accuracy": 0.37,
+"sapm": 3.2,
+"striking_defense": 0.63,
+"takedowns_per_15_minutes": 2.28,
+"takedown_accuracy": 0.36,
+"takedown_defense": 0.73,
+"submission_attempts_per_15_minutes": 0.9,
+"average_fight_time": 16,
+"standing": 40,
+"clinch": 30,
+"ground": 30
+},
+{
+"name": "Marlon Moraes",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Muay Thai, Brazilian Jiu-Jitsu",
+"team": "American Top Team",
+"coach": "Ricardo Almeida",
+"nationality": "Brazilian",
+"wins": 23,
+"losses": 8,
+"draws": 1,
+"overall": 86,
+"knockouts": 10,
+"submissions": 6,
+"decision_victory": 7,
+"age": 34,
+"height": 66,
+"weight": 135,
+"slpm": 3.86,
+"striking_accuracy": 0.41,
+"sapm": 2.92,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 1.68,
+"takedown_accuracy": 0.33,
+"takedown_defense": 0.64,
+"submission_attempts_per_15_minutes": 1.2,
+"average_fight_time": 16,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Dominick Cruz",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Boxing, Wrestling",
+"team": "Alliance MMA",
+"coach": "Eric Del Fierro",
+"nationality": "American",
+"wins": 23,
+"losses": 4,
+"draws": 0,
+"overall": 92,
+"knockouts": 6,
+"submissions": 1,
+"decision_victory": 16,
+"age": 36,
+"height": 68,
+"weight": 135,
+"slpm": 3.32,
+"striking_accuracy": 0.35,
+"sapm": 2.53,
+"striking_defense": 0.66,
+"takedowns_per_15_minutes": 1.65,
+"takedown_accuracy": 0.24,
+"takedown_defense": 0.69,
+"submission_attempts_per_15_minutes": 0.5,
+"average_fight_time": 19,
+"standing": 40,
+"clinch": 30,
+"ground": 30
+},
+{
+"name": "Cody Garbrandt",
+"weight_class": "Bantamweight",
+"fighting_style": "MMA, Boxing, Wrestling",
+"team": "Team Alpha Male",
+"coach": "Urijah Faber",
+"nationality": "American",
+"wins": 12,
+"losses": 4,
+"draws": 0,
+"overall": 76,
+"knockouts": 10,
+"submissions": 0,
+"decision_victory": 2,
+"age": 30,
+"height": 66,
+"weight": 135,
+"slpm": 2.96,
+"striking_accuracy": 0.38,
+"sapm": 2.59,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 1.23,
+"takedown_accuracy": 0.46,
+"takedown_defense": 0.63,
+"submission_attempts_per_15_minutes": 0.2,
+"average_fight_time": 14,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Alexander Volkanovski",
+"weight_class": "Featherweight",
+"fighting_style": "MMA, Boxing, Kickboxing",
+"team": "City Kickboxing",
+"coach": "Eugene Bareman",
+"nationality": "Australian",
+"wins": 22,
+"losses": 1,
+"draws": 0,
+"overall": 95,
+"knockouts": 11,
+"submissions": 3,
+"decision_victory": 8,
+"age": 32,
+"height": 67,
+"weight": 145,
+"slpm": 6.38,
+"striking_accuracy": 0.55,
+"sapm": 3.34,
+"striking_defense": 0.67,
+"takedowns_per_15_minutes": 2.15,
+"takedown_accuracy": 0.42,
+"takedown_defense": 0.85,
+"submission_attempts_per_15_minutes": 0.6,
+"average_fight_time": 17,
+"standing": 45,
+"clinch": 30,
+"ground": 25
+},
+{
+"name": "Max Holloway",
+"weight_class": "Featherweight",
+"fighting_style": "MMA, Boxing, Kickboxing",
+"team": "Gracie Technics",
+"coach": "Ivan Flores",
+"nationality": "American",
+"wins": 22,
+"losses": 6,
+"draws": 0,
+"overall": 88,
+"knockouts": 10,
+"submissions": 2,
+"decision_victory": 10,
+"age": 29,
+"height": 71,
+"weight": 145,
+"slpm": 6.9,
+"striking_accuracy": 0.46,
+"sapm": 4.82,
+"striking_defense": 0.62,
+"takedowns_per_15_minutes": 0.66,
+"takedown_accuracy": 0.34,
+"takedown_defense": 0.81,
+"submission_attempts_per_15_minutes": 0.3,
+"average_fight_time": 18,
+"standing": 55,
+"clinch": 20,
+"ground": 25
+},
+{
+"name": "Brian Ortega",
+"weight_class": "Featherweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Boxing",
+"team": "Black House MMA",
+"coach": "Rener Gracie",
+"nationality": "American",
+"wins": 15,
+"losses": 1,
+"draws": 0,
+"overall": 94,
+"knockouts": 4,
+"submissions": 9,
+"decision_victory": 2,
+"age": 30,
+"height": 70,
+"weight": 145,
+"slpm": 4.13,
+"striking_accuracy": 0.38,
+"sapm": 3.47,
+"striking_defense": 0.63,
+"takedowns_per_15_minutes": 1.4,
+"takedown_accuracy": 0.36,
+"takedown_defense": 0.75,
+"submission_attempts_per_15_minutes": 1.9,
+"average_fight_time": 16,
+"standing": 35,
+"clinch": 30,
+"ground": 35
+},
+{
+"name": "Zabit Magomedsharipov",
+"weight_class": "Featherweight",
+"fighting_style": "MMA, Sanda, Brazilian Jiu-Jitsu",
+"team": "American Kickboxing Academy",
+"coach": "Javier Mendez",
+"nationality": "Russian",
+"wins": 18,
+"losses": 1,
+"draws": 0,
+"overall": 93,
+"knockouts": 6,
+"submissions": 6,
+"decision_victory": 6,
+"age": 30,
+"height": 75,
+"weight": 145,
+"slpm": 4.57,
+"striking_accuracy": 0.45,
+"sapm": 2.28,
+"striking_defense": 0.67,
+"takedowns_per_15_minutes": 3.34,
+"takedown_accuracy": 0.53,
+"takedown_defense": 0.87,
+"submission_attempts_per_15_minutes": 1.6,
+"average_fight_time": 17,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Yair Rodriguez",
+"weight_class": "Featherweight",
+"fighting_style": "MMA, Taekwondo, Brazilian Jiu-Jitsu",
+"team": "Jackson Wink MMA",
+"coach": "Mike Valle",
+"nationality": "Mexican",
+"wins": 13,
+"losses": 3,
+"draws": 0,
+"overall": 81,
+"knockouts": 4,
+"submissions": 6,
+"decision_victory": 3,
+"age": 29,
+"height": 71,
+"weight": 145,
+"slpm": 4.29,
+"striking_accuracy": 0.42,
+"sapm": 2.72,
+"striking_defense": 0.65,
+"takedowns_per_15_minutes": 0.76,
+"takedown_accuracy": 0.31,
+"takedown_defense": 0.72,
+"submission_attempts_per_15_minutes": 1.8,
+"average_fight_time": 18,
+"standing": 45,
+"clinch": 30,
+"ground": 25
+},
+{
+"name": "Chan Sung Jung",
+"weight_class": "Featherweight",
+"fighting_style": "MMA, Taekwondo, Brazilian Jiu-Jitsu",
+"team": "Korean Zombie MMA",
+"coach": "Lee Chang-Seob",
+"nationality": "South Korean",
+"wins": 17,
+"losses": 6,
+"draws": 0,
+"overall": 80,
+"knockouts": 9,
+"submissions": 6,
+"decision_victory": 2,
+"age": 34,
+"height": 69,
+"weight": 145,
+"slpm": 4.31,
+"striking_accuracy": 0.40,
+"sapm": 3.19,
+"striking_defense": 0.63,
+"takedowns_per_15_minutes": 0.83,
+"takedown_accuracy": 0.33,
+"takedown_defense": 0.65,
+"submission_attempts_per_15_minutes": 1.7,
+"average_fight_time": 17,
+"standing": 45,
+"clinch": 30,
+"ground": 25
+},
+{
+"name": "Josh Emmett",
+"weight_class": "Featherweight",
+"fighting_style": "MMA, Boxing, Wrestling",
+"team": "Team Alpha Male",
+"coach": "Urijah Faber",
+"nationality": "American",
+"wins": 16,
+"losses": 2,
+"draws": 0,
+"overall": 89,
+"knockouts": 9,
+"submissions": 1,
+"decision_victory": 6,
+"age": 36,
+"height": 67,
+"weight": 145,
+"slpm": 4.66,
+"striking_accuracy": 0.37,
+"sapm": 3.68,
+"striking_defense": 0.59,
+"takedowns_per_15_minutes": 0.85,
+"takedown_accuracy": 0.40,
+"takedown_defense": 0.75,
+"submission_attempts_per_15_minutes": 0.3,
+"average_fight_time": 14,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Calvin Kattar",
+"weight_class": "Featherweight",
+"fighting_style": "MMA, Boxing, Muay Thai",
+"team": "MMA Gold Fight Team",
+"coach": "Bob McNeil",
+"nationality": "American",
+"wins": 22,
+"losses": 5,
+"draws": 0,
+"overall": 83,
+"knockouts": 12,
+"submissions": 2,
+"decision_victory": 8,
+"age": 33,
+"height": 71,
+"weight": 145,
+"slpm": 5.95,
+"striking_accuracy": 0.39,
+"sapm": 3.82,
+"striking_defense": 0.61,
+"takedowns_per_15_minutes": 0.84,
+"takedown_accuracy": 0.33,
+"takedown_defense": 0.76,
+"submission_attempts_per_15_minutes": 0.2,
+"average_fight_time": 15,
+"standing": 55,
+"clinch": 30,
+"ground": 15
+},
+{
+"name": "Jeremy Stephens",
+"weight_class": "Featherweight",
+"fighting_style": "MMA, Boxing, Wrestling",
+"team": "Alliance MMA",
+"coach": "Eric Del Fierro",
+"nationality": "American",
+"wins": 28,
+"losses": 18,
+"draws": 0,
+"overall": 86,
+"knockouts": 19,
+"submissions": 2,
+"decision_victory": 7,
+"age": 35,
+"height": 67,
+"weight": 145,
+"slpm": 3.18,
+"striking_accuracy": 0.38,
+"sapm": 3.02,
+"striking_defense": 0.59,
+"takedowns_per_15_minutes": 0.52,
+"takedown_accuracy": 0.31,
+"takedown_defense": 0.58,
+"submission_attempts_per_15_minutes": 0.6,
+"average_fight_time": 15,
+"standing": 55,
+"clinch": 30,
+"ground": 15
+},
+{
+"name": "Khabib Nurmagomedov",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Sambo",
+"team": "American Kickboxing Academy",
+"coach": "Javier Mendez",
+"nationality": "Russian",
+"wins": 29,
+"losses": 0,
+"draws": 0,
+"overall": 100,
+"knockouts": 8,
+"submissions": 11,
+"decision_victory": 10,
+"age": 32,
+"height": 70,
+"weight": 155,
+"slpm": 4.68,
+"striking_accuracy": 0.50,
+"sapm": 1.70,
+"striking_defense": 0.68,
+"takedowns_per_15_minutes": 5.35,
+"takedown_accuracy": 0.45,
+"takedown_defense": 0.84,
+"submission_attempts_per_15_minutes": 1.60,
+"average_fight_time": 15,
+"standing": 30,
+"clinch": 40,
+"ground": 30
+},
+{
+"name": "Charles Oliveira",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Muay Thai",
+"team": "Chute Boxe Diego Lima",
+"coach": "Diego Lima",
+"nationality": "Brazilian",
+"wins": 31,
+"losses": 8,
+"draws": 0,
+"overall": 92,
+"knockouts": 9,
+"submissions": 19,
+"decision_victory": 3,
+"age": 31,
+"height": 70,
+"weight": 155,
+"slpm": 2.68,
+"striking_accuracy": 0.52,
+"sapm": 2.95,
+"striking_defense": 0.60,
+"takedowns_per_15_minutes": 2.77,
+"takedown_accuracy": 0.35,
+"takedown_defense": 0.75,
+"submission_attempts_per_15_minutes": 2.60,
+"average_fight_time": 17,
+"standing": 35,
+"clinch": 30,
+"ground": 35
+},
+{
+"name": "Dustin Poirier",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Boxing, Brazilian Jiu-Jitsu",
+"team": "American Top Team",
+"coach": "Mike Brown",
+"nationality": "American",
+"wins": 28,
+"losses": 6,
+"draws": 1,
+"overall": 91,
+"knockouts": 13,
+"submissions": 7,
+"decision_victory": 8,
+"age": 32,
+"height": 69,
+"weight": 155,
+"slpm": 5.56,
+"striking_accuracy": 0.50,
+"sapm": 3.80,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 1.44,
+"takedown_accuracy": 0.37,
+"takedown_defense": 0.66,
+"submission_attempts_per_15_minutes": 0.70,
+"average_fight_time": 17,
+"standing": 55,
+"clinch": 30,
+"ground": 15
+},
+{
+"name": "Justin Gaethje",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Wrestling, Boxing",
+"team": "Trevor Wittman's MMA Gym",
+"coach": "Trevor Wittman",
+"nationality": "American",
+"wins": 22,
+"losses": 4,
+"draws": 0,
+"overall": 88,
+"knockouts": 19,
+"submissions": 1,
+"decision_victory": 2,
+"age": 33,
+"height": 71,
+"weight": 155,
+"slpm": 7.74,
+"striking_accuracy": 0.59,
+"sapm": 10.01,
+"striking_defense": 0.55,
+"takedowns_per_15_minutes": 0.64,
+"takedown_accuracy": 0.53,
+"takedown_defense": 0.78,
+"submission_attempts_per_15_minutes": 0.3,
+"average_fight_time": 11,
+"standing": 75,
+"clinch": 15,
+"ground": 10
+},
+{
+"name": "Tony Ferguson",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Boxing, Brazilian Jiu-Jitsu",
+"team": "10th Planet Jiu-Jitsu",
+"coach": "Eddie Bravo",
+"nationality": "American",
+"wins": 26,
+"losses": 6,
+"draws": 0,
+"overall": 87,
+"knockouts": 12,
+"submissions": 9,
+"decision_victory": 5,
+"age": 37,
+"height": 71,
+"weight": 155,
+"slpm": 5.83,
+"striking_accuracy": 0.45,
+"sapm": 3.98,
+"striking_defense": 0.62,
+"takedowns_per_15_minutes": 0.80,
+"takedown_accuracy": 0.37,
+"takedown_defense": 0.79,
+"submission_attempts_per_15_minutes": 2.30,
+"average_fight_time": 17,
+"standing": 55,
+"clinch": 20,
+"ground": 25
+},
+{
+"name": "Conor McGregor",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Boxing",
+"team": "SBG Ireland",
+"coach": "John Kavanagh",
+"nationality": "Irish",
+"wins": 22,
+"losses": 6,
+"draws": 0,
+"overall": 88,
+"knockouts": 19,
+"submissions": 1,
+"decision_victory": 2,
+"age": 33,
+"height": 69,
+"weight": 155,
+"slpm": 5.34,
+"striking_accuracy": 0.49,
+"sapm": 4.04,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 0.76,
+"takedown_accuracy": 0.61,
+"takedown_defense": 0.68,
+"submission_attempts_per_15_minutes": 0.3,
+"average_fight_time": 11,
+"standing": 80,
+"clinch": 10,
+"ground": 10
+},
+{
+"name": "Michael Chandler",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Wrestling, Boxing",
+"team": "Sanford MMA",
+"coach": "Henry Hooft",
+"nationality": "American",
+"wins": 22,
+"losses": 6,
+"draws": 0,
+"overall": 88,
+"knockouts": 10,
+"submissions": 7,
+"decision_victory": 5,
+"age": 35,
+"height": 68,
+"weight": 155,
+"slpm": 4.25,
+"striking_accuracy": 0.48,
+"sapm": 3.07,
+"striking_defense": 0.60,
+"takedowns_per_15_minutes": 1.57,
+"takedown_accuracy": 0.50,
+"takedown_defense": 0.66,
+"submission_attempts_per_15_minutes": 0.70,
+"average_fight_time": 14,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Islam Makhachev",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Sambo",
+"team": "American Kickboxing Academy",
+"coach": "Javier Mendez",
+"nationality": "Russian",
+"wins": 20,
+"losses": 1,
+"draws": 0,
+"overall": 95,
+"knockouts": 1,
+"submissions": 9,
+"decision_victory": 10,
+"age": 30,
+"height": 70,
+"weight": 155,
+"slpm": 2.67,
+"striking_accuracy": 0.49,
+"sapm": 1.65,
+"striking_defense": 0.63,
+"takedowns_per_15_minutes": 6.09,
+"takedown_accuracy": 0.58,
+"takedown_defense": 0.85,
+"submission_attempts_per_15_minutes": 1.10,
+"average_fight_time": 15,
+"standing": 30,
+"clinch": 30,
+"ground": 40
+},
+{
+"name": "Paul Felder",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "Team Elevation",
+"coach": "Eliot Marshall",
+"nationality": "American",
+"wins": 17,
+"losses": 6,
+"draws": 0,
+"overall": 84,
+"knockouts": 10,
+"submissions": 1,
+"decision_victory": 6,
+"age": 37,
+"height": 70,
+"weight": 155,
+"slpm": 3.72,
+"striking_accuracy": 0.41,
+"sapm": 3.39,
+"striking_defense": 0.58,
+"takedowns_per_15_minutes": 0.54,
+"takedown_accuracy": 0.32,
+"takedown_defense": 0.65,
+"submission_attempts_per_15_minutes": 0.2,
+"average_fight_time": 16,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Beneil Dariush",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Kings MMA",
+"coach": "Rafael Cordeiro",
+"nationality": "American",
+"wins": 21,
+"losses": 5,
+"draws": 1,
+"overall": 86,
+"knockouts": 4,
+"submissions": 10,
+"decision_victory": 7,
+"age": 32,
+"height": 70,
+"weight": 155,
+"slpm": 4.14,
+"striking_accuracy": 0.46,
+"sapm": 3.05,
+"striking_defense": 0.58,
+"takedowns_per_15_minutes": 1.79,
+"takedown_accuracy": 0.45,
+"takedown_defense": 0.69,
+"submission_attempts_per_15_minutes": 2.10,
+"average_fight_time": 15,
+"standing": 40,
+"clinch": 30,
+"ground": 30
+},
+{
+"name": "Diego Ferreira",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Muay Thai",
+"team": "Fortis MMA",
+"coach": "Sayif Saud",
+"nationality": "Brazilian",
+"wins": 18,
+"losses": 4,
+"draws": 0,
+"overall": 82,
+"knockouts": 6,
+"submissions": 8,
+"decision_victory": 4,
+"age": 36,
+"height": 68,
+"weight": 155,
+"slpm": 3.27,
+"striking_accuracy": 0.43,
+"sapm": 2.94,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 2.57,
+"takedown_accuracy": 0.50,
+"takedown_defense": 0.72,
+"submission_attempts_per_15_minutes": 2.30,
+"average_fight_time": 14,
+"standing": 35,
+"clinch": 30,
+"ground": 35
+},
+{
+"name": "Rafael dos Anjos",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Muay Thai",
+"team": "Kings MMA",
+"coach": "Rafael Cordeiro",
+"nationality": "Brazilian",
+"wins": 30,
+"losses": 13,
+"draws": 0,
+"overall": 87,
+"knockouts": 10,
+"submissions": 10,
+"decision_victory": 10,
+"age": 36,
+"height": 68,
+"weight": 155,
+"slpm": 3.10,
+"striking_accuracy": 0.42,
+"sapm": 3.05,
+"striking_defense": 0.60,
+"takedowns_per_15_minutes": 2.49,
+"takedown_accuracy": 0.40,
+"takedown_defense": 0.63,
+"submission_attempts_per_15_minutes": 1.50,
+"average_fight_time": 17,
+"standing": 40,
+"clinch": 30,
+"ground": 30
+},
+{
+"name": "Dan Hooker",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Muay Thai",
+"team": "City Kickboxing",
+"coach": "Eugene Bareman",
+"nationality": "New Zealand",
+"wins": 20,
+"losses": 10,
+"draws": 0,
+"overall": 80,
+"knockouts": 10,
+"submissions": 7,
+"decision_victory": 3,
+"age": 31,
+"height": 72,
+"weight": 155,
+"slpm": 4.64,
+"striking_accuracy": 0.46,
+"sapm": 4.38,
+"striking_defense": 0.55,
+"takedowns_per_15_minutes": 0.46,
+"takedown_accuracy": 0.33,
+"takedown_defense": 0.67,
+"submission_attempts_per_15_minutes": 0.80,
+"average_fight_time": 15,
+"standing": 55,
+"clinch": 30,
+"ground": 15
+},
+{
+"name": "Gregor Gillespie",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Wrestling",
+"team": "Bellmore Kickboxing MMA",
+"coach": "Keith Trimble",
+"nationality": "American",
+"wins": 14,
+"losses": 1,
+"draws": 0,
+"overall": 93,
+"knockouts": 6,
+"submissions": 6,
+"decision_victory": 2,
+"age": 34,
+"height": 68,
+"weight": 155,
+"slpm": 4.96,
+"striking_accuracy": 0.58,
+"sapm": 1.59,
+"striking_defense": 0.70,
+"takedowns_per_15_minutes": 9.60,
+"takedown_accuracy": 0.65,
+"takedown_defense": 0.71,
+"submission_attempts_per_15_minutes": 0.70,
+"average_fight_time": 11,
+"standing": 30,
+"clinch": 40,
+"ground": 30
+},
+{
+"name": "Carlos Diego Ferreira",
+"weight_class": "Lightweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Brazilian Top Team",
+"coach": "Jair Lourenco",
+"nationality": "Brazilian",
+"wins": 17,
+"losses": 4,
+"draws": 0,
+"overall": 82,
+"knockouts": 5,
+"submissions": 9,
+"decision_victory": 3,
+"age": 36,
+"height": 69,
+"weight": 155,
+"slpm": 3.11,
+"striking_accuracy": 0.46,
+"sapm": 2.57,
+"striking_defense": 0.63,
+"takedowns_per_15_minutes": 2.49,
+"takedown_accuracy": 0.48,
+"takedown_defense": 0.50,
+"submission_attempts_per_15_minutes": 2.40,
+"average_fight_time": 15,
+"standing": 35,
+"clinch": 35,
+"ground": 30
+},
+{
+"name": "Kamaru Usman",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Wrestling",
+"team": "Sanford MMA",
+"coach": "Henry Hooft",
+"nationality": "Nigerian",
+"wins": 19,
+"losses": 1,
+"draws": 0,
+"overall": 96,
+"knockouts": 9,
+"submissions": 1,
+"decision_victory": 9,
+"age": 34,
+"height": 72,
+"weight": 170,
+"slpm": 4.38,
+"striking_accuracy": 0.54,
+"sapm": 2.06,
+"striking_defense": 0.60,
+"takedowns_per_15_minutes": 3.40,
+"takedown_accuracy": 0.51,
+"takedown_defense": 0.93,
+"submission_attempts_per_15_minutes": 0.60,
+"average_fight_time": 18,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Colby Covington",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Wrestling",
+"team": "American Top Team",
+"coach": "Mike Brown",
+"nationality": "American",
+"wins": 16,
+"losses": 3,
+"draws": 0,
+"overall": 88,
+"knockouts": 2,
+"submissions": 6,
+"decision_victory": 8,
+"age": 33,
+"height": 71,
+"weight": 170,
+"slpm": 3.73,
+"striking_accuracy": 0.39,
+"sapm": 2.42,
+"striking_defense": 0.64,
+"takedowns_per_15_minutes": 4.88,
+"takedown_accuracy": 0.51,
+"takedown_defense": 0.69,
+"submission_attempts_per_15_minutes": 0.60,
+"average_fight_time": 16,
+"standing": 40,
+"clinch": 40,
+"ground": 20
+},
+{
+"name": "Leon Edwards",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "Renegade Jiu-Jitsu",
+"coach": "Colin Heron",
+"nationality": "English",
+"wins": 19,
+"losses": 3,
+"draws": 0,
+"overall": 85,
+"knockouts": 6,
+"submissions": 4,
+"decision_victory": 9,
+"age": 30,
+"height": 72,
+"weight": 170,
+"slpm": 2.86,
+"striking_accuracy": 0.46,
+"sapm": 2.01,
+"striking_defense": 0.64,
+"takedowns_per_15_minutes": 1.96,
+"takedown_accuracy": 0.47,
+"takedown_defense": 0.70,
+"submission_attempts_per_15_minutes": 0.30,
+"average_fight_time": 18,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Gilbert Burns",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Sanford MMA",
+"coach": "Henry Hooft",
+"nationality": "Brazilian",
+"wins": 20,
+"losses": 4,
+"draws": 0,
+"overall": 88,
+"knockouts": 6,
+"submissions": 10,
+"decision_victory": 4,
+"age": 35,
+"height": 70,
+"weight": 170,
+"slpm": 3.18,
+"striking_accuracy": 0.51,
+"sapm": 2.39,
+"striking_defense": 0.59,
+"takedowns_per_15_minutes": 2.35,
+"takedown_accuracy": 0.44,
+"takedown_defense": 0.68,
+"submission_attempts_per_15_minutes": 1.80,
+"average_fight_time": 16,
+"standing": 40,
+"clinch": 30,
+"ground": 30
+},
+{
+"name": "Michael Chiesa",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Gladiator MMA",
+"coach": "Rick Little",
+"nationality": "American",
+"wins": 18,
+"losses": 5,
+"draws": 0,
+"overall": 86,
+"knockouts": 2,
+"submissions": 9,
+"decision_victory": 7,
+"age": 33,
+"height": 73,
+"weight": 170,
+"slpm": 2.71,
+"striking_accuracy": 0.46,
+"sapm": 1.75,
+"striking_defense": 0.61,
+"takedowns_per_15_minutes": 3.02,
+"takedown_accuracy": 0.45,
+"takedown_defense": 0.67,
+"submission_attempts_per_15_minutes": 2.70,
+"average_fight_time": 16,
+"standing": 30,
+"clinch": 40,
+"ground": 30
+},
+{
+"name": "Stephen Thompson",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Karate",
+"team": "Upstate Karate",
+"coach": "Ray Thompson",
+"nationality": "American",
+"wins": 16,
+"losses": 5,
+"draws": 1,
+"overall": 80,
+"knockouts": 7,
+"submissions": 0,
+"decision_victory": 9,
+"age": 38,
+"height": 72,
+"weight": 170,
+"slpm": 3.77,
+"striking_accuracy": 0.44,
+"sapm": 2.62,
+"striking_defense": 0.65,
+"takedowns_per_15_minutes": 0.32,
+"takedown_accuracy": 0.36,
+"takedown_defense": 0.82,
+"submission_attempts_per_15_minutes": 0.00,
+"average_fight_time": 15,
+"standing": 80,
+"clinch": 10,
+"ground": 10
+},
+{
+"name": "Vicente Luque",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Cerrado MMA",
+"coach": "Rafael Alves",
+"nationality": "Brazilian",
+"wins": 21,
+"losses": 8,
+"draws": 1,
+"overall": 82,
+"knockouts": 11,
+"submissions": 8,
+"decision_victory": 2,
+"age": 29,
+"height": 71,
+"weight": 170,
+"slpm": 4.33,
+"striking_accuracy": 0.51,
+"sapm": 3.01,
+"striking_defense": 0.61,
+"takedowns_per_15_minutes": 1.40,
+"takedown_accuracy": 0.46,
+"takedown_defense": 0.59,
+"submission_attempts_per_15_minutes": 1.70,
+"average_fight_time": 13,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Neil Magny",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Elevation Fight Team",
+"coach": "Eliot Marshall",
+"nationality": "American",
+"wins": 24,
+"losses": 9,
+"draws": 0,
+"overall": 83,
+"knockouts": 7,
+"submissions": 5,
+"decision_victory": 12,
+"age": 34,
+"height": 73,
+"weight": 170,
+"slpm": 3.43,
+"striking_accuracy": 0.45,
+"sapm": 2.57,
+"striking_defense": 0.61,
+"takedowns_per_15_minutes": 2.79,
+"takedown_accuracy": 0.46,
+"takedown_defense": 0.57,
+"submission_attempts_per_15_minutes": 0.70,
+"average_fight_time": 16,
+"standing": 40,
+"clinch": 30,
+"ground": 30
+},
+{
+"name": "Geoff Neal",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "Fortis MMA",
+"coach": "Sayif Saud",
+"nationality": "American",
+"wins": 13,
+"losses": 4,
+"draws": 0,
+"overall": 82,
+"knockouts": 10,
+"submissions": 1,
+"decision_victory": 2,
+"age": 31,
+"height": 71,
+"weight": 170,
+"slpm": 4.31,
+"striking_accuracy": 0.50,
+"sapm": 3.47,
+"striking_defense": 0.55,
+"takedowns_per_15_minutes": 0.00,
+"takedown_accuracy": 0.00,
+"takedown_defense": 0.66,
+"submission_attempts_per_15_minutes": 0.00,
+"average_fight_time": 14,
+"standing": 80,
+"clinch": 10,
+"ground": 10
+},
+{
+"name": "Jorge Masvidal",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Boxing",
+"team": "American Top Team",
+"coach": "Mike Brown",
+"nationality": "American",
+"wins": 35,
+"losses": 15,
+"draws": 0,
+"overall": 80,
+"knockouts": 16,
+"submissions": 2,
+"decision_victory": 17,
+"age": 36,
+"height": 71,
+"weight": 170,
+"slpm": 4.22,
+"striking_accuracy": 0.47,
+"sapm": 3.20,
+"striking_defense": 0.59,
+"takedowns_per_15_minutes": 1.62,
+"takedown_accuracy": 0.57,
+"takedown_defense": 0.75,
+"submission_attempts_per_15_minutes": 0.40,
+"average_fight_time": 12,
+"standing": 60,
+"clinch": 30,
+"ground": 10
+},
+{
+"name": "Demian Maia",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Demian Maia Jiu-Jitsu",
+"coach": "Fábio Leopoldo",
+"nationality": "Brazilian",
+"wins": 28,
+"losses": 12,
+"draws": 0,
+"overall": 80,
+"knockouts": 3,
+"submissions": 15,
+"decision_victory": 10,
+"age": 44,
+"height": 74,
+"weight": 170,
+"slpm": 1.86,
+"striking_accuracy": 0.46,
+"sapm": 2.36,
+"striking_defense": 0.61,
+"takedowns_per_15_minutes": 2.42,
+"takedown_accuracy": 0.39,
+"takedown_defense": 0.68,
+"submission_attempts_per_15_minutes": 3.20,
+"average_fight_time": 16,
+"standing": 30,
+"clinch": 20,
+"ground": 50
+},
+{
+"name": "Santiago Ponzinibbio",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "American Top Team",
+"coach": "Mike Brown",
+"nationality": "Argentinian",
+"wins": 28,
+"losses": 4,
+"draws": 0,
+"overall": 85,
+"knockouts": 15,
+"submissions": 2,
+"decision_victory": 11,
+"age": 35,
+"height": 72,
+"weight": 170,
+"slpm": 3.94,
+"striking_accuracy": 0.51,
+"sapm": 2.49,
+"striking_defense": 0.65,
+"takedowns_per_15_minutes": 0.41,
+"takedown_accuracy": 0.28,
+"takedown_defense": 0.63,
+"submission_attempts_per_15_minutes": 0.00,
+"average_fight_time": 14,
+"standing": 80,
+"clinch": 10,
+"ground": 10
+},
+{
+"name": "Nate Diaz",
+"weight_class": "Welterweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Boxing",
+"team": "Cesar Gracie Jiu-Jitsu",
+"coach": "Cesar Gracie",
+"nationality": "American",
+"wins": 20,
+"losses": 13,
+"draws": 0,
+"overall": 80,
+"knockouts": 5,
+"submissions": 12,
+"decision_victory": 3,
+"age": 36,
+"height": 72,
+"weight": 170,
+"slpm": 4.55,
+"striking_accuracy": 0.45,
+"sapm": 3.68,
+"striking_defense": 0.55,
+"takedowns_per_15_minutes": 0.98,
+"takedown_accuracy": 0.29,
+"takedown_defense": 0.61,
+"submission_attempts_per_15_minutes": 1.60,
+"average_fight_time": 17,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Israel Adesanya",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "City Kickboxing",
+"coach": "Eugene Bareman",
+"nationality": "Nigerian",
+"wins": 21,
+"losses": 1,
+"draws": 0,
+"overall": 95,
+"knockouts": 15,
+"submissions": 4,
+"decision_victory": 2,
+"age": 32,
+"height": 76,
+"weight": 185,
+"slpm": 4.15,
+"striking_accuracy": 0.55,
+"sapm": 2.26,
+"striking_defense": 0.68,
+"takedowns_per_15_minutes": 0.67,
+"takedown_accuracy": 0.71,
+"takedown_defense": 0.85,
+"submission_attempts_per_15_minutes": 0.20,
+"average_fight_time": 17,
+"standing": 75,
+"clinch": 20,
+"ground": 5
+},
+{
+"name": "Robert Whittaker",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Hapkido, Boxing",
+"team": "Gracie Technics",
+"coach": "Alex Prates",
+"nationality": "Australian",
+"wins": 23,
+"losses": 5,
+"draws": 0,
+"overall": 87,
+"knockouts": 9,
+"submissions": 5,
+"decision_victory": 9,
+"age": 31,
+"height": 72,
+"weight": 185,
+"slpm": 3.92,
+"striking_accuracy": 0.43,
+"sapm": 3.12,
+"striking_defense": 0.62,
+"takedowns_per_15_minutes": 1.47,
+"takedown_accuracy": 0.40,
+"takedown_defense": 0.84,
+"submission_attempts_per_15_minutes": 0.70,
+"average_fight_time": 15,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Paulo Costa",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Boxing, Muay Thai",
+"team": "Pitbull Brothers",
+"coach": "Eric Albarracin",
+"nationality": "Brazilian",
+"wins": 13,
+"losses": 1,
+"draws": 0,
+"overall": 92,
+"knockouts": 11,
+"submissions": 1,
+"decision_victory": 1,
+"age": 30,
+"height": 72,
+"weight": 185,
+"slpm": 8.43,
+"striking_accuracy": 0.59,
+"sapm": 2.08,
+"striking_defense": 0.56,
+"takedowns_per_15_minutes": 0.80,
+"takedown_accuracy": 0.33,
+"takedown_defense": 0.67,
+"submission_attempts_per_15_minutes": 0.20,
+"average_fight_time": 9,
+"standing": 75,
+"clinch": 10,
+"ground": 15
+},
+{
+"name": "Jared Cannonier",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Boxing",
+"team": "The MMA Lab",
+"coach": "John Crouch",
+"nationality": "American",
+"wins": 14,
+"losses": 5,
+"draws": 0,
+"overall": 83,
+"knockouts": 10,
+"submissions": 2,
+"decision_victory": 2,
+"age": 37,
+"height": 71,
+"weight": 185,
+"slpm": 3.03,
+"striking_accuracy": 0.45,
+"sapm": 2.46,
+"striking_defense": 0.56,
+"takedowns_per_15_minutes": 1.45,
+"takedown_accuracy": 0.58,
+"takedown_defense": 0.73,
+"submission_attempts_per_15_minutes": 0.40,
+"average_fight_time": 12,
+"standing": 60,
+"clinch": 20,
+"ground": 20
+},
+{
+"name": "Derek Brunson",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Wrestling",
+"team": "Jackson Wink MMA",
+"coach": "Mike Winkeljohn",
+"nationality": "American",
+"wins": 23,
+"losses": 7,
+"draws": 0,
+"overall": 85,
+"knockouts": 11,
+"submissions": 5,
+"decision_victory": 7,
+"age": 37,
+"height": 74,
+"weight": 185,
+"slpm": 2.76,
+"striking_accuracy": 0.46,
+"sapm": 2.88,
+"striking_defense": 0.55,
+"takedowns_per_15_minutes": 2.31,
+"takedown_accuracy": 0.42,
+"takedown_defense": 0.74,
+"submission_attempts_per_15_minutes": 1.20,
+"average_fight_time": 14,
+"standing": 45,
+"clinch": 30,
+"ground": 25
+},
+{
+"name": "Marvin Vettori",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Kings MMA",
+"coach": "Rafael Cordeiro",
+"nationality": "Italian",
+"wins": 17,
+"losses": 5,
+"draws": 1,
+"overall": 82,
+"knockouts": 2,
+"submissions": 9,
+"decision_victory": 6,
+"age": 27,
+"height": 72,
+"weight": 185,
+"slpm": 3.63,
+"striking_accuracy": 0.49,
+"sapm": 2.87,
+"striking_defense": 0.63,
+"takedowns_per_15_minutes": 1.80,
+"takedown_accuracy": 0.45,
+"takedown_defense": 0.65,
+"submission_attempts_per_15_minutes": 1.60,
+"average_fight_time": 18,
+"standing": 40,
+"clinch": 40,
+"ground": 20
+},
+{
+"name": "Jack Hermansson",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Frontline Academy",
+"coach": "Kenneth Bergh",
+"nationality": "Swedish",
+"wins": 22,
+"losses": 6,
+"draws": 0,
+"overall": 83,
+"knockouts": 11,
+"submissions": 7,
+"decision_victory": 4,
+"age": 33,
+"height": 74,
+"weight": 185,
+"slpm": 3.48,
+"striking_accuracy": 0.52,
+"sapm": 2.97,
+"striking_defense": 0.58,
+"takedowns_per_15_minutes": 2.61,
+"takedown_accuracy": 0.47,
+"takedown_defense": 0.66,
+"submission_attempts_per_15_minutes": 2.80,
+"average_fight_time": 14,
+"standing": 45,
+"clinch": 20,
+"ground": 35
+},
+{
+"name": "Uriah Hall",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "Fortis MMA",
+"coach": "Sayif Saud",
+"nationality": "Jamaican",
+"wins": 17,
+"losses": 10,
+"draws": 0,
+"overall": 78,
+"knockouts": 12,
+"submissions": 5,
+"decision_victory": 0,
+"age": 37,
+"height": 73,
+"weight": 185,
+"slpm": 3.53,
+"striking_accuracy": 0.51,
+"sapm": 3.04,
+"striking_defense": 0.59,
+"takedowns_per_15_minutes": 0.77,
+"takedown_accuracy": 0.33,
+"takedown_defense": 0.60,
+"submission_attempts_per_15_minutes": 0.70,
+"average_fight_time": 14,
+"standing": 65,
+"clinch": 20,
+"ground": 15
+},
+{
+"name": "Sean Strickland",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Boxing",
+"team": "Dan Henderson's Athletic Fitness Center",
+"coach": "Dan Henderson",
+"nationality": "American",
+"wins": 24,
+"losses": 4,
+"draws": 0,
+"overall": 83,
+"knockouts": 11,
+"submissions": 6,
+"decision_victory": 7,
+"age": 30,
+"height": 72,
+"weight": 185,
+"slpm": 4.49,
+"striking_accuracy": 0.52,
+"sapm": 2.49,
+"striking_defense": 0.62,
+"takedowns_per_15_minutes": 0.50,
+"takedown_accuracy": 0.30,
+"takedown_defense": 0.80,
+"submission_attempts_per_15_minutes": 0.70,
+"average_fight_time": 13,
+"standing": 80,
+"clinch": 10,
+"ground": 10
+},
+{
+"name": "Kevin Holland",
+"weight_class": "Middleweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Kickboxing",
+"team": "Phalanx MMA Academy",
+"coach": "Jacob Ramos",
+"nationality": "American",
+"wins": 21,
+"losses": 8,
+"draws": 0,
+"overall": 81,
+"knockouts": 10,
+"submissions": 9,
+"decision_victory": 2,
+"age": 28,
+"height": 76,
+"weight": 185,
+"slpm": 3.47,
+"striking_accuracy": 0.55,
+"sapm": 2.47,
+"striking_defense": 0.59,
+"takedowns_per_15_minutes": 0.73,
+"takedown_accuracy": 0.35,
+"takedown_defense": 0.71,
+"submission_attempts_per_15_minutes": 1.50,
+"average_fight_time": 13,
+"standing": 70,
+"clinch": 10,
+"ground": 20
+},
+{
+"name": "Glover Teixeira",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Boxing",
+"team": "Pitbull Brothers",
+"coach": "Eric Albarracin",
+"nationality": "Brazilian",
+"wins": 32,
+"losses": 8,
+"draws": 0,
+"overall": 90,
+"knockouts": 11,
+"submissions": 17,
+"decision_victory": 4,
+"age": 42,
+"height": 74,
+"weight": 205,
+"slpm": 3.47,
+"striking_accuracy": 0.50,
+"sapm": 2.53,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 2.27,
+"takedown_accuracy": 0.42,
+"takedown_defense": 0.67,
+"submission_attempts_per_15_minutes": 1.50,
+"average_fight_time": 16,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Jan Błachowicz",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "Berserkers Team",
+"coach": "Marcin Haldyński",
+"nationality": "Polish",
+"wins": 28,
+"losses": 10,
+"draws": 0,
+"overall": 88,
+"knockouts": 8,
+"submissions": 9,
+"decision_victory": 11,
+"age": 38,
+"height": 74,
+"weight": 205,
+"slpm": 3.00,
+"striking_accuracy": 0.51,
+"sapm": 2.94,
+"striking_defense": 0.56,
+"takedowns_per_15_minutes": 1.16,
+"takedown_accuracy": 0.47,
+"takedown_defense": 0.69,
+"submission_attempts_per_15_minutes": 0.60,
+"average_fight_time": 16,
+"standing": 55,
+"clinch": 25,
+"ground": 20
+},
+{
+"name": "Aleksandar Rakić",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Muay Thai",
+"team": "Vienna Spiders",
+"coach": "Dinko Gruhonjić",
+"nationality": "Austrian",
+"wins": 14,
+"losses": 2,
+"draws": 0,
+"overall": 85,
+"knockouts": 9,
+"submissions": 2,
+"decision_victory": 3,
+"age": 29,
+"height": 76,
+"weight": 205,
+"slpm": 4.33,
+"striking_accuracy": 0.54,
+"sapm": 1.97,
+"striking_defense": 0.68,
+"takedowns_per_15_minutes": 1.95,
+"takedown_accuracy": 0.50,
+"takedown_defense": 0.92,
+"submission_attempts_per_15_minutes": 0.20,
+"average_fight_time": 13,
+"standing": 75,
+"clinch": 10,
+"ground": 15
+},
+{
+"name": "Anthony Smith",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Factory X Muay Thai",
+"coach": "Marc Montoya",
+"nationality": "American",
+"wins": 35,
+"losses": 16,
+"draws": 0,
+"overall": 85,
+"knockouts": 18,
+"submissions": 11,
+"decision_victory": 6,
+"age": 33,
+"height": 76,
+"weight": 205,
+"slpm": 3.40,
+"striking_accuracy": 0.47,
+"sapm": 3.29,
+"striking_defense": 0.52,
+"takedowns_per_15_minutes": 1.48,
+"takedown_accuracy": 0.38,
+"takedown_defense": 0.59,
+"submission_attempts_per_15_minutes": 1.60,
+"average_fight_time": 17,
+"standing": 60,
+"clinch": 20,
+"ground": 20
+},
+{
+"name": "Magomed Ankalaev",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Wrestling, Sambo",
+"team": "ACB MMA",
+"coach": "Abdulmanap Nurmagomedov",
+"nationality": "Russian",
+"wins": 16,
+"losses": 1,
+"draws": 0,
+"overall": 90,
+"knockouts": 8,
+"submissions": 5,
+"decision_victory": 3,
+"age": 29,
+"height": 77,
+"weight": 205,
+"slpm": 4.24,
+"striking_accuracy": 0.51,
+"sapm": 2.31,
+"striking_defense": 0.61,
+"takedowns_per_15_minutes": 2.77,
+"takedown_accuracy": 0.80,
+"takedown_defense": 0.86,
+"submission_attempts_per_15_minutes": 0.60,
+"average_fight_time": 14,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Thiago Santos",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Muay Thai, Brazilian Jiu-Jitsu",
+"team": "American Top Team",
+"coach": "Conan Silveira",
+"nationality": "Brazilian",
+"wins": 21,
+"losses": 10,
+"draws": 0,
+"overall": 84,
+"knockouts": 15,
+"submissions": 1,
+"decision_victory": 5,
+"age": 37,
+"height": 73,
+"weight": 205,
+"slpm": 2.94,
+"striking_accuracy": 0.50,
+"sapm": 3.33,
+"striking_defense": 0.53,
+"takedowns_per_15_minutes": 0.64,
+"takedown_accuracy": 0.26,
+"takedown_defense": 0.59,
+"submission_attempts_per_15_minutes": 0.10,
+"average_fight_time": 12,
+"standing": 75,
+"clinch": 10,
+"ground": 15
+},
+{
+"name": "Ryan Spann",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu",
+"team": "Fortis MMA",
+"coach": "Sayif Saud",
+"nationality": "American",
+"wins": 19,
+"losses": 6,
+"draws": 0,
+"overall": 83,
+"knockouts": 9,
+"submissions": 6,
+"decision_victory": 4,
+"age": 30,
+"height": 76,
+"weight": 205,
+"slpm": 4.29,
+"striking_accuracy": 0.49,
+"sapm": 3.09,
+"striking_defense": 0.51,
+"takedowns_per_15_minutes": 2.10,
+"takedown_accuracy": 0.41,
+"takedown_defense": 0.50,
+"submission_attempts_per_15_minutes": 0.90,
+"average_fight_time": 13,
+"standing": 55,
+"clinch": 25,
+"ground": 20
+},
+{
+"name": "Johnny Walker",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Capoeira, Muay Thai",
+"team": "SBG Ireland",
+"coach": "John Kavanagh",
+"nationality": "Brazilian",
+"wins": 18,
+"losses": 6,
+"draws": 0,
+"overall": 83,
+"knockouts": 15,
+"submissions": 2,
+"decision_victory": 1,
+"age": 30,
+"height": 78,
+"weight": 205,
+"slpm": 4.95,
+"striking_accuracy": 0.55,
+"sapm": 2.99,
+"striking_defense": 0.48,
+"takedowns_per_15_minutes": 0.60,
+"takedown_accuracy": 0.40,
+"takedown_defense": 0.55,
+"submission_attempts_per_15_minutes": 0.70,
+"average_fight_time": 9,
+"standing": 80,
+"clinch": 10,
+"ground": 10
+},
+{
+"name": "Misha Cirkunov",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Brazilian Jiu-Jitsu, Judo",
+"team": "Revolution MMA",
+"coach": "Kent Peters",
+"nationality": "Latvian",
+"wins": 15,
+"losses": 6,
+"draws": 0,
+"overall": 80,
+"knockouts": 3,
+"submissions": 11,
+"decision_victory": 1,
+"age": 35,
+"height": 74,
+"weight": 205,
+"slpm": 2.83,
+"striking_accuracy": 0.48,
+"sapm": 2.59,
+"striking_defense": 0.55,
+"takedowns_per_15_minutes": 3.34,
+"takedown_accuracy": 0.48,
+"takedown_defense": 0.47,
+"submission_attempts_per_15_minutes": 2.10,
+"average_fight_time": 11,
+"standing": 45,
+"clinch": 35,
+"ground": 20
+},
+{
+"name": "Jiri Prochazka",
+"weight_class": "Light Heavyweight",
+"fighting_style": "MMA, Muay Thai, Karate",
+"team": "RIZIN",
+"coach": "Martin Karaivanov",
+"nationality": "Czech",
+"wins": 28,
+"losses": 4,
+"draws": 1,
+"overall": 90,
+"knockouts": 24,
+"submissions": 3,
+"decision_victory": 1,
+"age": 29,
+"height": 75,
+"weight": 205,
+"slpm": 6.45,
+"striking_accuracy": 0.59,
+"sapm": 3.82,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 0.50,
+"takedown_accuracy": 0.25,
+"takedown_defense": 0.50,
+"submission_attempts_per_15_minutes": 0.40,
+"average_fight_time": 11,
+"standing": 85,
+"clinch": 5,
+"ground": 10
+},
+{
+"name": "Stipe Miocic",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Boxing, Wrestling",
+"team": "Strong Style Fight Team",
+"coach": "Marcus Marinelli",
+"nationality": "American",
+"wins": 20,
+"losses": 4,
+"draws": 0,
+"overall": 94,
+"knockouts": 15,
+"submissions": 1,
+"decision_victory": 4,
+"age": 39,
+"height": 76,
+"weight": 240,
+"slpm": 4.67,
+"striking_accuracy": 0.52,
+"sapm": 3.60,
+"striking_defense": 0.59,
+"takedowns_per_15_minutes": 1.89,
+"takedown_accuracy": 0.40,
+"takedown_defense": 0.79,
+"submission_attempts_per_15_minutes": 0.20,
+"average_fight_time": 18,
+"standing": 55,
+"clinch": 25,
+"ground": 20
+},
+{
+"name": "Francis Ngannou",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Boxing",
+"team": "MMA Factory",
+"coach": "Fernand Lopez",
+"nationality": "Cameroonian",
+"wins": 16,
+"losses": 3,
+"draws": 0,
+"overall": 91,
+"knockouts": 12,
+"submissions": 4,
+"decision_victory": 0,
+"age": 34,
+"height": 76,
+"weight": 260,
+"slpm": 3.71,
+"striking_accuracy": 0.48,
+"sapm": 2.22,
+"striking_defense": 0.56,
+"takedowns_per_15_minutes": 1.73,
+"takedown_accuracy": 0.33,
+"takedown_defense": 0.75,
+"submission_attempts_per_15_minutes": 0.60,
+"average_fight_time": 9,
+"standing": 80,
+"clinch": 10,
+"ground": 10
+},
+{
+"name": "Ciryl Gane",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Muay Thai, Savate",
+"team": "MMA Factory",
+"coach": "Fernand Lopez",
+"nationality": "French",
+"wins": 9,
+"losses": 0,
+"draws": 0,
+"overall": 92,
+"knockouts": 3,
+"submissions": 4,
+"decision_victory": 2,
+"age": 31,
+"height": 79,
+"weight": 245,
+"slpm": 5.44,
+"striking_accuracy": 0.56,
+"sapm": 2.12,
+"striking_defense": 0.67,
+"takedowns_per_15_minutes": 0.66,
+"takedown_accuracy": 0.42,
+"takedown_defense": 1.00,
+"submission_attempts_per_15_minutes": 1.20,
+"average_fight_time": 14,
+"standing": 70,
+"clinch": 20,
+"ground": 10
+},
+{
+"name": "Derrick Lewis",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Boxing",
+"team": "Silverback Fight Club",
+"coach": "Bob Perez",
+"nationality": "American",
+"wins": 25,
+"losses": 8,
+"draws": 0,
+"overall": 85,
+"knockouts": 20,
+"submissions": 2,
+"decision_victory": 3,
+"age": 36,
+"height": 75,
+"weight": 265,
+"slpm": 2.63,
+"striking_accuracy": 0.50,
+"sapm": 2.72,
+"striking_defense": 0.46,
+"takedowns_per_15_minutes": 0.39,
+"takedown_accuracy": 0.26,
+"takedown_defense": 0.64,
+"submission_attempts_per_15_minutes": 0.20,
+"average_fight_time": 13,
+"standing": 85,
+"clinch": 5,
+"ground": 10
+},
+{
+"name": "Alexander Volkov",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "Alexander Nevsky Club",
+"coach": "Yuriy Yaroshenko",
+"nationality": "Russian",
+"wins": 34,
+"losses": 9,
+"draws": 0,
+"overall": 89,
+"knockouts": 22,
+"submissions": 3,
+"decision_victory": 9,
+"age": 33,
+"height": 79,
+"weight": 250,
+"slpm": 5.14,
+"striking_accuracy": 0.59,
+"sapm": 2.43,
+"striking_defense": 0.61,
+"takedowns_per_15_minutes": 0.86,
+"takedown_accuracy": 0.60,
+"takedown_defense": 0.65,
+"submission_attempts_per_15_minutes": 0.30,
+"average_fight_time": 14,
+"standing": 70,
+"clinch": 15,
+"ground": 15
+},
+{
+"name": "Curtis Blaydes",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Wrestling",
+"team": "Team Elevation",
+"coach": "Eliot Marshall",
+"nationality": "American",
+"wins": 14,
+"losses": 3,
+"draws": 0,
+"overall": 88,
+"knockouts": 8,
+"submissions": 3,
+"decision_victory": 3,
+"age": 30,
+"height": 75,
+"weight": 260,
+"slpm": 3.35,
+"striking_accuracy": 0.53,
+"sapm": 2.01,
+"striking_defense": 0.58,
+"takedowns_per_15_minutes": 7.03,
+"takedown_accuracy": 0.57,
+"takedown_defense": 0.75,
+"submission_attempts_per_15_minutes": 1.20,
+"average_fight_time": 13,
+"standing": 35,
+"clinch": 35,
+"ground": 30
+},
+{
+"name": "Jairzinho Rozenstruik",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "Elite Training Center",
+"coach": "Michael Babb",
+"nationality": "Surinamese",
+"wins": 13,
+"losses": 2,
+"draws": 0,
+"overall": 85,
+"knockouts": 11,
+"submissions": 0,
+"decision_victory": 2,
+"age": 34,
+"height": 76,
+"weight": 260,
+"slpm": 3.85,
+"striking_accuracy": 0.52,
+"sapm": 2.72,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 0.20,
+"takedown_accuracy": 0.25,
+"takedown_defense": 0.75,
+"submission_attempts_per_15_minutes": 0.00,
+"average_fight_time": 8,
+"standing": 80,
+"clinch": 10,
+"ground": 10
+},
+{
+"name": "Alistair Overeem",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "Elevation Fight Team",
+"coach": "Greg Jones",
+"nationality": "Dutch",
+"wins": 47,
+"losses": 19,
+"draws": 0,
+"overall": 88,
+"knockouts": 23,
+"submissions": 17,
+"decision_victory": 7,
+"age": 41,
+"height": 77,
+"weight": 250,
+"slpm": 2.80,
+"striking_accuracy": 0.58,
+"sapm": 2.84,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 1.46,
+"takedown_accuracy": 0.36,
+"takedown_defense": 0.70,
+"submission_attempts_per_15_minutes": 1.40,
+"average_fight_time": 14,
+"standing": 55,
+"clinch": 20,
+"ground": 25
+},
+{
+"name": "Cain Velasquez",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Wrestling",
+"team": "American Kickboxing Academy",
+"coach": "Javier Mendez",
+"nationality": "American",
+"wins": 14,
+"losses": 3,
+"draws": 0,
+"overall": 89,
+"knockouts": 12,
+"submissions": 1,
+"decision_victory": 1,
+"age": 39,
+"height": 73,
+"weight": 240,
+"slpm": 3.62,
+"striking_accuracy": 0.58,
+"sapm": 2.52,
+"striking_defense": 0.64,
+"takedowns_per_15_minutes": 3.43,
+"takedown_accuracy": 0.53,
+"takedown_defense": 0.78,
+"submission_attempts_per_15_minutes": 0.20,
+"average_fight_time": 13,
+"standing": 50,
+"clinch": 30,
+"ground": 20
+},
+{
+"name": "Blagoy Ivanov",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Sambo, Kickboxing",
+"team": "Jackson Wink MMA",
+"coach": "Mike Winkeljohn",
+"nationality": "Bulgarian",
+"wins": 18,
+"losses": 5,
+"draws": 0,
+"overall": 83,
+"knockouts": 8,
+"submissions": 7,
+"decision_victory": 3,
+"age": 35,
+"height": 72,
+"weight": 250,
+"slpm": 2.61,
+"striking_accuracy": 0.41,
+"sapm": 2.42,
+"striking_defense": 0.59,
+"takedowns_per_15_minutes": 1.17,
+"takedown_accuracy": 0.33,
+"takedown_defense": 0.61,
+"submission_attempts_per_15_minutes": 1.80,
+"average_fight_time": 15,
+"standing": 35,
+"clinch": 30,
+"ground": 35
+},
+{
+"name": "Tai Tuivasa",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Kickboxing",
+"team": "Shindo New Breed",
+"coach": "Justin Fitzgerald",
+"nationality": "Australian",
+"wins": 13,
+"losses": 4,
+"draws": 0,
+"overall": 83,
+"knockouts": 12,
+"submissions": 1,
+"decision_victory": 0,
+"age": 28,
+"height": 74,
+"weight": 265,
+"slpm": 3.55,
+"striking_accuracy": 0.50,
+"sapm": 3.70,
+"striking_defense": 0.47,
+"takedowns_per_15_minutes": 0.60,
+"takedown_accuracy": 0.44,
+"takedown_defense": 0.58,
+"submission_attempts_per_15_minutes": 0.20,
+"average_fight_time": 9,
+"standing": 75,
+"clinch": 10,
+"ground": 15
+},
+{
+"name": "Marcin Tybura",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Boxing, Brazilian Jiu-Jitsu",
+"team": "American Top Team",
+"coach": "Conan Silveira",
+"nationality": "Polish",
+"wins": 23,
+"losses": 7,
+"draws": 0,
+"overall": 85,
+"knockouts": 6,
+"submissions": 7,
+"decision_victory": 10,
+"age": 36,
+"height": 76,
+"weight": 250,
+"slpm": 3.59,
+"striking_accuracy": 0.49,
+"sapm": 2.34,
+"striking_defense": 0.62,
+"takedowns_per_15_minutes": 2.31,
+"takedown_accuracy": 0.45,
+"takedown_defense": 0.74,
+"submission_attempts_per_15_minutes": 0.90,
+"average_fight_time": 13,
+"standing": 45,
+"clinch": 35,
+"ground": 20
+},
+{
+"name": "Jarjis Danho",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Boxing",
+"team": "MMA Spirit",
+"coach": "Ralf Rabe",
+"nationality": "German",
+"wins": 5,
+"losses": 1,
+"draws": 1,
+"overall": 81,
+"knockouts": 5,
+"submissions": 0,
+"decision_victory": 0,
+"age": 37,
+"height": 75,
+"weight": 260,
+"slpm": 1.50,
+"striking_accuracy": 0.30,
+"sapm": 0.75,
+"striking_defense": 0.70,
+"takedowns_per_15_minutes": 1.00,
+"takedown_accuracy": 0.33,
+"takedown_defense": 0.80,
+"submission_attempts_per_15_minutes": 0.00,
+"average_fight_time": 6,
+"standing": 75,
+"clinch": 10,
+"ground": 15
+},
+{
+"name": "Shamil Abdurakhimov",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Combat Sambo, Kickboxing",
+"team": "Ak Bars",
+"coach": "Rasul Mirzaev",
+"nationality": "Russian",
+"wins": 20,
+"losses": 6,
+"draws": 0,
+"overall": 82,
+"knockouts": 5,
+"submissions": 7,
+"decision_victory": 8,
+"age": 40,
+"height": 75,
+"weight": 260,
+"slpm": 2.35,
+"striking_accuracy": 0.49,
+"sapm": 1.76,
+"striking_defense": 0.55,
+"takedowns_per_15_minutes": 1.32,
+"takedown_accuracy": 0.43,
+"takedown_defense": 0.70,
+"submission_attempts_per_15_minutes": 0.80,
+"average_fight_time": 15,
+"standing": 35,
+"clinch": 35,
+"ground": 30
+},
+{
+"name": "Maro Perak",
+"weight_class": "Heavyweight",
+"fighting_style": "MMA, Boxing, Muay Thai",
+"team": "KSW",
+"coach": "Vladimir Mineev",
+"nationality": "Croatian",
+"wins": 30,
+"losses": 10,
+"draws": 1,
+"overall": 83,
+"knockouts": 18,
+"submissions": 8,
+"decision_victory": 4,
+"age": 35,
+"height": 75,
+"weight": 235,
+"slpm": 3.40,
+"striking_accuracy": 0.57,
+"sapm": 2.40,
+"striking_defense": 0.57,
+"takedowns_per_15_minutes": 1.20,
+"takedown_accuracy": 0.25,
+"takedown_defense": 0.50,
+"submission_attempts_per_15_minutes": 0.90,
+"average_fight_time": 13,
+"standing": 60,
+"clinch": 20,
+"ground": 20
+},
+
+
+
+
+
+
+
+
+]
+
+function search() {
+var input_name = document.getElementById("name").value.toLowerCase();
+var input_weight_class = document.getElementById("weight_class").value.toLowerCase();
+var input_fighting_style = document.getElementById("fighting_style").value.toLowerCase();
+var input_team = document.getElementById("team").value.toLowerCase();
+var input_coach = document.getElementById("coach").value.toLowerCase();
+var input_nationality = document.getElementById("nationality").value.toLowerCase();
+var input_wins = document.getElementById("wins").value;
+var input_losses = document.getElementById("losses").value;
+var input_draws = document.getElementById("draws").value;
+var input_overall = document.getElementById("overall").value;
+var input_knockouts = document.getElementById("knockouts").value;
+var input_submissions = document.getElementById("submissions").value;
+var input_decision_victory = document.getElementById("decision_victory").value;
+var input_age = document.getElementById("age").value;
+var input_height = document.getElementById("height").value;
+var input_weight = document.getElementById("weight").value;
+var input_slpm = document.getElementById("slpm").value;
+var input_striking_accuracy = document.getElementById("striking_accuracy").value;
+var input_sapm = document.getElementById("sapm").value;
+var input_striking_defense = document.getElementById("striking_defense").value;
+var input_takedowns_per_15_minutes = document.getElementById("takedowns_per_15_minutes").value;
+var input_takedown_accuracy = document.getElementById("takedown_accuracy").value;
+var input_takedown_defense = document.getElementById("takedown_defense").value;
+var input_submission_attempts_per_15_minutes = document.getElementById("submission_attempts_per_15_minutes").value;
+var input_average_fight_time = document.getElementById("average_fight_time").value;
+var input_standing = document.getElementById("standing").value;
+var input_clinch = document.getElementById("clinch").value;
+var input_ground = document.getElementById("ground").value;
+  
+
+  var results = [];
+
+  for (var i = 0; i < players.length; i++) {
+    var player = players[i];
+if (input_name && !player.name.toLowerCase().includes(input_name)) {
+continue;
+}
+if (input_weight_class && !player.weight_class.toLowerCase().includes(input_weight_class)) {
+continue;
+}
+if (input_fighting_style && !player.fighting_style.toLowerCase().includes(input_fighting_style)) {
+continue;
+}
+if (input_team && !player.team.toLowerCase().includes(input_team)) {
+continue;
+}
+if (input_coach && !player.coach.toLowerCase().includes(input_coach)) {
+continue;
+}
+if (input_nationality && !player.nationality.toLowerCase().includes(input_nationality)) {
+continue;
+}
+if (input_wins && player.wins < parseFloat(input_wins)) {
+continue;
+}
+if (input_losses && player.losses < parseFloat(input_losses)) {
+continue;
+}
+if (input_draws && player.draws < parseFloat(input_draws)) {
+continue;
+}
+if (input_overall && player.overall < parseFloat(input_overall)) {
+continue;
+}
+if (input_knockouts && player.knockouts < parseFloat(input_knockouts)) {
+continue;
+}
+if (input_submissions && player.submissions < parseFloat(input_submissions)) {
+continue;
+}
+if (input_decision_victory && player.decision_victory < parseFloat(input_decision_victory)) {
+continue;
+}
+if (input_age && player.age < parseFloat(input_age)) {
+continue;
+}
+if (input_height && player.height < parseFloat(input_height)) {
+continue;
+}
+if (input_weight && player.weight < parseFloat(input_weight)) {
+continue;
+}
+if (input_slpm && player.slpm < parseFloat(input_slpm)) {
+continue;
+}
+if (input_striking_accuracy && player.striking_accuracy < parseFloat(input_striking_accuracy)) {
+continue;
+}
+if (input_sapm && player.sapm < parseFloat(input_sapm)) {
+continue;
+}
+if (input_striking_defense && player.striking_defense < parseFloat(input_striking_defense)) {
+continue;
+}
+if (input_takedowns_per_15_minutes && player.takedowns_per_15_minutes < parseFloat(input_takedowns_per_15_minutes)) {
+continue;
+}
+if (input_takedown_accuracy && player.takedown_accuracy < parseFloat(input_takedown_accuracy)) {
+continue;
+}
+if (input_takedown_defense && player.takedown_defense < parseFloat(input_takedown_defense)) {
+continue;
+}
+if (input_submission_attempts_per_15_minutes && player.submission_attempts_per_15_minutes < parseFloat(input_submission_attempts_per_15_minutes)) {
+continue;
+}
+if (input_average_fight_time && player.average_fight_time < parseFloat(input_average_fight_time)) {
+continue;
+}
+if (input_standing && player.standing < parseFloat(input_standing)) {
+continue;
+}
+if (input_clinch && player.clinch < parseFloat(input_clinch)) {
+continue;
+}
+if (input_ground && player.ground < parseFloat(input_ground)) {
+continue;
+}
+
+
+if (
+!input_name &&
+!input_weight_class &&
+!input_fighting_style &&
+!input_team &&
+!input_coach &&
+!input_nationality &&
+!input_wins &&
+!input_losses &&
+!input_draws &&
+!input_overall &&
+!input_knockouts &&
+!input_submissions &&
+!input_decision_victory &&
+!input_age &&
+!input_height &&
+!input_weight &&
+!input_slpm &&
+!input_striking_accuracy &&
+!input_sapm &&
+!input_striking_defense &&
+!input_takedowns_per_15_minutes &&
+!input_takedown_accuracy &&
+!input_takedown_defense &&
+!input_submission_attempts_per_15_minutes &&
+!input_average_fight_time &&
+!input_standing &&
+!input_clinch &&
+!input_ground
+) {
+    
+    var tableBody = document.querySelector("#search-results tbody");
+    tableBody.innerHTML = "";
+    return;
+}
+
+results.push(player);
+}
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+          if (results[i].name.toLowerCase() === uniqueResults[j].name.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+
+for (var i = 0; i < results.length; i++) {
+var player = results[i];
+var row = document.createElement("tr");
+row.innerHTML = 
+"<td>" + player.name + "</td>" +
+"<td>" + player.weight_class + "</td>" +
+"<td>" + player.fighting_style + "</td>" +
+"<td>" + player.team + "</td>" +
+"<td>" + player.coach + "</td>" +
+"<td>" + player.nationality + "</td>" +
+"<td>" + player.wins + "</td>" +
+"<td>" + player.losses + "</td>" +
+"<td>" + player.draws + "</td>" +
+"<td>" + player.overall + "</td>" +
+"<td>" + player.knockouts + "</td>" +
+"<td>" + player.submissions + "</td>" +
+"<td>" + player.decision_victory + "</td>" +
+"<td>" + player.age + "</td>" +
+"<td>" + player.height + "</td>" +
+"<td>" + player.weight + "</td>" +
+"<td>" + player.slpm + "</td>" +
+"<td>" + player.striking_accuracy + "</td>" +
+"<td>" + player.sapm + "</td>" +
+"<td>" + player.striking_defense + "</td>" +
+"<td>" + player.takedowns_per_15_minutes + "</td>" +
+"<td>" + player.takedown_accuracy + "</td>" +
+"<td>" + player.takedown_defense + "</td>" +
+"<td>" + player.submission_attempts_per_15_minutes + "</td>" +
+"<td>" + player.average_fight_time + "</td>" +
+"<td>" + player.standing + "</td>" +
+"<td>" + player.clinch + "</td>" +
+"<td>" + player.ground + "</td>";
+
+
+
+
+
+
+
+
+
+tableBody.appendChild(row);
+}
+}
+
+
+
+
+
+function compareNumbers(a, b) {
+    var numA = a.era === null ? Infinity : parseFloat(a.era);
+    var numB = b.era === null ? Infinity : parseFloat(b.era);
+
+    return numA - numB;
+}
+
+players.sort(compareNumbers);
+
+console.log(players);
+
+
+
+
+
+
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 6) { 
+        x = x.innerHTML.toLowerCase() == "null" ? Infinity : parseFloat(x.innerHTML);
+        y = y.innerHTML.toLowerCase() == "null" ? Infinity : parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+</script>
+
+</body>
+</html>

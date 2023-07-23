@@ -1,0 +1,3283 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>NFL</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+
+    th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+
+    
+	</style>
+</head>
+<body>
+	<h1>NFC(West+South)</h1>
+	<img src="">
+
+    <canvas id="matrix-canvas"></canvas>
+
+	<form onsubmit="search(); return false;">
+		
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="team" placeholder="Team">
+<input type="text" id="nationality" placeholder="Nationality">
+<input type="text" id="position" placeholder="Position">
+<input type="number" step="0.01" id="age" placeholder="Age">
+<input type="number" step="0.01" id="height" placeholder="Height(inches)">
+<input type="number" step="0.01" id="weight" placeholder="Weight(pounds)">
+<input type="number" step="0.01" id="overall" placeholder="Overall(0~100)">
+<input type="number" step="0.01" id="passer_rating" placeholder="Passer Rating">
+<input type="number" step="0.01" id="passing_yards" placeholder="Passing Yards(Yards)">
+<input type="number" step="0.01" id="td" placeholder="TD(Touchdown Passes)">
+<input type="number" step="0.01" id="ints" placeholder="INTs(Interceptions)">
+<input type="number" step="0.01" id="rushing_yards" placeholder="Rushing Yards(Yards)">
+<input type="number" step="0.01" id="yards_per_attempt" placeholder="Yards per Attempt(Yards)">
+<input type="number" step="0.01" id="rushing_tds" placeholder="Rushing TDs(Rushing Touchdowns)">
+<input type="number" step="0.01" id="receptions" placeholder="Receptions">
+<input type="number" step="0.01" id="receiving_yards" placeholder="Receiving Yards(Yards)">
+<input type="number" step="0.01" id="yards_per_reception" placeholder="Yards per Reception(Yards)">
+<input type="number" step="0.01" id="receiving_tds" placeholder="Receiving TDs(Receiving Touchdowns)">
+<input type="number" step="0.01" id="tackles" placeholder="Tackles">
+<input type="number" step="0.01" id="sacks" placeholder="Sacks">
+<input type="number" step="0.01" id="interceptions" placeholder="Interceptions">
+<input type="number" step="0.01" id="forced_fumbles" placeholder="Forced Fumbles">
+<input type="number" step="0.01" id="fg_percentage" placeholder="FG%(Field Goal Percentage)">
+<input type="number" step="0.01" id="long" placeholder="Long(Longest Field Goal,Yards)">
+<input type="number" step="0.01" id="pats" placeholder="PATs(Points After Touchdown)">
+		
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+
+<thead>
+  <tr>
+    
+    <th onclick="sortTable(0)">Name<span id="sortIndicator0">▲▼</span></th>
+    <th onclick="sortTable(1)">Team<span id="sortIndicator1">▲▼</span></th>
+    <th onclick="sortTable(2)">Nationality<span id="sortIndicator2">▲▼</span></th>
+    <th onclick="sortTable(3)">Position<span id="sortIndicator3">▲▼</span></th>
+    <th onclick="sortTable(4)">Age<span id="sortIndicator4">▲▼</span></th>
+    <th onclick="sortTable(5)">Height(inches)<span id="sortIndicator5">▲▼</span></th>
+    <th onclick="sortTable(6)">Weight(pounds)<span id="sortIndicator6">▲▼</span></th>
+    <th onclick="sortTable(7)">Overall(0~100)<span id="sortIndicator7">▲▼</span></th>
+    <th onclick="sortTable(8)">Passer Rating<span id="sortIndicator8">▲▼</span></th>
+    <th onclick="sortTable(9)">Passing Yards(Yards)<span id="sortIndicator9">▲▼</span></th>
+    <th onclick="sortTable(10)">TD(Touchdown Passes)<span id="sortIndicator10">▲▼</span></th>
+    <th onclick="sortTable(11)">INTs(Interceptions)<span id="sortIndicator11">▲▼</span></th>
+    <th onclick="sortTable(12)">Rushing Yards(Yards)<span id="sortIndicator12">▲▼</span></th>
+    <th onclick="sortTable(13)">Yards per Attempt(Yards)<span id="sortIndicator13">▲▼</span></th>
+    <th onclick="sortTable(14)">Rushing TDs(Rushing Touchdowns)<span id="sortIndicator14">▲▼</span></th>
+    <th onclick="sortTable(15)">Receptions<span id="sortIndicator15">▲▼</span></th>
+    <th onclick="sortTable(16)">Receiving Yards(Yards)<span id="sortIndicator16">▲▼</span></th>
+    <th onclick="sortTable(17)">Yards per Reception(Yards)<span id="sortIndicator17">▲▼</span></th>
+    <th onclick="sortTable(18)">Receiving TDs(Receiving Touchdowns)<span id="sortIndicator18">▲▼</span></th>
+    <th onclick="sortTable(19)">Tackles<span id="sortIndicator19">▲▼</span></th>
+    <th onclick="sortTable(20)">Sacks<span id="sortIndicator20">▲▼</span></th>
+    <th onclick="sortTable(21)">Interceptions<span id="sortIndicator21">▲▼</span></th>
+    <th onclick="sortTable(22)">Forced Fumbles<span id="sortIndicator22">▲▼</span></th>
+    <th onclick="sortTable(23)">FG%(Field Goal Percentage)<span id="sortIndicator23">▲▼</span></th>
+    <th onclick="sortTable(24)">Long(Longest Field Goal,Yards)<span id="sortIndicator24">▲▼</span></th>
+    <th onclick="sortTable(25)">PATs(Points After Touchdown)<span id="sortIndicator25">▲▼</span></th>
+    
+  </tr>
+  </thead>
+  
+  
+<tbody></tbody>
+</table>
+<script>
+
+var players = [
+{
+"name": "Matt Ryan",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Quarterback",
+"age": 36,
+"height": 77,
+"weight": 217,
+"overall": 90,
+"passer_rating": 94.5,
+"passing_yards": 4500,
+"td": 28,
+"ints": 11,
+"rushing_yards": 56,
+"yards_per_attempt": 7.8,
+"rushing_tds": 1,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Calvin Ridley",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 25,
+"height": 73,
+"weight": 190,
+"overall": 92,
+"passer_rating": null,
+"passing_yards": null,
+"td": 10,
+"ints": null,
+"rushing_yards": 32,
+"yards_per_attempt": 4.6,
+"rushing_tds": 0,
+"receptions": 90,
+"receiving_yards": 1300,
+"yards_per_reception": 14.4,
+"receiving_tds": 10,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Grady Jarrett",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Defensive tackle",
+"age": 28,
+"height": 73,
+"weight": 305,
+"overall": 91,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 60,
+"sacks": 6.5,
+"interceptions": null,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Deion Jones",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Linebacker",
+"age": 26,
+"height": 73,
+"weight": 222,
+"overall": 88,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 95,
+"sacks": 2.0,
+"interceptions": 2,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Jake Matthews",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 30,
+"height": 77,
+"weight": 309,
+"overall": 87,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Chris Lindstrom",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Guard",
+"age": 25,
+"height": 76,
+"weight": 307,
+"overall": 86,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "AJ Terrell",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Cornerback",
+"age": 23,
+"height": 72,
+"weight": 195,
+"overall": 85,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 53,
+"sacks": null,
+"interceptions": 2,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Dante Fowler Jr.",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Defensive end",
+"age": 27,
+"height": 76,
+"weight": 266,
+"overall": 85,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 32,
+"sacks": 4.5,
+"interceptions": null,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Hayden Hurst",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Tight end",
+"age": 28,
+"height": 77,
+"weight": 250,
+"overall": 84,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": 60,
+"receiving_yards": 700,
+"yards_per_reception": 11.7,
+"receiving_tds": 4,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Kaleb McGary",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 24,
+"height": 78,
+"weight": 306,
+"overall": 83,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Isaiah Oliver",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Cornerback",
+"age": 24,
+"height": 73,
+"weight": 210,
+"overall": 82,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 1,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 48,
+"sacks": null,
+"interceptions": 1,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Mike Davis",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Running back",
+"age": 28,
+"height": 70,
+"weight": 221,
+"overall": 82,
+"passer_rating": null,
+"passing_yards": null,
+"td": 5,
+"ints": null,
+"rushing_yards": 700,
+"yards_per_attempt": 3.9,
+"rushing_tds": 5,
+"receptions": 40,
+"receiving_yards": 350,
+"yards_per_reception": 8.8,
+"receiving_tds": 2,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "James Carpenter",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Guard",
+"age": 32,
+"height": 76,
+"weight": 321,
+"overall": 81,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Russell Gage",
+"team": "Atlanta Falcons",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 25,
+"height": 72,
+"weight": 184,
+"overall": 79,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": 65,
+"yards_per_attempt": 6.5,
+"rushing_tds": 1,
+"receptions": 55,
+"receiving_yards": 680,
+"yards_per_reception": 12.4,
+"receiving_tds": 4,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Christian McCaffrey",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Running back",
+"age": 25,
+"height": 71,
+"weight": 205,
+"overall": 98,
+"passer_rating": null,
+"passing_yards": null,
+"td": 12,
+"ints": null,
+"rushing_yards": 1000,
+"yards_per_attempt": 5.0,
+"rushing_tds": 8,
+"receptions": 90,
+"receiving_yards": 1000,
+"yards_per_reception": 11.1,
+"receiving_tds": 4,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "D.J. Moore",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 24,
+"height": 72,
+"weight": 210,
+"overall": 90,
+"passer_rating": null,
+"passing_yards": null,
+"td": 8,
+"ints": null,
+"rushing_yards": 50,
+"yards_per_attempt": 5.0,
+"rushing_tds": 0,
+"receptions": 85,
+"receiving_yards": 1100,
+"yards_per_reception": 12.9,
+"receiving_tds": 8,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Brian Burns",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Defensive end",
+"age": 23,
+"height": 78,
+"weight": 250,
+"overall": 88,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 45,
+"sacks": 9.5,
+"interceptions": null,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Jeremy Chinn",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Linebacker",
+"age": 23,
+"height": 74,
+"weight": 221,
+"overall": 86,
+"passer_rating": null,
+"passing_yards": null,
+"td": 2,
+"ints": 2,
+"rushing_yards": 75,
+"yards_per_attempt": 5.4,
+"rushing_tds": 1,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 70,
+"sacks": 2.0,
+"interceptions": 2,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Taylor Moton",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 26,
+"height": 78,
+"weight": 325,
+"overall": 85,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Da'Quan Jones",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Defensive tackle",
+"age": 30,
+"height": 77,
+"weight": 322,
+"overall": 83,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 40,
+"sacks": 4.0,
+"interceptions": null,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Jaycee Horn",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Cornerback",
+"age": 21,
+"height": 73,
+"weight": 200,
+"overall": 82,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 1,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 38,
+"sacks": null,
+"interceptions": 1,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Hassan Reddick",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Linebacker",
+"age": 26,
+"height": 75,
+"weight": 235,
+"overall": 82,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 60,
+"sacks": 7.5,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Donte Jackson",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Cornerback",
+"age": 25,
+"height": 71,
+"weight": 180,
+"overall": 80,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 35,
+"sacks": null,
+"interceptions": 2,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Terrace Marshall Jr.",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 21,
+"height": 75,
+"weight": 205,
+"overall": 79,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": 55,
+"receiving_yards": 750,
+"yards_per_reception": 13.6,
+"receiving_tds": 6,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Robbie Anderson",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 28,
+"height": 73,
+"weight": 190,
+"overall": 78,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": 30,
+"yards_per_attempt": 5.0,
+"rushing_tds": 0,
+"receptions": 70,
+"receiving_yards": 900,
+"yards_per_reception": 12.9,
+"receiving_tds": 4,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Yetur Gross-Matos",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Defensive end",
+"age": 23,
+"height": 78,
+"weight": 265,
+"overall": 77,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 30,
+"sacks": 4.0,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Brady Christensen",
+"team": "Carolina Panthers",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 23,
+"height": 78,
+"weight": 300,
+"overall": 77,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Chuba Hubbard",
+"team": "Carolina Panthers",
+"nationality": "Canadian",
+"position": "Running back",
+"age": 21,
+"height": 70,
+"weight": 208,
+"overall": 76,
+"passer_rating": null,
+"passing_yards": null,
+"td": 3,
+"ints": null,
+"rushing_yards": 400,
+"yards_per_attempt": 4.0,
+"rushing_tds": 3,
+"receptions": 20,
+"receiving_yards": 150,
+"yards_per_reception": 7.5,
+"receiving_tds": 1,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Alvin Kamara",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Running back",
+"age": 26,
+"height": 70,
+"weight": 215,
+"overall": 97,
+"passer_rating": null,
+"passing_yards": null,
+"td": 16,
+"ints": null,
+"rushing_yards": 900,
+"yards_per_attempt": 4.8,
+"rushing_tds": 10,
+"receptions": 80,
+"receiving_yards": 900,
+"yards_per_reception": 11.3,
+"receiving_tds": 6,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Michael Thomas",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 28,
+"height": 75,
+"weight": 212,
+"overall": 95,
+"passer_rating": null,
+"passing_yards": null,
+"td": 9,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": 110,
+"receiving_yards": 1300,
+"yards_per_reception": 11.8,
+"receiving_tds": 9,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Cameron Jordan",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Defensive end",
+"age": 32,
+"height": 76,
+"weight": 287,
+"overall": 92,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 50,
+"sacks": 10.0,
+"interceptions": null,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Marshon Lattimore",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Cornerback",
+"age": 25,
+"height": 72,
+"weight": 193,
+"overall": 90,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 3,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 45,
+"sacks": null,
+"interceptions": 3,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Terron Armstead",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 30,
+"height": 77,
+"weight": 304,
+"overall": 89,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Demario Davis",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Linebacker",
+"age": 32,
+"height": 74,
+"weight": 248,
+"overall": 88,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 80,
+"sacks": 4.0,
+"interceptions": 2,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Ryan Ramczyk",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 27,
+"height": 78,
+"weight": 314,
+"overall": 88,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Trey Hendrickson",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Defensive end",
+"age": 26,
+"height": 77,
+"weight": 270,
+"overall": 86,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 40,
+"sacks": 8.0,
+"interceptions": null,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Marcus Davenport",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Defensive end",
+"age": 25,
+"height": 78,
+"weight": 265,
+"overall": 84,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 35,
+"sacks": 5.5,
+"interceptions": null,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "David Onyemata",
+"team": "New Orleans Saints",
+"nationality": "Nigerian",
+"position": "Defensive tackle",
+"age": 28,
+"height": 76,
+"weight": 300,
+"overall": 83,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 30,
+"sacks": 6.0,
+"interceptions": null,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Erik McCoy",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Center",
+"age": 23,
+"height": 76,
+"weight": 303,
+"overall": 82,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Tre'Quan Smith",
+"team": "New Orleans Saints",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 25,
+"height": 74,
+"weight": 210,
+"overall": 81,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": 40,
+"receiving_yards": 550,
+"yards_per_reception": 13.8,
+"receiving_tds": 4,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Tom Brady",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Quarterback",
+"age": 44,
+"height": 76,
+"weight": 225,
+"overall": 99,
+"passer_rating": 102.2,
+"passing_yards": 5000,
+"td": 45,
+"ints": 11,
+"rushing_yards": 50,
+"yards_per_attempt": 6.5,
+"rushing_tds": 2,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Mike Evans",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 28,
+"height": 77,
+"weight": 231,
+"overall": 95,
+"passer_rating": null,
+"passing_yards": null,
+"td": 12,
+"ints": null,
+"rushing_yards": 0,
+"yards_per_attempt": 0.0,
+"rushing_tds": 0,
+"receptions": 90,
+"receiving_yards": 1200,
+"yards_per_reception": 13.3,
+"receiving_tds": 12,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Lavonte David",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Linebacker",
+"age": 31,
+"height": 73,
+"weight": 233,
+"overall": 92,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 100,
+"sacks": 2.0,
+"interceptions": 2,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Chris Godwin",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 25,
+"height": 73,
+"weight": 209,
+"overall": 90,
+"passer_rating": null,
+"passing_yards": null,
+"td": 8,
+"ints": null,
+"rushing_yards": 30,
+"yards_per_attempt": 5.0,
+"rushing_tds": 0,
+"receptions": 85,
+"receiving_yards": 1100,
+"yards_per_reception": 12.9,
+"receiving_tds": 8,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Tristan Wirfs",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 22,
+"height": 78,
+"weight": 320,
+"overall": 88,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Jason Pierre-Paul",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Defensive end",
+"age": 32,
+"height": 77,
+"weight": 275,
+"overall": 87,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 40,
+"sacks": 9.0,
+"interceptions": null,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Mike Edwards",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Safety",
+"age": 25,
+"height": 72,
+"weight": 205,
+"overall": 82,
+"passer_rating": null,
+"passing_yards": null,
+"td": 1,
+"ints": 3,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 50,
+"sacks": null,
+"interceptions": 3,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Rob Gronkowski",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Tight end",
+"age": 32,
+"height": 78,
+"weight": 265,
+"overall": 86,
+"passer_rating": null,
+"passing_yards": null,
+"td": 7,
+"ints": null,
+"rushing_yards": 0,
+"yards_per_attempt": 0.0,
+"rushing_tds": 0,
+"receptions": 55,
+"receiving_yards": 800,
+"yards_per_reception": 14.5,
+"receiving_tds": 7,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Carlton Davis",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Cornerback",
+"age": 25,
+"height": 73,
+"weight": 206,
+"overall": 84,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 3,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 45,
+"sacks": null,
+"interceptions": 3,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Ryan Jensen",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Center",
+"age": 30,
+"height": 77,
+"weight": 319,
+"overall": 83,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Antoine Winfield Jr.",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Safety",
+"age": 23,
+"height": 70,
+"weight": 203,
+"overall": 82,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 55,
+"sacks": null,
+"interceptions": 2,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Ali Marpet",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Guard",
+"age": 29,
+"height": 76,
+"weight": 307,
+"overall": 81,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Vita Vea",
+"team": "Tampa Bay Buccaneers",
+"nationality": "American",
+"position": "Defensive tackle",
+"age": 26,
+"height": 76,
+"weight": 347,
+"overall": 80,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 30,
+"sacks": 4.0,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Kyler Murray",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Quarterback",
+"age": 24,
+"height": 70,
+"weight": 207,
+"overall": 94,
+"passer_rating": 94.3,
+"passing_yards": 4000,
+"td": 30,
+"ints": 10,
+"rushing_yards": 500,
+"yards_per_attempt": 5.5,
+"rushing_tds": 5,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "DeAndre Hopkins",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 29,
+"height": 73,
+"weight": 212,
+"overall": 98,
+"passer_rating": null,
+"passing_yards": null,
+"td": 10,
+"ints": null,
+"rushing_yards": 0,
+"yards_per_attempt": 0.0,
+"rushing_tds": 0,
+"receptions": 110,
+"receiving_yards": 1500,
+"yards_per_reception": 13.6,
+"receiving_tds": 10,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "J.J. Watt",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Defensive end",
+"age": 32,
+"height": 77,
+"weight": 288,
+"overall": 95,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 40,
+"sacks": 12.0,
+"interceptions": null,
+"forced_fumbles": 3,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Chandler Jones",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Outside linebacker",
+"age": 31,
+"height": 77,
+"weight": 265,
+"overall": 93,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 50,
+"sacks": 15.0,
+"interceptions": null,
+"forced_fumbles": 4,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Budda Baker",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Safety",
+"age": 25,
+"height": 70,
+"weight": 195,
+"overall": 90,
+"passer_rating": null,
+"passing_yards": null,
+"td": 1,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 80,
+"sacks": null,
+"interceptions": 2,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "A.J. Green",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 33,
+"height": 76,
+"weight": 210,
+"overall": 88,
+"passer_rating": null,
+"passing_yards": null,
+"td": 6,
+"ints": null,
+"rushing_yards": 0,
+"yards_per_attempt": 0.0,
+"rushing_tds": 0,
+"receptions": 65,
+"receiving_yards": 800,
+"yards_per_reception": 12.3,
+"receiving_tds": 6,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Jordan Hicks",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Inside linebacker",
+"age": 29,
+"height": 73,
+"weight": 236,
+"overall": 87,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 100,
+"sacks": 2.0,
+"interceptions": 2,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Byron Murphy",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Cornerback",
+"age": 24,
+"height": 71,
+"weight": 190,
+"overall": 85,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 3,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 50,
+"sacks": null,
+"interceptions": 3,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Zach Allen",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Defensive end",
+"age": 24,
+"height": 77,
+"weight": 285,
+"overall": 81,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 30,
+"sacks": 3.0,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Christian Kirk",
+"team": "Arizona Cardinals",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 24,
+"height": 71,
+"weight": 200,
+"overall": 80,
+"passer_rating": null,
+"passing_yards": null,
+"td": 5,
+"ints": null,
+"rushing_yards": 50,
+"yards_per_attempt": 5.6,
+"rushing_tds": 1,
+"receptions": 60,
+"receiving_yards": 700,
+"yards_per_reception": 11.7,
+"receiving_tds": 5,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Aaron Donald",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Defensive tackle",
+"age": 30,
+"height": 73,
+"weight": 280,
+"overall": 99,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 50,
+"sacks": 15.5,
+"interceptions": null,
+"forced_fumbles": 4,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Jalen Ramsey",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Cornerback",
+"age": 26,
+"height": 73,
+"weight": 208,
+"overall": 97,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 3,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 45,
+"sacks": null,
+"interceptions": 3,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Cooper Kupp",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 28,
+"height": 74,
+"weight": 208,
+"overall": 94,
+"passer_rating": null,
+"passing_yards": null,
+"td": 10,
+"ints": null,
+"rushing_yards": 20,
+"yards_per_attempt": 4.4,
+"rushing_tds": 0,
+"receptions": 100,
+"receiving_yards": 1300,
+"yards_per_reception": 13.0,
+"receiving_tds": 10,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Matthew Stafford",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Quarterback",
+"age": 33,
+"height": 75,
+"weight": 220,
+"overall": 93,
+"passer_rating": 96.9,
+"passing_yards": 4300,
+"td": 35,
+"ints": 10,
+"rushing_yards": 100,
+"yards_per_attempt": 7.8,
+"rushing_tds": 2,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Andrew Whitworth",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 40,
+"height": 79,
+"weight": 330,
+"overall": 91,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Cam Akers",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Running back",
+"age": 22,
+"height": 70,
+"weight": 217,
+"overall": 88,
+"passer_rating": null,
+"passing_yards": null,
+"td": 8,
+"ints": null,
+"rushing_yards": 1000,
+"yards_per_attempt": 4.3,
+"rushing_tds": 8,
+"receptions": 40,
+"receiving_yards": 400,
+"yards_per_reception": 10.0,
+"receiving_tds": 2,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Robert Woods",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 29,
+"height": 73,
+"weight": 195,
+"overall": 87,
+"passer_rating": null,
+"passing_yards": null,
+"td": 6,
+"ints": null,
+"rushing_yards": 200,
+"yards_per_attempt": 6.9,
+"rushing_tds": 1,
+"receptions": 80,
+"receiving_yards": 900,
+"yards_per_reception": 11.3,
+"receiving_tds": 6,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Leonard Floyd",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Outside linebacker",
+"age": 29,
+"height": 77,
+"weight": 240,
+"overall": 86,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 45,
+"sacks": 10.5,
+"interceptions": null,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Darious Williams",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Cornerback",
+"age": 28,
+"height": 70,
+"weight": 187,
+"overall": 85,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 4,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 40,
+"sacks": null,
+"interceptions": 4,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Tyler Higbee",
+"team": "Los Angeles Rams",
+"nationality": "American",
+"position": "Tight end",
+"age": 28,
+"height": 78,
+"weight": 255,
+"overall": 82,
+"passer_rating": null,
+"passing_yards": null,
+"td": 5,
+"ints": null,
+"rushing_yards": 0,
+"yards_per_attempt": 0.0,
+"rushing_tds": 0,
+"receptions": 60,
+"receiving_yards": 700,
+"yards_per_reception": 11.7,
+"receiving_tds": 5,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "George Kittle",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Tight end",
+"age": 27,
+"height": 76,
+"weight": 250,
+"overall": 97,
+"passer_rating": null,
+"passing_yards": null,
+"td": 8,
+"ints": null,
+"rushing_yards": 0,
+"yards_per_attempt": 0.0,
+"rushing_tds": 0,
+"receptions": 85,
+"receiving_yards": 1000,
+"yards_per_reception": 11.8,
+"receiving_tds": 8,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Fred Warner",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Linebacker",
+"age": 24,
+"height": 74,
+"weight": 236,
+"overall": 96,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 120,
+"sacks": 5.0,
+"interceptions": 2,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Nick Bosa",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Defensive end",
+"age": 23,
+"height": 77,
+"weight": 266,
+"overall": 94,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 40,
+"sacks": 10.0,
+"interceptions": null,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Deebo Samuel",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 25,
+"height": 71,
+"weight": 214,
+"overall": 88,
+"passer_rating": null,
+"passing_yards": null,
+"td": 5,
+"ints": null,
+"rushing_yards": 200,
+"yards_per_attempt": 6.9,
+"rushing_tds": 2,
+"receptions": 70,
+"receiving_yards": 800,
+"yards_per_reception": 11.4,
+"receiving_tds": 5,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Trent Williams",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 33,
+"height": 80,
+"weight": 320,
+"overall": 95,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Jimmy Garoppolo",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Quarterback",
+"age": 30,
+"height": 74,
+"weight": 225,
+"overall": 79,
+"passer_rating": 92.4,
+"passing_yards": 3000,
+"td": 20,
+"ints": 8,
+"rushing_yards": 100,
+"yards_per_attempt": 7.2,
+"rushing_tds": 1,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Raheem Mostert",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Running back",
+"age": 29,
+"height": 70,
+"weight": 205,
+"overall": 85,
+"passer_rating": null,
+"passing_yards": null,
+"td": 6,
+"ints": null,
+"rushing_yards": 700,
+"yards_per_attempt": 5.0,
+"rushing_tds": 6,
+"receptions": 20,
+"receiving_yards": 200,
+"yards_per_reception": 10.0,
+"receiving_tds": 1,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Jason Verrett",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Cornerback",
+"age": 30,
+"height": 70,
+"weight": 188,
+"overall": 84,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 3,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 30,
+"sacks": null,
+"interceptions": 3,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Arik Armstead",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Defensive end",
+"age": 27,
+"height": 79,
+"weight": 290,
+"overall": 83,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 35,
+"sacks": 6.5,
+"interceptions": null,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Trent Sherfield",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 25,
+"height": 73,
+"weight": 219,
+"overall": 73,
+"passer_rating": null,
+"passing_yards": null,
+"td": 1,
+"ints": null,
+"rushing_yards": 0,
+"yards_per_attempt": 0.0,
+"rushing_tds": 0,
+"receptions": 20,
+"receiving_yards": 300,
+"yards_per_reception": 15.0,
+"receiving_tds": 1,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Javon Kinlaw",
+"team": "San Francisco 49ers",
+"nationality": "American",
+"position": "Defensive tackle",
+"age": 22,
+"height": 77,
+"weight": 319,
+"overall": 79,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 25,
+"sacks": 2.0,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Russell Wilson",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Quarterback",
+"age": 33,
+"height": 71,
+"weight": 215,
+"overall": 98,
+"passer_rating": 108.2,
+"passing_yards": 4000,
+"td": 35,
+"ints": 7,
+"rushing_yards": 300,
+"yards_per_attempt": 8.0,
+"rushing_tds": 4,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Bobby Wagner",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Linebacker",
+"age": 31,
+"height": 73,
+"weight": 245,
+"overall": 97,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 120,
+"sacks": 3.0,
+"interceptions": 2,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "DK Metcalf",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 23,
+"height": 76,
+"weight": 229,
+"overall": 95,
+"passer_rating": null,
+"passing_yards": null,
+"td": 10,
+"ints": null,
+"rushing_yards": 100,
+"yards_per_attempt": 6.7,
+"rushing_tds": 1,
+"receptions": 80,
+"receiving_yards": 1300,
+"yards_per_reception": 16.3,
+"receiving_tds": 10,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Jamal Adams",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Safety",
+"age": 25,
+"height": 72,
+"weight": 213,
+"overall": 93,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 4,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 80,
+"sacks": 2.5,
+"interceptions": 4,
+"forced_fumbles": 2,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Tyler Lockett",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Wide receiver",
+"age": 28,
+"height": 70,
+"weight": 182,
+"overall": 89,
+"passer_rating": null,
+"passing_yards": null,
+"td": 8,
+"ints": null,
+"rushing_yards": 50,
+"yards_per_attempt": 5.0,
+"rushing_tds": 1,
+"receptions": 70,
+"receiving_yards": 900,
+"yards_per_reception": 12.9,
+"receiving_tds": 8,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Quandre Diggs",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Safety",
+"age": 28,
+"height": 70,
+"weight": 196,
+"overall": 86,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 3,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 45,
+"sacks": null,
+"interceptions": 3,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Chris Carson",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Running back",
+"age": 27,
+"height": 71,
+"weight": 222,
+"overall": 87,
+"passer_rating": null,
+"passing_yards": null,
+"td": 6,
+"ints": null,
+"rushing_yards": 900,
+"yards_per_attempt": 4.3,
+"rushing_tds": 6,
+"receptions": 30,
+"receiving_yards": 300,
+"yards_per_reception": 10.0,
+"receiving_tds": 1,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Carlos Dunlap",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Defensive end",
+"age": 32,
+"height": 78,
+"weight": 285,
+"overall": 84,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 30,
+"sacks": 7.5,
+"interceptions": null,
+"forced_fumbles": 3,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Duane Brown",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Offensive tackle",
+"age": 36,
+"height": 77,
+"weight": 325,
+"overall": 91,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "K.J. Wright",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Linebacker",
+"age": 32,
+"height": 74,
+"weight": 246,
+"overall": 86,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 80,
+"sacks": 2.0,
+"interceptions": 2,
+"forced_fumbles": 1,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Gerald Everett",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Tight end",
+"age": 27,
+"height": 75,
+"weight": 240,
+"overall": 81,
+"passer_rating": null,
+"passing_yards": null,
+"td": 3,
+"ints": null,
+"rushing_yards": 0,
+"yards_per_attempt": 0.0,
+"rushing_tds": 0,
+"receptions": 40,
+"receiving_yards": 500,
+"yards_per_reception": 12.5,
+"receiving_tds": 3,
+"tackles": null,
+"sacks": null,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Shaquill Griffin",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Cornerback",
+"age": 26,
+"height": 73,
+"weight": 198,
+"overall": 84,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 2,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 40,
+"sacks": null,
+"interceptions": 2,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "Poona Ford",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Defensive tackle",
+"age": 26,
+"height": 71,
+"weight": 310,
+"overall": 83,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": null,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 45,
+"sacks": 2.0,
+"interceptions": null,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+{
+"name": "D.J. Reed",
+"team": "Seattle Seahawks",
+"nationality": "American",
+"position": "Cornerback",
+"age": 24,
+"height": 69,
+"weight": 188,
+"overall": 79,
+"passer_rating": null,
+"passing_yards": null,
+"td": null,
+"ints": 1,
+"rushing_yards": null,
+"yards_per_attempt": null,
+"rushing_tds": null,
+"receptions": null,
+"receiving_yards": null,
+"yards_per_reception": null,
+"receiving_tds": null,
+"tackles": 30,
+"sacks": null,
+"interceptions": 1,
+"forced_fumbles": null,
+"fg_percentage": null,
+"long": null,
+"pats": null
+},
+
+
+]
+
+function search() {
+  var input_name = document.getElementById("name").value.toLowerCase();
+  var input_team = document.getElementById("team").value.toLowerCase();
+  var input_nationality = document.getElementById("nationality").value.toLowerCase();
+  var input_position = document.getElementById("position").value.toLowerCase();
+  var input_age = document.getElementById("age").value;
+  var input_height = document.getElementById("height").value;
+  var input_weight = document.getElementById("weight").value;
+  var input_overall = document.getElementById("overall").value;
+  var input_passer_rating = document.getElementById("passer_rating").value;
+  var input_passing_yards = document.getElementById("passing_yards").value;
+  var input_td = document.getElementById("td").value;
+  var input_ints = document.getElementById("ints").value;
+  var input_rushing_yards = document.getElementById("rushing_yards").value;
+  var input_yards_per_attempt = document.getElementById("yards_per_attempt").value;
+  var input_rushing_tds = document.getElementById("rushing_tds").value;
+  var input_receptions = document.getElementById("receptions").value;
+  var input_receiving_yards = document.getElementById("receiving_yards").value;
+  var input_yards_per_reception = document.getElementById("yards_per_reception").value;
+  var input_receiving_tds = document.getElementById("receiving_tds").value;
+  var input_tackles = document.getElementById("tackles").value;
+  var input_sacks = document.getElementById("sacks").value;
+  var input_interceptions = document.getElementById("interceptions").value;
+  var input_forced_fumbles = document.getElementById("forced_fumbles").value;
+  var input_fg_percentage = document.getElementById("fg_percentage").value;
+  var input_long = document.getElementById("long").value;
+  var input_pats = document.getElementById("pats").value;
+  
+ 
+
+  
+
+  var results = [];
+
+  for (var i = 0; i < players.length; i++) {
+    var player = players[i];
+    if (input_name && !player.name.toLowerCase().includes(input_name)) {
+  continue;
+}
+if (input_team && !player.team.toLowerCase().includes(input_team)) {
+  continue;
+}
+if (input_nationality && !player.nationality.toLowerCase().includes(input_nationality)) {
+  continue;
+}
+if (input_position && !player.position.toLowerCase().includes(input_position)) {
+  continue;
+}
+if (input_age && player.age < parseFloat(input_age)) {
+  continue;
+}
+if (input_height && player.height < parseFloat(input_height)) {
+  continue;
+}
+if (input_weight && player.weight < parseFloat(input_weight)) {
+  continue;
+}
+if (input_overall && player.overall < parseFloat(input_overall)) {
+  continue;
+}
+if (input_passer_rating && player.passer_rating < parseFloat(input_passer_rating)) {
+  continue;
+}
+if (input_passing_yards && player.passing_yards < parseFloat(input_passing_yards)) {
+  continue;
+}
+if (input_td && player.td < parseFloat(input_td)) {
+  continue;
+}
+if (input_ints && player.ints < parseFloat(input_ints)) {
+  continue;
+}
+if (input_rushing_yards && player.rushing_yards < parseFloat(input_rushing_yards)) {
+  continue;
+}
+if (input_yards_per_attempt && player.yards_per_attempt < parseFloat(input_yards_per_attempt)) {
+  continue;
+}
+if (input_rushing_tds && player.rushing_tds < parseFloat(input_rushing_tds)) {
+  continue;
+}
+if (input_receptions && player.receptions < parseFloat(input_receptions)) {
+  continue;
+}
+if (input_receiving_yards && player.receiving_yards < parseFloat(input_receiving_yards)) {
+  continue;
+}
+if (input_yards_per_reception && player.yards_per_reception < parseFloat(input_yards_per_reception)) {
+  continue;
+}
+if (input_receiving_tds && player.receiving_tds < parseFloat(input_receiving_tds)) {
+  continue;
+}
+if (input_tackles && player.tackles < parseFloat(input_tackles)) {
+  continue;
+}
+if (input_sacks && player.sacks < parseFloat(input_sacks)) {
+  continue;
+}
+if (input_interceptions && player.interceptions < parseFloat(input_interceptions)) {
+  continue;
+}
+if (input_forced_fumbles && player.forced_fumbles < parseFloat(input_forced_fumbles)) {
+  continue;
+}
+if (input_fg_percentage && player.fg_percentage < parseFloat(input_fg_percentage)) {
+  continue;
+}
+if (input_long && player.long < parseFloat(input_long)) {
+  continue;
+}
+if (input_pats && player.pats < parseFloat(input_pats)) {
+  continue;
+}
+
+
+if (
+  !input_name &&
+  !input_team &&
+  !input_nationality &&
+  !input_position &&
+  !input_age &&
+  !input_height &&
+  !input_weight &&
+  !input_overall &&
+  !input_passer_rating &&
+  !input_passing_yards &&
+  !input_td &&
+  !input_ints &&
+  !input_rushing_yards &&
+  !input_yards_per_attempt &&
+  !input_rushing_tds &&
+  !input_receptions &&
+  !input_receiving_yards &&
+  !input_yards_per_reception &&
+  !input_receiving_tds &&
+  !input_tackles &&
+  !input_sacks &&
+  !input_interceptions &&
+  !input_forced_fumbles &&
+  !input_fg_percentage &&
+  !input_long &&
+  !input_pats
+)  {
+    
+    var tableBody = document.querySelector("#search-results tbody");
+    tableBody.innerHTML = "";
+    return;
+}
+
+
+
+
+
+results.push(player);
+}
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+          if (results[i].name.toLowerCase() === uniqueResults[j].name.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+
+for (var i = 0; i < results.length; i++) {
+var player = results[i];
+var row = document.createElement("tr");
+row.innerHTML = 
+"<td>" + player.name + "</td>" +
+"<td>" + player.team + "</td>" +
+"<td>" + player.nationality + "</td>" +
+"<td>" + player.position + "</td>" +
+"<td>" + player.age + "</td>" +
+"<td>" + player.height + "</td>" +
+"<td>" + player.weight + "</td>" +
+"<td>" + player.overall + "</td>" +
+"<td>" + player.passer_rating + "</td>" +
+"<td>" + player.passing_yards + "</td>" +
+"<td>" + player.td + "</td>" +
+"<td>" + player.ints + "</td>" +
+"<td>" + player.rushing_yards + "</td>" +
+"<td>" + player.yards_per_attempt + "</td>" +
+"<td>" + player.rushing_tds + "</td>" +
+"<td>" + player.receptions + "</td>" +
+"<td>" + player.receiving_yards + "</td>" +
+"<td>" + player.yards_per_reception + "</td>" +
+"<td>" + player.receiving_tds + "</td>" +
+"<td>" + player.tackles + "</td>" +
+"<td>" + player.sacks + "</td>" +
+"<td>" + player.interceptions + "</td>" +
+"<td>" + player.forced_fumbles + "</td>" +
+"<td>" + player.fg_percentage + "</td>" +
+"<td>" + player.long + "</td>" +
+"<td>" + player.pats + "</td>";
+
+
+
+
+
+
+
+
+tableBody.appendChild(row);
+}
+}
+
+
+
+
+
+function compareNumbers(a, b) {
+    var numA = a.era === null ? Infinity : parseFloat(a.era);
+    var numB = b.era === null ? Infinity : parseFloat(b.era);
+
+    return numA - numB;
+}
+
+players.sort(compareNumbers);
+
+console.log(players);
+
+
+
+
+
+
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = x.innerHTML.toLowerCase() == "null" ? Infinity : parseFloat(x.innerHTML);
+        y = y.innerHTML.toLowerCase() == "null" ? Infinity : parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+</script>
+
+</body>
+</html>

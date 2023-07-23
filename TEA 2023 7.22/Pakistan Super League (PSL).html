@@ -1,0 +1,2653 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Cricket</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+
+    th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+
+    
+	</style>
+</head>
+<body>
+	<h1>Pakistan Super League (PSL)</h1>
+	<img src="">
+
+    <canvas id="matrix-canvas"></canvas>
+
+	<form onsubmit="search(); return false;">
+		
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="team" placeholder="Team">
+<input type="text" id="nationality" placeholder="Nationality">
+<input type="text" id="position" placeholder="Position">
+<input type="number" step="0.01" id="age" placeholder="Age">
+<input type="number" step="0.01" id="height" placeholder="Height(cm)">
+<input type="number" step="0.01" id="weight" placeholder="Weight(kg)">
+<input type="number" step="0.01" id="overall" placeholder="Overall(0~100)">
+<input type="number" step="0.01" id="batting_average" placeholder="Batting Average">
+<input type="number" step="0.01" id="sr_bt" placeholder="SR-BT(Strike Rate for Batting)">
+<input type="number" step="0.01" id="hs" placeholder="HS(Highest Score)">
+<input type="number" step="0.01" id="100s" placeholder="100s(Centuries)">
+<input type="number" step="0.01" id="50s" placeholder="50s(Half Centuries)">
+<input type="number" step="0.01" id="econ" placeholder="Econ(Economy Rate)">
+<input type="number" step="0.01" id="bowling_average" placeholder="Bowling Average">
+<input type="number" step="0.01" id="sr_bl" placeholder="SR-BL(Strike Rate for Bowling)">
+<input type="number" step="0.01" id="5wi" placeholder="5WI(Five Wicket Innings)">
+<input type="number" step="0.01" id="ct" placeholder="Ct(Catches)">
+<input type="number" step="0.01" id="st" placeholder="St(Stumpings)">
+		
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+
+<thead>
+  <tr>
+
+    <th onclick="sortTable(0)">Name<span id="sortIndicator0">▲▼</span></th>
+    <th onclick="sortTable(1)">Team<span id="sortIndicator1">▲▼</span></th>
+    <th onclick="sortTable(2)">Nationality<span id="sortIndicator2">▲▼</span></th>
+    <th onclick="sortTable(3)">Position<span id="sortIndicator3">▲▼</span></th>
+    <th onclick="sortTable(4)">Age<span id="sortIndicator4">▲▼</span></th>
+    <th onclick="sortTable(5)">Height(cm)<span id="sortIndicator5">▲▼</span></th>
+    <th onclick="sortTable(6)">Weight(kg)<span id="sortIndicator6">▲▼</span></th>
+    <th onclick="sortTable(7)">Overall(0~100)<span id="sortIndicator7">▲▼</span></th>
+    <th onclick="sortTable(8)">Batting Average<span id="sortIndicator8">▲▼</span></th>
+    <th onclick="sortTable(9)">SR-BT(Strike Rate for Batting)<span id="sortIndicator9">▲▼</span></th>
+    <th onclick="sortTable(10)">HS(Highest Score)<span id="sortIndicator10">▲▼</span></th>
+    <th onclick="sortTable(11)">100s(Centuries)<span id="sortIndicator11">▲▼</span></th>
+    <th onclick="sortTable(12)">50s(Half Centuries)<span id="sortIndicator12">▲▼</span></th>
+    <th onclick="sortTable(13)">Econ(Economy Rate)<span id="sortIndicator13">▲▼</span></th>
+    <th onclick="sortTable(14)">Bowling Average<span id="sortIndicator14">▲▼</span></th>
+    <th onclick="sortTable(15)">SR-BL(Strike Rate for Bowling)<span id="sortIndicator15">▲▼</span></th>
+    <th onclick="sortTable(16)">5WI(Five Wicket Innings)<span id="sortIndicator16">▲▼</span></th>
+    <th onclick="sortTable(17)">Ct(Catches)<span id="sortIndicator17">▲▼</span></th>
+    <th onclick="sortTable(18)">St(Stumpings)<span id="sortIndicator18">▲▼</span></th>
+    
+  </tr>
+  </thead>
+  
+  
+<tbody></tbody>
+</table>
+<script>
+
+var players = [
+
+{
+"name": "Shadab Khan",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 23,
+"height": 173,
+"weight": 68,
+"overall": 87,
+"batting_average": 19.15,
+"sr_bt": 126.67,
+"hs": 77,
+"100s": 0,
+"50s": 4,
+"econ": 7.07,
+"bowling_average": 18.90,
+"sr_bl": 16.1,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Colin Munro",
+"team": "Islamabad United",
+"nationality": "New Zealand",
+"position": "Batsman",
+"age": 34,
+"height": 180,
+"weight": 80,
+"overall": 85,
+"batting_average": 27.90,
+"sr_bt": 156.04,
+"hs": 100,
+"100s": 1,
+"50s": 10,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Alex Hales",
+"team": "Islamabad United",
+"nationality": "English",
+"position": "Batsman",
+"age": 32,
+"height": 193,
+"weight": 90,
+"overall": 88,
+"batting_average": 35.13,
+"sr_bt": 142.23,
+"hs": 116,
+"100s": 1,
+"50s": 10,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Faheem Ashraf",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 27,
+"height": 183,
+"weight": 82,
+"overall": 84,
+"batting_average": 17.50,
+"sr_bt": 149.78,
+"hs": 62,
+"100s": 0,
+"50s": 1,
+"econ": 8.13,
+"bowling_average": 27.42,
+"sr_bl": 20.2,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Asif Ali",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 30,
+"height": 183,
+"weight": 75,
+"overall": 82,
+"batting_average": 20.77,
+"sr_bt": 142.32,
+"hs": 80,
+"100s": 0,
+"50s": 5,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Rohail Nazir",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Wicketkeeper",
+"age": 20,
+"height": 180,
+"weight": 70,
+"overall": 77,
+"batting_average": 19.00,
+"sr_bt": 124.03,
+"hs": 34,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Lewis Gregory",
+"team": "Islamabad United",
+"nationality": "English",
+"position": "All-rounder",
+"age": 29,
+"height": 188,
+"weight": 85,
+"overall": 83,
+"batting_average": 23.43,
+"sr_bt": 147.91,
+"hs": 49,
+"100s": 0,
+"50s": 1,
+"econ": 7.68,
+"bowling_average": 23.90,
+"sr_bl": 18.7,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Zafar Gohar",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 26,
+"height": 180,
+"weight": 80,
+"overall": 81,
+"batting_average": 13.16,
+"sr_bt": 100.00,
+"hs": 8,
+"100s": 0,
+"50s": 0,
+"econ": 8.30,
+"bowling_average": 27.14,
+"sr_bl": 19.6,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Akif Javed",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 22,
+"height": 183,
+"weight": 78,
+"overall": 76,
+"batting_average": 2.50,
+"sr_bt": 62.50,
+"hs": 2,
+"100s": 0,
+"50s": 0,
+"econ": 7.68,
+"bowling_average": 24.00,
+"sr_bl": 18.7,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Wasim Jr",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 20,
+"height": 191,
+"weight": 82,
+"overall": 75,
+"batting_average": 7.50,
+"sr_bt": 115.38,
+"hs": 9,
+"100s": 0,
+"50s": 0,
+"econ": 8.84,
+"bowling_average": 24.75,
+"sr_bl": 16.7,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Musa Khan",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 20,
+"height": 188,
+"weight": 82,
+"overall": 78,
+"batting_average": 4.00,
+"sr_bt": 160.00,
+"hs": 4,
+"100s": 0,
+"50s": 0,
+"econ": 7.34,
+"bowling_average": 25.18,
+"sr_bl": 20.5,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Rohit Gulzar",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 21,
+"height": 175,
+"weight": 70,
+"overall": 72,
+"batting_average": 15.33,
+"sr_bt": 130.77,
+"hs": 27,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Akhlaq",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Wicketkeeper",
+"age": 21,
+"height": 178,
+"weight": 70,
+"overall": 72,
+"batting_average": 17.66,
+"sr_bt": 103.52,
+"hs": 37,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Iftikhar Ahmed",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 31,
+"height": 180,
+"weight": 75,
+"overall": 80,
+"batting_average": 21.47,
+"sr_bt": 131.34,
+"hs": 92,
+"100s": 0,
+"50s": 4,
+"econ": 8.33,
+"bowling_average": 30.85,
+"sr_bl": 22.2,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Zeeshan Zameer",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 21,
+"height": 180,
+"weight": 75,
+"overall": 70,
+"batting_average": 11.25,
+"sr_bt": 100.00,
+"hs": 9,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Ali Khan",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 28,
+"height": 180,
+"weight": 75,
+"overall": 72,
+"batting_average": 5.66,
+"sr_bt": 97.91,
+"hs": 4,
+"100s": 0,
+"50s": 0,
+"econ": 7.50,
+"bowling_average": 29.00,
+"sr_bl": 23.2,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Ali Imran",
+"team": "Islamabad United",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 23,
+"height": 175,
+"weight": 72,
+"overall": 70,
+"batting_average": 11.50,
+"sr_bt": 126.92,
+"hs": 49,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Fakhar Zaman",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 31,
+"height": 183,
+"weight": 80,
+"overall": 88,
+"batting_average": 31.64,
+"sr_bt": 139.65,
+"hs": 158,
+"100s": 1,
+"50s": 15,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Rashid Khan",
+"team": "Lahore Qalandars",
+"nationality": "Afghan",
+"position": "All-rounder",
+"age": 23,
+"height": 168,
+"weight": 64,
+"overall": 92,
+"batting_average": 18.82,
+"sr_bt": 146.55,
+"hs": 56,
+"100s": 0,
+"50s": 2,
+"econ": 6.05,
+"bowling_average": 17.32,
+"sr_bl": 13.7,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Hafeez",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 41,
+"height": 180,
+"weight": 80,
+"overall": 85,
+"batting_average": 24.56,
+"sr_bt": 117.41,
+"hs": 98,
+"100s": 0,
+"50s": 6,
+"econ": 7.22,
+"bowling_average": 29.68,
+"sr_bl": 24.6,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Haris Rauf",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 27,
+"height": 185,
+"weight": 75,
+"overall": 87,
+"batting_average": 6.16,
+"sr_bt": 89.18,
+"hs": 8,
+"100s": 0,
+"50s": 0,
+"econ": 7.75,
+"bowling_average": 23.34,
+"sr_bl": 18.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Shaheen Afridi",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 21,
+"height": 196,
+"weight": 75,
+"overall": 89,
+"batting_average": 5.25,
+"sr_bt": 97.67,
+"hs": 6,
+"100s": 0,
+"50s": 0,
+"econ": 7.70,
+"bowling_average": 23.14,
+"sr_bl": 18.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Ben Dunk",
+"team": "Lahore Qalandars",
+"nationality": "Australian",
+"position": "Wicketkeeper",
+"age": 35,
+"height": 183,
+"weight": 80,
+"overall": 81,
+"batting_average": 29.35,
+"sr_bt": 158.54,
+"hs": 99,
+"100s": 0,
+"50s": 5,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Faizan",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 25,
+"height": 175,
+"weight": 68,
+"overall": 74,
+"batting_average": 22.77,
+"sr_bt": 115.13,
+"hs": 59,
+"100s": 0,
+"50s": 1,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "David Wiese",
+"team": "Lahore Qalandars",
+"nationality": "South African",
+"position": "All-rounder",
+"age": 36,
+"height": 186,
+"weight": 88,
+"overall": 80,
+"batting_average": 22.73,
+"sr_bt": 142.66,
+"hs": 45,
+"100s": 0,
+"50s": 1,
+"econ": 8.34,
+"bowling_average": 30.30,
+"sr_bl": 21.8,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Sohail Akhtar",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 35,
+"height": 180,
+"weight": 75,
+"overall": 79,
+"batting_average": 23.05,
+"sr_bt": 134.18,
+"hs": 68,
+"100s": 0,
+"50s": 4,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Maaz Khan",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 20,
+"height": 175,
+"weight": 70,
+"overall": 71,
+"batting_average": 5.33,
+"sr_bt": 120.00,
+"hs": 6,
+"100s": 0,
+"50s": 0,
+"econ": 9.60,
+"bowling_average": 29.20,
+"sr_bl": 18.2,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Dilbar Hussain",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 27,
+"height": 180,
+"weight": 75,
+"overall": 73,
+"batting_average": 1.00,
+"sr_bt": 50.00,
+"hs": 1,
+"100s": 0,
+"50s": 0,
+"econ": 8.50,
+"bowling_average": 26.40,
+"sr_bl": 18.6,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Zeeshan Ashraf",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Wicketkeeper",
+"age": 28,
+"height": 178,
+"weight": 80,
+"overall": 70,
+"batting_average": 22.30,
+"sr_bt": 136.58,
+"hs": 36,
+"100s": 0,
+"50s": 2,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Zaid Alam",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 23,
+"height": 175,
+"weight": 70,
+"overall": 68,
+"batting_average": 14.40,
+"sr_bt": 109.37,
+"hs": 25,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Ahmed Danyal",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 22,
+"height": 180,
+"weight": 75,
+"overall": 70,
+"batting_average": 0.00,
+"sr_bt": 0.00,
+"hs": 0,
+"100s": 0,
+"50s": 0,
+"econ": 9.00,
+"bowling_average": 36.00,
+"sr_bl": 24.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Fahad Munir",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 23,
+"height": 178,
+"weight": 72,
+"overall": 70,
+"batting_average": 6.66,
+"sr_bt": 78.79,
+"hs": 6,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Agha Salman",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 26,
+"height": 180,
+"weight": 80,
+"overall": 69,
+"batting_average": 10.60,
+"sr_bt": 106.66,
+"hs": 35,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Maaz Khan",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 20,
+"height": 175,
+"weight": 70,
+"overall": 71,
+"batting_average": 5.33,
+"sr_bt": 120.00,
+"hs": 6,
+"100s": 0,
+"50s": 0,
+"econ": 9.60,
+"bowling_average": 29.20,
+"sr_bl": 18.2,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Salman Mirza",
+"team": "Lahore Qalandars",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 27,
+"height": 180,
+"weight": 75,
+"overall": 70,
+"batting_average": 1.00,
+"sr_bt": 50.00,
+"hs": 1,
+"100s": 0,
+"50s": 0,
+"econ": 8.50,
+"bowling_average": 26.40,
+"sr_bl": 18.6,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Shan Masood",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 27,
+"height": 183,
+"weight": 75,
+"overall": 82,
+"batting_average": 28.12,
+"sr_bt": 125.86,
+"hs": 73,
+"100s": 0,
+"50s": 5,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Shoaib Malik",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 40,
+"height": 183,
+"weight": 78,
+"overall": 87,
+"batting_average": 35.17,
+"sr_bt": 124.26,
+"hs": 95,
+"100s": 0,
+"50s": 6,
+"econ": 7.54,
+"bowling_average": 36.37,
+"sr_bl": 28.9,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Sohail Tanvir",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 37,
+"height": 188,
+"weight": 82,
+"overall": 84,
+"batting_average": 8.90,
+"sr_bt": 83.68,
+"hs": 26,
+"100s": 0,
+"50s": 0,
+"econ": 7.34,
+"bowling_average": 26.86,
+"sr_bl": 22.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Rilee Rossouw",
+"team": "Multan Sultans",
+"nationality": "South African",
+"position": "Batsman",
+"age": 32,
+"height": 180,
+"weight": 75,
+"overall": 84,
+"batting_average": 30.38,
+"sr_bt": 133.98,
+"hs": 100,
+"100s": 1,
+"50s": 6,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Usman Qadir",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 28,
+"height": 180,
+"weight": 72,
+"overall": 82,
+"batting_average": 8.75,
+"sr_bt": 95.74,
+"hs": 10,
+"100s": 0,
+"50s": 0,
+"econ": 7.80,
+"bowling_average": 28.58,
+"sr_bl": 22.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Rizwan",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "Wicketkeeper",
+"age": 29,
+"height": 175,
+"weight": 70,
+"overall": 87,
+"batting_average": 35.18,
+"sr_bt": 130.38,
+"hs": 99,
+"100s": 0,
+"50s": 9,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Carlos Brathwaite",
+"team": "Multan Sultans",
+"nationality": "West Indian",
+"position": "All-rounder",
+"age": 33,
+"height": 193,
+"weight": 95,
+"overall": 83,
+"batting_average": 20.25,
+"sr_bt": 144.32,
+"hs": 64,
+"100s": 0,
+"50s": 1,
+"econ": 8.83,
+"bowling_average": 30.93,
+"sr_bl": 21.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Imran Tahir",
+"team": "Multan Sultans",
+"nationality": "South African",
+"position": "Bowler",
+"age": 42,
+"height": 175,
+"weight": 70,
+"overall": 89,
+"batting_average": 4.68,
+"sr_bt": 84.16,
+"hs": 8,
+"100s": 0,
+"50s": 0,
+"econ": 6.77,
+"bowling_average": 20.38,
+"sr_bl": 18.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Sohail Khan",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 37,
+"height": 183,
+"weight": 82,
+"overall": 80,
+"batting_average": 8.06,
+"sr_bt": 72.43,
+"hs": 17,
+"100s": 0,
+"50s": 0,
+"econ": 8.81,
+"bowling_average": 24.93,
+"sr_bl": 16.9,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Shahid Afridi",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 42,
+"height": 182,
+"weight": 77,
+"overall": 88,
+"batting_average": 17.92,
+"sr_bt": 153.42,
+"hs": 54,
+"100s": 0,
+"50s": 2,
+"econ": 7.43,
+"bowling_average": 24.27,
+"sr_bl": 19.6,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "James Vince",
+"team": "Multan Sultans",
+"nationality": "English",
+"position": "Batsman",
+"age": 30,
+"height": 183,
+"weight": 78,
+"overall": 83,
+"batting_average": 27.73,
+"sr_bt": 130.49,
+"hs": 84,
+"100s": 0,
+"50s": 7,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Khushdil Shah",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 26,
+"height": 183,
+"weight": 80,
+"overall": 79,
+"batting_average": 13.62,
+"sr_bt": 129.78,
+"hs": 70,
+"100s": 0,
+"50s": 1,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Adam Lyth",
+"team": "Multan Sultans",
+"nationality": "English",
+"position": "Batsman",
+"age": 34,
+"height": 183,
+"weight": 80,
+"overall": 79,
+"batting_average": 26.96,
+"sr_bt": 129.92,
+"hs": 85,
+"100s": 0,
+"50s": 6,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Umar",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 25,
+"height": 185,
+"weight": 75,
+"overall": 78,
+"batting_average": 1.00,
+"sr_bt": 50.00,
+"hs": 1,
+"100s": 0,
+"50s": 0,
+"econ": 8.50,
+"bowling_average": 28.40,
+"sr_bl": 20.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Chris Lynn",
+"team": "Multan Sultans",
+"nationality": "Australian",
+"position": "Batsman",
+"age": 32,
+"height": 183,
+"weight": 80,
+"overall": 81,
+"batting_average": 29.35,
+"sr_bt": 145.14,
+"hs": 113,
+"100s": 1,
+"50s": 4,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Sohaib Maqsood",
+"team": "Multan Sultans",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 34,
+"height": 178,
+"weight": 75,
+"overall": 77,
+"batting_average": 21.80,
+"sr_bt": 124.57,
+"hs": 85,
+"100s": 0,
+"50s": 4,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Babar Azam",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 26,
+"height": 180,
+"weight": 68,
+"overall": 90,
+"batting_average": 45.12,
+"sr_bt": 130.56,
+"hs": 105,
+"100s": 2,
+"50s": 9,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Imad Wasim",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 32,
+"height": 185,
+"weight": 80,
+"overall": 86,
+"batting_average": 27.84,
+"sr_bt": 120.02,
+"hs": 77,
+"100s": 0,
+"50s": 5,
+"econ": 7.52,
+"bowling_average": 29.04,
+"sr_bl": 23.2,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Amir",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 29,
+"height": 188,
+"weight": 74,
+"overall": 87,
+"batting_average": 6.84,
+"sr_bt": 79.78,
+"hs": 19,
+"100s": 0,
+"50s": 0,
+"econ": 7.04,
+"bowling_average": 21.59,
+"sr_bl": 18.4,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Sharjeel Khan",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 32,
+"height": 180,
+"weight": 78,
+"overall": 82,
+"batting_average": 23.45,
+"sr_bt": 132.05,
+"hs": 117,
+"100s": 1,
+"50s": 6,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Dan Christian",
+"team": "Karachi Kings",
+"nationality": "Australian",
+"position": "All-rounder",
+"age": 38,
+"height": 185,
+"weight": 85,
+"overall": 83,
+"batting_average": 24.35,
+"sr_bt": 126.70,
+"hs": 57,
+"100s": 0,
+"50s": 1,
+"econ": 8.73,
+"bowling_average": 26.61,
+"sr_bl": 18.3,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Nabi",
+"team": "Karachi Kings",
+"nationality": "Afghan",
+"position": "All-rounder",
+"age": 36,
+"height": 180,
+"weight": 75,
+"overall": 84,
+"batting_average": 23.42,
+"sr_bt": 132.02,
+"hs": 89,
+"100s": 0,
+"50s": 6,
+"econ": 6.88,
+"bowling_average": 23.74,
+"sr_bl": 20.6,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Colin Ingram",
+"team": "Karachi Kings",
+"nationality": "South African",
+"position": "Batsman",
+"age": 35,
+"height": 183,
+"weight": 82,
+"overall": 81,
+"batting_average": 29.84,
+"sr_bt": 135.24,
+"hs": 127,
+"100s": 1,
+"50s": 7,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Aamer Yamin",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 30,
+"height": 183,
+"weight": 82,
+"overall": 80,
+"batting_average": 10.87,
+"sr_bt": 110.77,
+"hs": 35,
+"100s": 0,
+"50s": 0,
+"econ": 9.13,
+"bowling_average": 30.84,
+"sr_bl": 20.2,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Martin Guptill",
+"team": "Karachi Kings",
+"nationality": "New Zealand",
+"position": "Batsman",
+"age": 35,
+"height": 185,
+"weight": 87,
+"overall": 80,
+"batting_average": 28.06,
+"sr_bt": 133.89,
+"hs": 101,
+"100s": 1,
+"50s": 6,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Thisara Perera",
+"team": "Karachi Kings",
+"nationality": "Sri Lankan",
+"position": "All-rounder",
+"age": 32,
+"height": 185,
+"weight": 83,
+"overall": 82,
+"batting_average": 17.82,
+"sr_bt": 146.12,
+"hs": 66,
+"100s": 0,
+"50s": 2,
+"econ": 8.63,
+"bowling_average": 29.17,
+"sr_bl": 20.2,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Chadwick Walton",
+"team": "Karachi Kings",
+"nationality": "West Indian",
+"position": "Batsman",
+"age": 36,
+"height": 183,
+"weight": 78,
+"overall": 79,
+"batting_average": 22.41,
+"sr_bt": 127.77,
+"hs": 92,
+"100s": 0,
+"50s": 6,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Noor Ahmad",
+"team": "Karachi Kings",
+"nationality": "Afghan",
+"position": "Bowler",
+"age": 20,
+"height": 175,
+"weight": 70,
+"overall": 75,
+"batting_average": 3.66,
+"sr_bt": 45.24,
+"hs": 6,
+"100s": 0,
+"50s": 0,
+"econ": 8.29,
+"bowling_average": 26.40,
+"sr_bl": 19.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Arshad Iqbal",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 20,
+"height": 182,
+"weight": 72,
+"overall": 75,
+"batting_average": 1.00,
+"sr_bt": 25.00,
+"hs": 1,
+"100s": 0,
+"50s": 0,
+"econ": 8.32,
+"bowling_average": 34.75,
+"sr_bl": 25.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Qasim Akram",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 19,
+"height": 180,
+"weight": 70,
+"overall": 73,
+"batting_average": 15.80,
+"sr_bt": 107.58,
+"hs": 32,
+"100s": 0,
+"50s": 0,
+"econ": 9.75,
+"bowling_average": 22.50,
+"sr_bl": 13.8,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Ammad Butt",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 26,
+"height": 188,
+"weight": 80,
+"overall": 72,
+"batting_average": 4.20,
+"sr_bt": 80.76,
+"hs": 12,
+"100s": 0,
+"50s": 0,
+"econ": 8.57,
+"bowling_average": 29.21,
+"sr_bl": 20.4,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Zeeshan Malik",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 24,
+"height": 178,
+"weight": 75,
+"overall": 71,
+"batting_average": 15.60,
+"sr_bt": 109.20,
+"hs": 40,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Maqbool Ahmed",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 25,
+"height": 180,
+"weight": 75,
+"overall": 70,
+"batting_average": 2.66,
+"sr_bt": 57.14,
+"hs": 3,
+"100s": 0,
+"50s": 0,
+"econ": 9.26,
+"bowling_average": 30.76,
+"sr_bl": 19.9,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Noor Zeb",
+"team": "Karachi Kings",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 26,
+"height": 182,
+"weight": 77,
+"overall": 70,
+"batting_average": 1.33,
+"sr_bt": 42.85,
+"hs": 2,
+"100s": 0,
+"50s": 0,
+"econ": 8.83,
+"bowling_average": 35.52,
+"sr_bl": 24.1,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Najeebullah Zadran",
+"team": "Karachi Kings",
+"nationality": "Afghan",
+"position": "Batsman",
+"age": 26,
+"height": 175,
+"weight": 72,
+"overall": 69,
+"batting_average": 13.15,
+"sr_bt": 125.01,
+"hs": 47,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Shoaib Malik",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 39,
+"height": 180,
+"weight": 74,
+"overall": 86,
+"batting_average": 37.53,
+"sr_bt": 122.59,
+"hs": 94,
+"100s": 0,
+"50s": 8,
+"econ": 8.41,
+"bowling_average": 29.94,
+"sr_bl": 21.3,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Kamran Akmal",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 39,
+"height": 180,
+"weight": 77,
+"overall": 83,
+"batting_average": 26.92,
+"sr_bt": 129.54,
+"hs": 107,
+"100s": 1,
+"50s": 9,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Wahab Riaz",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 36,
+"height": 183,
+"weight": 80,
+"overall": 84,
+"batting_average": 10.15,
+"sr_bt": 107.69,
+"hs": 30,
+"100s": 0,
+"50s": 0,
+"econ": 8.36,
+"bowling_average": 22.56,
+"sr_bl": 16.1,
+"5wi": 1,
+"ct": null,
+"st": null
+},
+{
+"name": "Haider Ali",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 20,
+"height": 175,
+"weight": 70,
+"overall": 79,
+"batting_average": 29.34,
+"sr_bt": 155.68,
+"hs": 90,
+"100s": 0,
+"50s": 9,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "David Miller",
+"team": "Peshawar Zalmi",
+"nationality": "South African",
+"position": "Batsman",
+"age": 32,
+"height": 183,
+"weight": 86,
+"overall": 84,
+"batting_average": 29.24,
+"sr_bt": 139.17,
+"hs": 101,
+"100s": 1,
+"50s": 5,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Umaid Asif",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 35,
+"height": 188,
+"weight": 80,
+"overall": 81,
+"batting_average": 5.66,
+"sr_bt": 116.66,
+"hs": 16,
+"100s": 0,
+"50s": 0,
+"econ": 8.49,
+"bowling_average": 24.79,
+"sr_bl": 17.5,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Sherfane Rutherford",
+"team": "Peshawar Zalmi",
+"nationality": "West Indian",
+"position": "All-rounder",
+"age": 23,
+"height": 185,
+"weight": 76,
+"overall": 80,
+"batting_average": 19.28,
+"sr_bt": 139.89,
+"hs": 45,
+"100s": 0,
+"50s": 2,
+"econ": 9.78,
+"bowling_average": 46.16,
+"sr_bl": 28.3,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Ravi Bopara",
+"team": "Peshawar Zalmi",
+"nationality": "English",
+"position": "All-rounder",
+"age": 36,
+"height": 188,
+"weight": 85,
+"overall": 81,
+"batting_average": 26.41,
+"sr_bt": 129.77,
+"hs": 71,
+"100s": 0,
+"50s": 1,
+"econ": 7.81,
+"bowling_average": 30.78,
+"sr_bl": 23.6,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Saqib Mahmood",
+"team": "Peshawar Zalmi",
+"nationality": "English",
+"position": "Bowler",
+"age": 24,
+"height": 191,
+"weight": 85,
+"overall": 80,
+"batting_average": 2.00,
+"sr_bt": 66.66,
+"hs": 1,
+"100s": 0,
+"50s": 0,
+"econ": 9.15,
+"bowling_average": 28.92,
+"sr_bl": 19.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Irfan",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 39,
+"height": 216,
+"weight": 115,
+"overall": 79,
+"batting_average": 5.22,
+"sr_bt": 82.75,
+"hs": 10,
+"100s": 0,
+"50s": 0,
+"econ": 7.04,
+"bowling_average": 29.77,
+"sr_bl": 25.4,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Amad Butt",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 25,
+"height": 188,
+"weight": 78,
+"overall": 77,
+"batting_average": 10.20,
+"sr_bt": 114.28,
+"hs": 24,
+"100s": 0,
+"50s": 0,
+"econ": 8.98,
+"bowling_average": 28.66,
+"sr_bl": 19.1,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Imam-ul-Haq",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 25,
+"height": 180,
+"weight": 75,
+"overall": 76,
+"batting_average": 25.52,
+"sr_bt": 111.33,
+"hs": 58,
+"100s": 0,
+"50s": 4,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Mujeeb Ur Rahman",
+"team": "Peshawar Zalmi",
+"nationality": "Afghan",
+"position": "Bowler",
+"age": 20,
+"height": 175,
+"weight": 65,
+"overall": 78,
+"batting_average": 3.25,
+"sr_bt": 54.16,
+"hs": 7,
+"100s": 0,
+"50s": 0,
+"econ": 6.33,
+"bowling_average": 18.67,
+"sr_bl": 17.6,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Sherfane Rutherford",
+"team": "Peshawar Zalmi",
+"nationality": "West Indian",
+"position": "All-rounder",
+"age": 23,
+"height": 185,
+"weight": 76,
+"overall": 77,
+"batting_average": 15.44,
+"sr_bt": 131.58,
+"hs": 45,
+"100s": 0,
+"50s": 2,
+"econ": 12.66,
+"bowling_average": 78.00,
+"sr_bl": 37.0,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Abrar Ahmed",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 21,
+"height": 180,
+"weight": 75,
+"overall": 73,
+"batting_average": 2.00,
+"sr_bt": 33.33,
+"hs": 2,
+"100s": 0,
+"50s": 0,
+"econ": 9.52,
+"bowling_average": 34.00,
+"sr_bl": 21.4,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Imran",
+"team": "Peshawar Zalmi",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 22,
+"height": 183,
+"weight": 76,
+"overall": 73,
+"batting_average": 2.00,
+"sr_bt": 50.00,
+"hs": 2,
+"100s": 0,
+"50s": 0,
+"econ": 8.80,
+"bowling_average": 31.50,
+"sr_bl": 21.5,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Sarfaraz Ahmed",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "Wicketkeeper",
+"age": 34,
+"height": 178,
+"weight": 77,
+"overall": 84,
+"batting_average": 26.88,
+"sr_bt": 124.45,
+"hs": 94,
+"100s": 0,
+"50s": 7,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Azam Khan",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "Wicketkeeper",
+"age": 23,
+"height": 173,
+"weight": 85,
+"overall": 81,
+"batting_average": 26.42,
+"sr_bt": 130.50,
+"hs": 90,
+"100s": 0,
+"50s": 6,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Nawaz",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 27,
+"height": 183,
+"weight": 78,
+"overall": 81,
+"batting_average": 18.00,
+"sr_bt": 125.00,
+"hs": 25,
+"100s": 0,
+"50s": 0,
+"econ": 8.12,
+"bowling_average": 29.07,
+"sr_bl": 21.4,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Naseem Shah",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 18,
+"height": 188,
+"weight": 70,
+"overall": 80,
+"batting_average": 2.33,
+"sr_bt": 25.00,
+"hs": 5,
+"100s": 0,
+"50s": 0,
+"econ": 7.47,
+"bowling_average": 34.07,
+"sr_bl": 27.3,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Chris Gayle",
+"team": "Quetta Gladiators",
+"nationality": "West Indian",
+"position": "Batsman",
+"age": 42,
+"height": 191,
+"weight": 98,
+"overall": 83,
+"batting_average": 41.16,
+"sr_bt": 148.30,
+"hs": 175,
+"100s": 7,
+"50s": 28,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Cameron Delport",
+"team": "Quetta Gladiators",
+"nationality": "South African",
+"position": "All-rounder",
+"age": 32,
+"height": 188,
+"weight": 82,
+"overall": 79,
+"batting_average": 23.00,
+"sr_bt": 133.57,
+"hs": 117,
+"100s": 1,
+"50s": 5,
+"econ": 8.26,
+"bowling_average": 29.61,
+"sr_bl": 21.4,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Andre Russell",
+"team": "Quetta Gladiators",
+"nationality": "West Indian",
+"position": "All-rounder",
+"age": 33,
+"height": 188,
+"weight": 98,
+"overall": 84,
+"batting_average": 28.06,
+"sr_bt": 171.62,
+"hs": 121,
+"100s": 1,
+"50s": 3,
+"econ": 8.61,
+"bowling_average": 37.42,
+"sr_bl": 26.1,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Usman Shinwari",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 27,
+"height": 185,
+"weight": 75,
+"overall": 81,
+"batting_average": 6.25,
+"sr_bt": 60.96,
+"hs": 10,
+"100s": 0,
+"50s": 0,
+"econ": 7.75,
+"bowling_average": 23.23,
+"sr_bl": 17.9,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Hasnain",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 21,
+"height": 185,
+"weight": 85,
+"overall": 82,
+"batting_average": 4.00,
+"sr_bt": 33.33,
+"hs": 4,
+"100s": 0,
+"50s": 0,
+"econ": 8.58,
+"bowling_average": 27.41,
+"sr_bl": 19.1,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Jake Weatherald",
+"team": "Quetta Gladiators",
+"nationality": "Australian",
+"position": "Batsman",
+"age": 27,
+"height": 183,
+"weight": 77,
+"overall": 78,
+"batting_average": 24.88,
+"sr_bt": 135.94,
+"hs": 115,
+"100s": 1,
+"50s": 3,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Khurram Shehzad",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 31,
+"height": 180,
+"weight": 78,
+"overall": 77,
+"batting_average": 23.77,
+"sr_bt": 130.84,
+"hs": 75,
+"100s": 0,
+"50s": 7,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Qais Ahmad",
+"team": "Quetta Gladiators",
+"nationality": "Afghan",
+"position": "Bowler",
+"age": 21,
+"height": 180,
+"weight": 70,
+"overall": 78,
+"batting_average": 11.83,
+"sr_bt": 121.23,
+"hs": 26,
+"100s": 0,
+"50s": 0,
+"econ": 7.96,
+"bowling_average": 29.83,
+"sr_bl": 22.5,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Anwar Ali",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 34,
+"height": 183,
+"weight": 79,
+"overall": 78,
+"batting_average": 13.47,
+"sr_bt": 125.41,
+"hs": 42,
+"100s": 0,
+"50s": 0,
+"econ": 8.89,
+"bowling_average": 31.72,
+"sr_bl": 21.4,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Mohammad Talha",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 36,
+"height": 190,
+"weight": 88,
+"overall": 77,
+"batting_average": 2.00,
+"sr_bt": 25.00,
+"hs": 2,
+"100s": 0,
+"50s": 0,
+"econ": 10.00,
+"bowling_average": 35.75,
+"sr_bl": 21.4,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Saim Ayub",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "Batsman",
+"age": 20,
+"height": 175,
+"weight": 68,
+"overall": 75,
+"batting_average": 17.28,
+"sr_bt": 117.58,
+"hs": 47,
+"100s": 0,
+"50s": 1,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": null,
+"st": null
+},
+{
+"name": "Hassan Khan",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "All-rounder",
+"age": 22,
+"height": 183,
+"weight": 75,
+"overall": 74,
+"batting_average": 12.75,
+"sr_bt": 107.00,
+"hs": 23,
+"100s": 0,
+"50s": 0,
+"econ": 7.91,
+"bowling_average": 27.37,
+"sr_bl": 20.8,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Zahid Mahmood",
+"team": "Quetta Gladiators",
+"nationality": "Pakistani",
+"position": "Bowler",
+"age": 25,
+"height": 183,
+"weight": 76,
+"overall": 73,
+"batting_average": 3.66,
+"sr_bt": 60.00,
+"hs": 3,
+"100s": 0,
+"50s": 0,
+"econ": 7.80,
+"bowling_average": 40.00,
+"sr_bl": 30.7,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+
+
+
+
+
+
+
+
+
+
+
+]
+
+function search() {
+  var input_name = document.getElementById("name").value.toLowerCase();
+  var input_team = document.getElementById("team").value.toLowerCase();
+  var input_nationality = document.getElementById("nationality").value.toLowerCase();
+  var input_position = document.getElementById("position").value.toLowerCase();
+  var input_age = document.getElementById("age").value;
+  var input_height = document.getElementById("height").value;
+  var input_weight = document.getElementById("weight").value;
+  var input_overall = document.getElementById("overall").value;
+  var input_batting_average = document.getElementById("batting_average").value;
+  var input_sr_bt = document.getElementById("sr_bt").value;
+  var input_hs = document.getElementById("hs").value;
+  var input_100s = document.getElementById("100s").value;
+  var input_50s = document.getElementById("50s").value;
+  var input_econ = document.getElementById("econ").value;
+  var input_bowling_average = document.getElementById("bowling_average").value;
+  var input_sr_bl = document.getElementById("sr_bl").value;
+  var input_5wi = document.getElementById("5wi").value;
+  var input_ct = document.getElementById("ct").value;
+  var input_st = document.getElementById("st").value;
+  
+
+  var results = [];
+  
+  for (var i = 0; i < players.length; i++) {
+    var player = players[i];
+    if (input_name && !player.name.toLowerCase().includes(input_name)) {
+      continue;
+    }
+    if (input_team && !player.team.toLowerCase().includes(input_team)) {
+      continue;
+    }
+    if (input_nationality && !player.nationality.toLowerCase().includes(input_nationality)) {
+      continue;
+    }
+    if (input_position && !player.position.toLowerCase().includes(input_position)) {
+      continue;
+    }
+    if (input_age && player.age < parseFloat(input_age)) {
+      continue;
+    }
+    if (input_height && player.height < parseFloat(input_height)) {
+      continue;
+    }
+    if (input_weight && player.weight < parseFloat(input_weight)) {
+      continue;
+    }
+    if (input_overall && player.overall < parseFloat(input_overall)) {
+      continue;
+    }
+    if (input_batting_average && player.batting_average < parseFloat(input_batting_average)) {
+      continue;
+    }
+    if (input_sr_bt && player.sr_bt < parseFloat(input_sr_bt)) {
+      continue;
+    }
+    if (input_hs && player.hs < parseFloat(input_hs)) {
+      continue;
+    }
+    if (input_100s && player["100s"] < parseFloat(input_100s)) {
+      continue;
+    }
+    if (input_50s && player["50s"] < parseFloat(input_50s)) {
+      continue;
+    }
+    if (input_econ && player.econ < parseFloat(input_econ)) {
+      continue;
+    }
+    if (input_bowling_average && player.bowling_average < parseFloat(input_bowling_average)) {
+      continue;
+    }
+    if (input_sr_bl && player.sr_bl < parseFloat(input_sr_bl)) {
+      continue;
+    }
+    if (input_5wi && player["5wi"] < parseFloat(input_5wi)) {
+      continue;
+    }
+    if (input_ct && player.ct < parseFloat(input_ct)) {
+      continue;
+    }
+    if (input_st && player.st < parseFloat(input_st)) {
+      continue;
+    }
+
+
+    if (
+  !input_name &&
+  !input_team &&
+  !input_nationality &&
+  !input_position &&
+  !input_age &&
+  !input_height &&
+  !input_weight &&
+  !input_overall &&
+  !input_batting_average &&
+  !input_sr_bt &&
+  !input_hs &&
+  !input_100s &&
+  !input_50s &&
+  !input_econ &&
+  !input_bowling_average &&
+  !input_sr_bl &&
+  !input_5wi &&
+  !input_ct &&
+  !input_st
+) {
+    
+    var tableBody = document.querySelector("#search-results tbody");
+    tableBody.innerHTML = "";
+    return;
+}
+
+
+
+
+results.push(player);
+}
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+          if (results[i].name.toLowerCase() === uniqueResults[j].name.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+
+for (var i = 0; i < results.length; i++) {
+var player = results[i];
+var row = document.createElement("tr");
+row.innerHTML = 
+"<td>" + player.name + "</td>" +
+                    "<td>" + player.team + "</td>" +
+                    "<td>" + player.nationality + "</td>" +
+                    "<td>" + player.position + "</td>" +
+                    "<td>" + player.age + "</td>" +
+                    "<td>" + player.height + "</td>" +
+                    "<td>" + player.weight + "</td>" +
+                    "<td>" + player.overall + "</td>" +
+                    "<td>" + player.batting_average + "</td>" +
+                    "<td>" + player.sr_bt + "</td>" +
+                    "<td>" + player.hs + "</td>" +
+                    "<td>" + player["100s"] + "</td>" +
+                    "<td>" + player["50s"] + "</td>" +
+                    "<td>" + player.econ + "</td>" +
+                    "<td>" + player.bowling_average + "</td>" +
+                    "<td>" + player.sr_bl + "</td>" +
+                    "<td>" + player["5wi"] + "</td>" +
+                    "<td>" + player.ct + "</td>" +
+                    "<td>" + player.st + "</td>";
+
+
+
+
+
+
+
+
+
+tableBody.appendChild(row);
+}
+}
+
+
+
+
+
+function compareNumbers(a, b) {
+    var numA = a.era === null ? Infinity : parseFloat(a.era);
+    var numB = b.era === null ? Infinity : parseFloat(b.era);
+
+    return numA - numB;
+}
+
+players.sort(compareNumbers);
+
+console.log(players);
+
+
+
+
+
+
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = x.innerHTML.toLowerCase() == "null" ? Infinity : parseFloat(x.innerHTML);
+        y = y.innerHTML.toLowerCase() == "null" ? Infinity : parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.fillStyle = '#0f0'; 
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Search Speaker</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+
+    th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+</style>
+</head>
+<body>
+	<h1>Search Speaker</h1>
+	<img src="">
+
+  <canvas id="matrix-canvas"></canvas>
+
+	<form onsubmit="search(); return false;">
+<input type="text" id="model" placeholder="model">
+<input type="text" id="company" placeholder="company">
+<input type="text" id="port_type" placeholder="port type">
+<input type="text" id="output_device" placeholder="output device">
+<input type="text" id="power_input" placeholder="power input">
+<input type="text" id="channels" placeholder="channels">
+<input type="text" id="frequency_response" placeholder="frequency response">
+<input type="text" id="material" placeholder="material">
+<input type="text" id="size" placeholder="size">
+<input type="number" id="weight" placeholder="weight(kg)">
+<input type="number" id="cable_length" placeholder="cable length(m)">
+<input type="number" id="impedance" placeholder="impedance(ohms)">
+<input type="number" id="sensitivity" placeholder="sensitivity(dB SPL/meter)">
+<input type="number" id="power_output" placeholder="power output(W)">
+<input type="number" id="price" placeholder="price($)">
+<input type="number" id="total_sales" placeholder="total sales">
+<input type="number" id="release_date" placeholder="release date (year)">
+<input type="number" id="rating" placeholder="rating(0~100)">
+<input type="number" id="sound_quality" placeholder="sound quality(0~100)">
+<input type="number" id="driver_unit" placeholder="driver unit(0~100)">
+<input type="number" id="design" placeholder="design(0~100)">
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+<thead>
+<tr>
+    <th onclick="sortTable(0)">Model<span id="sortIndicator0">▲▼</span></th>
+    <th onclick="sortTable(1)">Company<span id="sortIndicator1">▲▼</span></th>
+    <th onclick="sortTable(2)">Port Type<span id="sortIndicator2">▲▼</span></th>
+    <th onclick="sortTable(3)">Output Device<span id="sortIndicator3">▲▼</span></th>
+    <th onclick="sortTable(4)">Power Input<span id="sortIndicator4">▲▼</span></th>
+    <th onclick="sortTable(5)">Channels<span id="sortIndicator5">▲▼</span></th>
+    <th onclick="sortTable(6)">Frequency Response<span id="sortIndicator6">▲▼</span></th>
+    <th onclick="sortTable(7)">Material<span id="sortIndicator7">▲▼</span></th>
+    <th onclick="sortTable(8)">Size<span id="sortIndicator8">▲▼</span></th>
+    <th onclick="sortTable(9)">Weight(kg)<span id="sortIndicator9">▲▼</span></th>
+    <th onclick="sortTable(10)">Cable Length(m)<span id="sortIndicator10">▲▼</span></th>
+    <th onclick="sortTable(11)">Impedance(ohms)<span id="sortIndicator11">▲▼</span></th>
+    <th onclick="sortTable(12)">Sensitivity(dB SPL/meter)<span id="sortIndicator12">▲▼</span></th>
+    <th onclick="sortTable(13)">Power Output(W)<span id="sortIndicator13">▲▼</span></th>
+    <th onclick="sortTable(14)">Price($)<span id="sortIndicator14">▲▼</span></th>
+    <th onclick="sortTable(15)">Total Sales<span id="sortIndicator15">▲▼</span></th>
+    <th onclick="sortTable(16)">Release Date<span id="sortIndicator16">▲▼</span></th>
+    <th onclick="sortTable(17)">Rating(0~100)<span id="sortIndicator17">▲▼</span></th>
+    <th onclick="sortTable(18)">Sound Quality(0~100)<span id="sortIndicator18">▲▼</span></th>
+    <th onclick="sortTable(19)">Driver Unit(0~100)<span id="sortIndicator19">▲▼</span></th>
+    <th onclick="sortTable(20)">Design(0~100)<span id="sortIndicator20">▲▼</span></th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<script>
+var speakers = [
+{
+"model": "Sonos One",
+"company": "Sonos",
+"port_type": "AC power, Wi-Fi, Ethernet",
+"output_device": "Speaker",
+"power_input": "100-240V AC",
+"channels": "2",
+"frequency_response": "50 Hz to 20 kHz",
+"material": "Acoustic mesh fabric",
+"size": "16.14 x 11.97 x 11.97 cm",
+"weight": 1.85,
+"cable_length": 1.8,
+"impedance": 8,
+"sensitivity": 85,
+"power_output": 25,
+"price": 199,
+"total_sales": 50000,
+"release_date": "2017-10-24",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 90
+},
+{
+"model": "Bose SoundLink Mini II",
+"company": "Bose",
+"port_type": "AC power, Bluetooth",
+"output_device": "Speaker",
+"power_input": "100-240V AC",
+"channels": "1",
+"frequency_response": "50 Hz to 20 kHz",
+"material": "Aluminum",
+"size": "18 x 5.1 x 5.8 cm",
+"weight": 0.68,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 199,
+"total_sales": 1000000,
+"release_date": "2015-06-11",
+"rating": 88,
+"sound_quality": 88,
+"driver_unit": 88,
+"design": 90
+},
+{
+"model": "JBL Flip 5",
+"company": "JBL",
+"port_type": "USB-C, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "65 Hz to 20 kHz",
+"material": "Plastic, fabric",
+"size": "18.1 x 6.9 x 7.4 cm",
+"weight": 0.54,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 119.95,
+"total_sales": 2000000,
+"release_date": "2019-08-01",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 85
+},
+{
+"model": "Amazon Echo Dot (3rd Gen)",
+"company": "Amazon",
+"port_type": "AC power, Bluetooth, 3.5 mm audio",
+"output_device": "Speaker",
+"power_input": "15W",
+"channels": "1",
+"frequency_response": "60 Hz to 20 kHz",
+"material": "Plastic, fabric",
+"size": "10 x 10 x 8.5 cm",
+"weight": 0.3,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 49.99,
+"total_sales": 5000000,
+"release_date": "2018-10-11",
+"rating": 80,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 75
+},
+
+{
+"model": "Google Nest Mini (2nd Gen)",
+"company": "Google",
+"port_type": "AC power, Bluetooth, Wi-Fi",
+"output_device": "Speaker",
+"power_input": "15W",
+"channels": "1",
+"frequency_response": "60 Hz to 20 kHz",
+"material": "Recyclable fabric",
+"size": "9.8 x 4.2 cm",
+"weight": 0.18,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 49,
+"total_sales": 3000000,
+"release_date": "2020-10-15",
+"rating": 80,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 85
+},
+{
+"model": "Ultimate Ears Boom 3",
+"company": "Ultimate Ears",
+"port_type": "Micro-USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "90 Hz to 20 kHz",
+"material": "Fabric",
+"size": "18.4 x 7.3 cm",
+"weight": 0.6,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 149.99,
+"total_sales": 1500000,
+"release_date": "2018-09-13",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 90
+},
+{
+"model": "Marshall Kilburn II",
+"company": "Marshall",
+"port_type": "AC power, Bluetooth, 3.5 mm audio",
+"output_device": "Speaker",
+"power_input": "36W",
+"channels": "2",
+"frequency_response": "52 Hz to 20 kHz",
+"material": "Vinyl, metal",
+"size": "24.13 x 24.13 x 13.97 cm",
+"weight": 2.5,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 299.99,
+"total_sales": 500000,
+"release_date": "2018-09-18",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 95
+},
+{
+"model": "Bang & Olufsen Beoplay A9",
+"company": "Bang & Olufsen",
+"port_type": "AC power, Bluetooth, Wi-Fi, Line-in/ Optical combi-jack",
+"output_device": "Speaker",
+"power_input": "200-240V AC",
+"channels": "2",
+"frequency_response": "33 Hz to 23 kHz",
+"material": "Wood, fabric",
+"size": "70.1 x 90.8 cm",
+"weight": 14.7,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 3500,
+"total_sales": 50000,
+"release_date": "2012-11-12",
+"rating": 95,
+"sound_quality": 95,
+"driver_unit": 95,
+"design": 100
+},
+{
+"model": "Sony SRS-XB23",
+"company": "Sony",
+"port_type": "USB Type-C, Bluetooth",
+"output_device": "Speaker",
+"power_input": "DC 5V, 3A",
+"channels": "1",
+"frequency_response": "20 Hz to 20 kHz",
+"material": "Rubber, fabric",
+"size": "21.7 x 8.5 x 8.6 cm",
+"weight": 0.58,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 99.99,
+"total_sales": 2000000,
+"release_date": "2020-04-24",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 85
+},
+{
+"model": "Harman Kardon Onyx Studio 6",
+"company": "Harman Kardon",
+"port_type": "AC power, Bluetooth",
+"output_device": "Speaker",
+"power_input": "19V/3A",
+"channels": "1",
+"frequency_response": "50 Hz to 20 kHz",
+"material": "Aluminum, fabric",
+"size": "28.5 x 28.5 x 12.8 cm",
+"weight": 3.18,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 479.95,
+"total_sales": 500000,
+"release_date": "2019-10-01",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 95
+},
+{
+"model": "Bose SoundLink Revolve+",
+"company": "Bose",
+"port_type": "Micro-B USB, 3.5mm auxiliary",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "1",
+"frequency_response": "240 Hz to 16 kHz",
+"material": "Aluminum",
+"size": "18.4 x 10.5 cm",
+"weight": 0.9,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 329.95,
+"total_sales": 1000000,
+"release_date": "2017-04-13",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 90
+},
+{
+"model": "Sonos Move",
+"company": "Sonos",
+"port_type": "USB Type-C, Wi-Fi, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "50 Hz to 20 kHz",
+"material": "Silicone base, polycarbonate shell",
+"size": "24.4 x 16.0 x 12.7 cm",
+"weight": 3.0,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 399,
+"total_sales": 1000000,
+"release_date": "2019-09-05",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 90
+},
+{
+"model": "Amazon Echo (3rd Gen)",
+"company": "Amazon",
+"port_type": "AC power, Bluetooth, 3.5mm auxiliary",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": null,
+"material": "Fabric",
+"size": "14.8 x 9.9 x 9.9 cm",
+"weight": 0.78,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 99.99,
+"total_sales": 2000000,
+"release_date": "2019-10-16",
+"rating": 80,
+"sound_quality": 75,
+"driver_unit": 80,
+"design": 80
+},
+{
+"model": "JBL Charge 4",
+"company": "JBL",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "60 Hz to 20 kHz",
+"material": "Fabric, rubber",
+"size": "22 x 9.5 x 9.3 cm",
+"weight": 0.96,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 179.95,
+"total_sales": 1000000,
+"release_date": "2018-09-01",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 80
+},
+{
+"model": "Google Nest Audio",
+"company": "Google",
+"port_type": "AC power, Bluetooth, Wi-Fi",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": null,
+"material": "Fabric",
+"size": "16.7 x 12.4 x 7.8 cm",
+"weight": 1.2,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 99.99,
+"total_sales": 500000,
+"release_date": "2020-10-05",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 90
+},
+{
+"model": "Ultimate Ears Megaboom 3",
+"company": "Ultimate Ears",
+"port_type": "Micro USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "60 Hz to 20 kHz",
+"material": "Fabric",
+"size": "22.5 x 8.7 cm",
+"weight": 0.93,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 199.99,
+"total_sales": 500000,
+"release_date": "2018-09-13",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 85
+},
+{
+"model": "Marshall Acton II",
+"company": "Marshall",
+"port_type": "AC power, Bluetooth, 3.5mm auxiliary",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "70 Hz to 20 kHz",
+"material": "Vinyl",
+"size": "26 x 16 x 15.8 cm",
+"weight": 2.85,
+"cable_length": null,
+"impedance": 8,
+"sensitivity": 90,
+"power_output": null,
+"price": 249,
+"total_sales": 200000,
+"release_date": "2018-08-30",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 95
+},
+{
+"model": "Bang & Olufsen Beoplay A9",
+"company": "Bang & Olufsen",
+"port_type": "Line-in/optical combi-jack, Ethernet, USB",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2.1",
+"frequency_response": "20 Hz to 20 kHz",
+"material": "Fabric, wood, plastic",
+"size": "70.1 x 90.8 x 41.4 cm",
+"weight": 14.7,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 480,
+"price": 3200,
+"total_sales": 10000,
+"release_date": "2012-11-12",
+"rating": 90,
+"sound_quality": 95,
+"driver_unit": 90,
+"design": 100
+},
+{
+"model": "Sony SRS-XB23",
+"company": "Sony",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "20 Hz to 20 kHz",
+"material": "Fabric, rubber",
+"size": "22.1 x 7.8 x 7.9 cm",
+"weight": 0.58,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 99.99,
+"total_sales": 1000000,
+"release_date": "2020-04-20",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 85,
+"design": 80
+},
+{
+"model": "Harman Kardon Onyx Studio 6",
+"company": "Harman Kardon",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "50 Hz to 20 kHz",
+"material": "Fabric, aluminum",
+"size": "28.7 x 22.5 x 13.5 cm",
+"weight": 2.98,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 479.95,
+"total_sales": 500000,
+"release_date": "2019-06-26",
+"rating": 80,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Bose SoundLink Revolve+",
+"company": "Bose",
+"port_type": "USB, Bluetooth, 3.5mm auxiliary",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "16 Hz to 20 kHz",
+"material": "Aluminum",
+"size": "18.4 x 10.5 x 10.5 cm",
+"weight": 0.9,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 299.95,
+"total_sales": 2000000,
+"release_date": "2017-05-18",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 90
+},
+{
+"model": "Sonos Move",
+"company": "Sonos",
+"port_type": "USB, Bluetooth, Wi-Fi",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "50 Hz to 20 kHz",
+"material": "Plastic, metal",
+"size": "24.4 x 16.0 x 12.4 cm",
+"weight": 3.0,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 399,
+"total_sales": 1000000,
+"release_date": "2019-09-05",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 90
+},
+{
+"model": "Amazon Echo (3rd Gen)",
+"company": "Amazon",
+"port_type": "Bluetooth, 3.5mm audio",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "60 Hz to 20 kHz",
+"material": "Fabric, plastic",
+"size": "14.8 x 9.9 x 9.9 cm",
+"weight": 0.78,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 99.99,
+"total_sales": 5000000,
+"release_date": "2019-09-25",
+"rating": 80,
+"sound_quality": 75,
+"driver_unit": 80,
+"design": 80
+},
+{
+"model": "JBL Charge 4",
+"company": "JBL",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "60 Hz to 20 kHz",
+"material": "Fabric, rubber",
+"size": "22.0 x 9.5 x 9.3 cm",
+"weight": 0.96,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 179.99,
+"total_sales": 1500000,
+"release_date": "2018-09-01",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 85,
+"design": 80
+},
+{
+"model": "Ultimate Ears Megaboom 3",
+"company": "Ultimate Ears",
+"port_type": "Micro USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "60 Hz to 20 kHz",
+"material": "Plastic, fabric",
+"size": "22.6 x 8.7 cm",
+"weight": 0.93,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 199.99,
+"total_sales": 2000000,
+"release_date": "2018-09-04",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 90
+},
+{
+"model": "Marshall Kilburn II",
+"company": "Marshall",
+"port_type": "3.5mm audio, Bluetooth",
+"output_device": "Speaker",
+"power_input": "100-240V AC",
+"channels": "2",
+"frequency_response": "52 Hz to 20 kHz",
+"material": "Vinyl, metal",
+"size": "24.1 x 24.1 x 13.7 cm",
+"weight": 2.5,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 36,
+"price": 299.99,
+"total_sales": 1000000,
+"release_date": "2018-09-05",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 90
+},
+{
+"model": "Bang & Olufsen Beoplay A9",
+"company": "Bang & Olufsen",
+"port_type": "Line-in, Ethernet, Wi-Fi",
+"output_device": "Speaker",
+"power_input": "100-240V AC",
+"channels": "2",
+"frequency_response": "33 Hz to 23 kHz",
+"material": "Wood, fabric, aluminum",
+"size": "70.1 x 90.8 x 41.4 cm",
+"weight": 14.7,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 480,
+"price": 3500,
+"total_sales": 50000,
+"release_date": "2012-11-12",
+"rating": 95,
+"sound_quality": 95,
+"driver_unit": 95,
+"design": 100
+},
+{
+"model": "Sony SRS-XB23",
+"company": "Sony",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "20 Hz to 20 kHz",
+"material": "Fabric, rubber",
+"size": "22.5 x 10.9 x 10.9 cm",
+"weight": 0.58,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 99.99,
+"total_sales": 500000,
+"release_date": "2020-04-22",
+"rating": 80,
+"sound_quality": 75,
+"driver_unit": 80,
+"design": 80
+},
+{
+"model": "Harman Kardon Onyx Studio 6",
+"company": "Harman Kardon",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "50 Hz to 20 kHz",
+"material": "Aluminum, fabric",
+"size": "28.7 x 28.7 x 12.9 cm",
+"weight": 3.2,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 50,
+"price": 479.95,
+"total_sales": 100000,
+"release_date": "2019-08-19",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 90
+},
+{
+"model": "Bose SoundLink Revolve+",
+"company": "Bose",
+"port_type": "AUX, Micro USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "55 Hz to 20 kHz",
+"material": "Aluminum",
+"size": "18.4 x 10.5 x 10.5 cm",
+"weight": 0.9,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 299.95,
+"total_sales": 500000,
+"release_date": "2017-04-13",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 85
+},
+{
+"model": "Sonos Move",
+"company": "Sonos",
+"port_type": "USB-C, Wi-Fi, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "50 Hz to 20 kHz",
+"material": "Plastic, fabric",
+"size": "24.4 x 16 x 12.7 cm",
+"weight": 3,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 399,
+"total_sales": 500000,
+"release_date": "2019-09-05",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 85
+},
+{
+"model": "Amazon Echo (3rd Gen)",
+"company": "Amazon",
+"port_type": "3.5mm audio, Bluetooth, Wi-Fi",
+"output_device": "Speaker",
+"power_input": "100-240V AC",
+"channels": "2",
+"frequency_response": null,
+"material": "Fabric, plastic",
+"size": "14.8 x 9.9 x 9.9 cm",
+"weight": 0.78,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 99.99,
+"total_sales": 5000000,
+"release_date": "2019-09-25",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 85
+},
+{
+"model": "JBL Charge 4",
+"company": "JBL",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "60 Hz to 20 kHz",
+"material": "Fabric, rubber",
+"size": "22 x 9.5 x 9.3 cm",
+"weight": 0.96,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 30,
+"price": 179.99,
+"total_sales": 1000000,
+"release_date": "2018-10-10",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 85
+},
+{
+"model": "Apple HomePod mini",
+"company": "Apple",
+"port_type": "Power cable",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": null,
+"material": "Mesh fabric",
+"size": "8.4 x 9.8 cm",
+"weight": 0.345,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 99,
+"total_sales": 1000000,
+"release_date": "2020-11-16",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 85
+},
+{
+"model": "Google Nest Mini (2nd Gen)",
+"company": "Google",
+"port_type": "Power cable",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": null,
+"material": "Fabric, plastic",
+"size": "9.8 x 4.2 x 9.8 cm",
+"weight": 0.181,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 49,
+"total_sales": 2000000,
+"release_date": "2019-10-15",
+"rating": 80,
+"sound_quality": 75,
+"driver_unit": 75,
+"design": 85
+},
+{
+"model": "Ultimate Ears Boom 3",
+"company": "Ultimate Ears",
+"port_type": "Micro-USB",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "90 Hz to 20 kHz",
+"material": "Fabric, rubber",
+"size": "18.4 x 7.3 cm",
+"weight": 0.608,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 15,
+"price": 149.99,
+"total_sales": 1000000,
+"release_date": "2018-09-13",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Marshall Kilburn II",
+"company": "Marshall",
+"port_type": "3.5 mm, RCA, Bluetooth",
+"output_device": "Speaker",
+"power_input": "100-240V AC",
+"channels": "2",
+"frequency_response": "52-20,000 Hz",
+"material": "Leather, metal",
+"size": "24.1 x 24.1 x 13.2 cm",
+"weight": 2.5,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 36,
+"price": 249,
+"total_sales": 500000,
+"release_date": "2018-09-05",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 95
+},
+{
+"model": "Bang & Olufsen Beoplay A9",
+"company": "Bang & Olufsen",
+"port_type": 
+"Speaker terminals, Wi-Fi, Bluetooth, Line-in",
+"output_device": "Speaker",
+"power_input": "100-240V AC",
+"channels": "2",
+"frequency_response": "33-23,000 Hz",
+"material": "Wood, aluminum, plastic",
+"size": "70.1 x 90.8 x 41.4 cm",
+"weight": 14.7,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 480,
+"price": 3500,
+"total_sales": 10000,
+"release_date": "2012-11-12",
+"rating": 90,
+"sound_quality": 95,
+"driver_unit": 90,
+"design": 100
+},
+{
+"model": "Sony SRS-XB23",
+"company": "Sony",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "20-20,000 Hz",
+"material": "Plastic, fabric",
+"size": "7.2 x 20.4 x 7.9 cm",
+"weight": 0.58,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 20,
+"price": 99.99,
+"total_sales": 500000,
+"release_date": "2020-04-22",
+"rating": 80,
+"sound_quality": 75,
+"driver_unit": 75,
+"design": 80
+},
+{
+"model": "Harman Kardon Onyx Studio 6",
+"company": "Harman Kardon",
+"port_type": "Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "50-20,000 Hz",
+"material": "Aluminum, fabric",
+"size": "28 x 28 x 12.5 cm",
+"weight": 3,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 50,
+"price": 479.95,
+"total_sales": 100000,
+"release_date": "2019-06-13",
+"rating": 85,
+"sound_quality": 85,
+"driver_unit": 85,
+"design": 95
+},
+{
+"model": "Bose SoundLink Revolve+",
+"company": "Bose",
+"port_type": "Auxiliary input, Micro-USB",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "2400 Hz",
+"material": "Aluminum",
+"size": "18.4 x 10.5 cm",
+"weight": 0.9,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 24,
+"price": 299.95,
+"total_sales": 500000,
+"release_date": "2017-04-13",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Sonos Move",
+"company": "Sonos",
+"port_type": "Charging base, Wi-Fi, Bluetooth",
+"output_device": "Speaker",
+"power_input": "100-240V AC",
+"channels": "2",
+"frequency_response": null,
+"material": "Plastic, metal",
+"size": "24.4 x 16 x 12.6 cm",
+"weight": 3,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 50,
+"price": 399,
+"total_sales": 200000,
+"release_date": "2019-09-05",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 95
+},
+{
+"model": "Amazon Echo (3rd Gen)",
+"company": "Amazon",
+"port_type": "3.5 mm auxiliary, Bluetooth",
+"output_device": "Speaker",
+"power_input": "15W",
+"channels": "2",
+"frequency_response": null,
+"material": "Fabric, plastic",
+"size": "9.9 x 9.9 x 14.8 cm",
+"weight": 0.96,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 20,
+"price": 99.99,
+"total_sales": 1000000,
+"release_date": "2019-09-25",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "JBL Charge 4",
+"company": "JBL",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "60Hz–20kHz",
+"material": "Fabric, rubber",
+"size": "22 x 9.5 x 9.3 cm",
+"weight": 0.96,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 30,
+"price": 179.95,
+"total_sales": 500000,
+"release_date": "2018-09-19",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Google Nest Audio",
+"company": "Google",
+"port_type": "DC power jack, Bluetooth, Wi-Fi",
+"output_device": "Speaker",
+"power_input": "30W",
+"channels": "2",
+"frequency_response": "75-20,000 Hz",
+"material": "Fabric, recycled plastic",
+"size": "17.5 x 12.4 x 7.8 cm",
+"weight": 1.2,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 50,
+"price": 99.99,
+"total_sales": 500000,
+"release_date": "2020-10-05",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Ultimate Ears Megaboom 3",
+"company": "Ultimate Ears",
+"port_type": "Micro-USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": null,
+"channels": "2",
+"frequency_response": "60Hz-20kHz",
+"material": "Plastic",
+"size": "22.5 x 8.7 cm",
+"weight": 0.93,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 30,
+"price": 199.99,
+"total_sales": 500000,
+"release_date": "2018-09-04",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Marshall Kilburn II",
+"company": "Marshall",
+"port_type": "3.5 mm auxiliary, Bluetooth",
+"output_device": "Speaker",
+"power_input": "20W",
+"channels": "2",
+"frequency_response": "52-20,000 Hz",
+"material": "Vinyl, metal",
+"size": "24.2 x 16 x 24.2 cm",
+"weight": 2.5,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 36,
+"price": 299.99,
+"total_sales": 100000,
+"release_date": "2018-09-06",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 95
+},
+{
+"model": "Bang & Olufsen Beoplay A9",
+"company": "Bang & Olufsen",
+"port_type": "Power cable, Ethernet, Line-in, Wi-Fi, Bluetooth",
+"output_device": "Speaker",
+"power_input": "AC 100-240V, 50-60Hz",
+"channels": "2.1",
+"frequency_response": "33.1-25,000 Hz",
+"material": "Aluminum, wood",
+"size": "70.1 x 90.8 x 41.4 cm",
+"weight": 14,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 480,
+"price": 3200,
+"total_sales": 50000,
+"release_date": "2012-11-12",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 100
+},
+{
+"model": "Sony SRS-XB23",
+"company": "Sony",
+"port_type": "USB Type-C, Bluetooth",
+"output_device": "Speaker",
+"power_input": "DC 5 V 3 A",
+"channels": "2",
+"frequency_response": "20 Hz–20,000 Hz",
+"material": "Fabric, rubber",
+"size": "8.6 x 22.3 x 8.2 cm",
+"weight": 0.58,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 20,
+"price": 99.99,
+"total_sales": 500000,
+"release_date": "2020-04-01",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Harman Kardon Onyx Studio 6",
+"company": "Harman Kardon",
+"port_type": "USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": "19V/3A",
+"channels": "2",
+"frequency_response": "50 Hz - 20 kHz",
+"material": "Fabric, aluminum",
+"size": "28.7 x 22.1 x 12.7 cm",
+"weight": 2.98,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 50,
+"price": 479.95,
+"total_sales": 100000,
+"release_date": "2019-09-03",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 95
+},
+{
+"model": "JBL Flip 5",
+"company": "JBL",
+"port_type": "USB Type-C, Bluetooth",
+"output_device": "Speaker",
+"power_input": "5V/3A",
+"channels": "2",
+"frequency_response": "65Hz–20kHz",
+"material": "Plastic, fabric",
+"size": "18.1 x 6.9 x 7.4 cm",
+"weight": 0.54,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 20,
+"price": 129.95,
+"total_sales": 500000,
+"release_date": "2019-08-01",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Amazon Echo Dot (3rd Gen)",
+"company": "Amazon",
+"port_type": "3.5 mm audio output, Bluetooth",
+"output_device": "Speaker",
+"power_input": "15W",
+"channels": "1",
+"frequency_response": "70 Hz - 20 kHz",
+"material": "Plastic",
+"size": "9.9 x 9.9 x 4.3 cm",
+"weight": 0.3,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 3,
+"price": 49.99,
+"total_sales": 10000000,
+"release_date": "2018-10-11",
+"rating": 80,
+"sound_quality": 70,
+"driver_unit": 70,
+"design": 75
+},
+{
+"model": "Apple HomePod mini",
+"company": "Apple",
+"port_type": "Power cable, Bluetooth",
+"output_device": "Speaker",
+"power_input": "20W",
+"channels": "1",
+"frequency_response": "60 Hz to 20,000 Hz",
+"material": "Mesh fabric",
+"size": "8.4 x 9.8 cm",
+"weight": 0.345,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 10,
+"price": 99,
+"total_sales": 2000000,
+"release_date": "2020-11-16",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Google Nest Mini (2nd Gen)",
+"company": "Google",
+"port_type": "Micro-USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": "15W",
+"channels": "1",
+"frequency_response": "60 Hz to 20,000 Hz",
+"material": "Recyclable plastic",
+"size": "9.8 x 4.2 cm",
+"weight": 0.181,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 9,
+"price": 49,
+"total_sales": 3000000,
+"release_date": "2019-10-22",
+"rating": 80,
+"sound_quality": 75,
+"driver_unit": 75,
+"design": 85
+},
+
+{
+"model": "Sony SRS-XB33",
+"company": "Sony",
+"port_type": "USB Type-C, Bluetooth",
+"output_device": "Speaker",
+"power_input": "5V/3A",
+"channels": "2",
+"frequency_response": "20 Hz - 20,000 Hz",
+"material": "Fabric, rubber",
+"size": "9.5 x 10.8 x 24.5 cm",
+"weight": 1.1,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 30,
+"price": 149.99,
+"total_sales": 800000,
+"release_date": "2020-04-13",
+"rating": 80,
+"sound_quality": 75,
+"driver_unit": 75,
+"design": 85
+},
+{
+"model": "Harman Kardon Onyx Studio 6",
+"company": "Harman Kardon",
+"port_type": "Bluetooth",
+"output_device": "Speaker",
+"power_input": "19V/2A",
+"channels": "1",
+"frequency_response": "50 Hz - 20 kHz",
+"material": "Aluminum, fabric",
+"size": "28.7 x 28.7 x 12.8 cm",
+"weight": 3,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 50,
+"price": 479.95,
+"total_sales": 50000,
+"release_date": "2019-09-04",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Bose SoundLink Revolve+",
+"company": "Bose",
+"port_type": "3.5 mm audio input, Micro-USB, Bluetooth",
+"output_device": "Speaker",
+"power_input": "12V DC",
+"channels": "1",
+"frequency_response": "16 Hz - 20 kHz",
+"material": "Aluminum",
+"size": "18.4 x 10.5 x 10.5 cm",
+"weight": 0.9,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 24,
+"price": 329.95,
+"total_sales": 1500000,
+"release_date": "2017-05-17",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 85
+},
+{
+"model": "Sonos Move",
+"company": "Sonos",
+"port_type": "USB Type-C, Wi-Fi, Bluetooth",
+"output_device": "Speaker",
+"power_input": "USB-C (5V/1.5A), charging base (12V/1.5A)",
+"channels": "2",
+"frequency_response": "50 Hz - 20,000 Hz",
+"material": "Silicone base, polycarbonate grille",
+"size": "24.4 x 16 x 12.5 cm",
+"weight": 3,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 25,
+"price": 399,
+"total_sales": 500000,
+"release_date": "2019-09-05",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 90,
+"design": 90
+},
+{
+"model": "Amazon Echo (3rd Gen)",
+"company": "Amazon",
+"port_type": "3.5 mm audio output, Bluetooth",
+"output_device": "Speaker",
+"power_input": "15W",
+"channels": "2",
+"frequency_response": "Not specified",
+"material": "Fabric",
+"size": "14.8 x 9.9 x 9.9 cm",
+"weight": 0.97,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": null,
+"price": 99.99,
+"total_sales": 10000000,
+"release_date": "2019-09-25",
+"rating": 80,
+"sound_quality": 75,
+"driver_unit": 75,
+"design": 85
+},
+{
+"model": "JBL Charge 4",
+"company": "JBL",
+"port_type": "USB Type-C, 3.5 mm audio input, Bluetooth",
+"output_device": "Speaker",
+"power_input": "5V/2.3A",
+"channels": "2",
+"frequency_response": "60 Hz - 20,000 Hz",
+"material": "Fabric, rubber",
+"size": "22 x 9.5 x 9.3 cm",
+"weight": 0.96,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 30,
+"price": 179.95,
+"total_sales": 2000000,
+"release_date": "2018-09-30",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 85
+},
+{
+"model": "Google Nest Audio",
+"company": "Google",
+"port_type": "DC power jack, Bluetooth",
+"output_device": "Speaker",
+"power_input": "30W",
+"channels": "1",
+"frequency_response": "75 Hz - 20,000 Hz",
+"material": "Fabric",
+"size": "17.5 x 12.4 x 7.8 cm",
+"weight": 1.2,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 30,
+"price": 99.99,
+"total_sales": 500000,
+"release_date": "2020-10-05",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 90
+},
+{
+"model": "Ultimate Ears Megaboom 3",
+"company": "Ultimate Ears",
+"port_type": "USB Type-C, Bluetooth",
+"output_device": "Speaker",
+"power_input": "5V/2.2A",
+"channels": "2",
+"frequency_response": "60 Hz - 20,000 Hz",
+"material": "Plastic, fabric",
+"size": "22.5 x 8.7 cm",
+"weight": 0.6,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 90,
+"price": 199.99,
+"total_sales": 1000000,
+"release_date": "2018-09-13",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 85
+},
+{
+"model": "Marshall Kilburn II",
+"company": "Marshall",
+"port_type": "3.5 mm audio input, Bluetooth",
+"output_device": "Speaker",
+"power_input": "15V/3A",
+"channels": "2",
+"frequency_response": "52 Hz - 20,000 Hz",
+"material": "Vinyl, metal",
+"size": "24.1 x 16 x 24 cm",
+"weight": 2.5,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 36,
+"price": 299.99,
+"total_sales": 500000,
+"release_date": "2018-09-10",
+"rating": 90,
+"sound_quality": 90,
+"driver_unit": 85,
+"design": 95
+},
+{
+"model": "Bang & Olufsen Beoplay A9",
+"company": "Bang & Olufsen",
+"port_type": "Line-in, Ethernet, USB, Wi-Fi, Bluetooth",
+"output_device": "Speaker",
+"power_input": "100 - 240V AC",
+"channels": "2",
+"frequency_response": "33 Hz - 23,000 Hz",
+"material": "Fabric, wood, aluminum",
+"size": "70.1 x 90.8 x 41.4 cm",
+"weight": 14.7,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 480,
+"price": 3200,
+"total_sales": 10000,
+"release_date": "2019-09-12",
+"rating": 90,
+"sound_quality": 95,
+"driver_unit": 95,
+"design": 100
+},
+{
+"model": "Sony SRS-XB23",
+"company": "Sony",
+"port_type": "USB Type-C, 3.5 mm audio input, Bluetooth",
+"output_device": "Speaker",
+"power_input": "DC 5V/1.5A",
+"channels": "2",
+"frequency_response": "20 Hz - 20,000 Hz",
+"material": "Fabric, rubber",
+"size": "20.4 x 7.4 x 7.5 cm",
+"weight": 0.58,
+"cable_length": null,
+"impedance": null,
+"sensitivity": null,
+"power_output": 20,
+"price": 99.99,
+"total_sales": 1000000,
+"release_date": "2020-04-17",
+"rating": 85,
+"sound_quality": 80,
+"driver_unit": 80,
+"design": 85
+}
+];
+
+function search() {
+  var input_model = document.getElementById("model").value.toLowerCase();
+  var input_company = document.getElementById("company").value.toLowerCase();
+  var input_port_type = document.getElementById("port_type").value.toLowerCase();
+  var input_output_device = document.getElementById("output_device").value.toLowerCase();
+  var input_power_input = document.getElementById("power_input").value.toLowerCase();
+  var input_channels = document.getElementById("channels").value.toLowerCase();
+  var input_frequency_response = document.getElementById("frequency_response").value.toLowerCase();
+  var input_material = document.getElementById("material").value.toLowerCase().toLowerCase();
+  var input_size = document.getElementById("size").value.toLowerCase();
+  var input_weight = document.getElementById("weight").value;
+  var input_cable_length = document.getElementById("cable_length").value;
+  var input_impedance = document.getElementById("impedance").value;
+  var input_sensitivity = document.getElementById("sensitivity").value;
+  var input_power_output = document.getElementById("power_output").value;
+  var input_price = document.getElementById("price").value;
+  var input_total_sales = document.getElementById("total_sales").value;
+  var input_release_date = document.getElementById("release_date").value;
+  var input_rating = document.getElementById("rating").value;
+  var input_sound_quality = document.getElementById("sound_quality").value;
+  var input_driver_unit = document.getElementById("driver_unit").value;
+  var input_design = document.getElementById("design").value;
+
+  var results = [];
+
+  for (var i = 0; i < speakers.length; i++) {
+    var speaker = speakers[i];
+    
+if (input_model && !speaker.model.toLowerCase().includes(input_model)) {
+      continue;
+    }
+    if (input_company && !speaker.company.toLowerCase().includes(input_company)) {
+      continue;
+    }
+    if (input_port_type && !speaker.port_type.toLowerCase().includes(input_port_type)) {
+      continue;
+    }
+    if (input_output_device && !speaker.output_device.toLowerCase().includes(input_output_device)) {
+      continue;
+    }
+    if (input_power_input && !speaker.power_input.toLowerCase().includes(input_power_input)) {
+      continue;
+    }
+    if (input_channels && !String(speaker.channels).toLowerCase().includes(input_channels)) {
+      continue;
+    }
+    if (input_frequency_response && !speaker.frequency_response.toLowerCase().includes(input_frequency_response)) {
+      continue;
+    }
+    if (input_material && !speaker.material.toLowerCase().includes(input_material)) {
+      continue;
+    }
+    if (input_size && !speaker.size.toLowerCase().includes(input_size)) {
+      continue;
+    }
+    if (input_weight && speaker.weight < Number(input_weight)) {
+      continue;
+    }
+    if (input_cable_length && speaker.cable_length < Number(input_cable_length)) {
+      continue;
+    }
+    if (input_impedance && speaker.impedance < Number(input_impedance)) {
+      continue;
+    }
+    if (input_sensitivity && speaker.sensitivity < Number(input_sensitivity)) {
+      continue;
+    }
+    if (input_power_output && speaker.power_output < Number(input_power_output)) {
+      continue;
+    }
+    if (input_price && speaker.price < Number(input_price)) {
+      continue;
+    }
+    if (input_total_sales && speaker.total_sales < Number(input_total_sales)) {
+      continue;
+    }
+    if (input_release_date && !String(speaker.release_date).startsWith(input_release_date)) {
+      continue;
+    }
+    if (input_rating && speaker.rating < Number(input_rating)) {
+      continue;
+    }
+    if (input_sound_quality && speaker.sound_quality < Number(input_sound_quality)) {
+      continue  
+}
+if (input_driver_unit && speaker.driver_unit < Number(input_driver_unit)) {
+continue;
+}
+if (input_design && speaker.design < Number(input_design)) {
+continue;
+}
+
+
+
+if (
+  !input_model &&
+  !input_company &&
+  !input_port_type &&
+  !input_output_device &&
+  !input_power_input &&
+  !input_channels &&
+  !input_frequency_response &&
+  !input_material &&
+  !input_size &&
+  !input_weight &&
+  !input_cable_length &&
+  !input_impedance &&
+  !input_sensitivity &&
+  !input_power_output &&
+  !input_price &&
+  !input_total_sales &&
+  !input_release_date &&
+  !input_rating &&
+  !input_sound_quality &&
+  !input_driver_unit &&
+  !input_design
+) {
+  var tableBody = document.querySelector("#search-results tbody");
+  tableBody.innerHTML = "";
+  return;
+}
+
+
+
+results.push(speaker);
+}
+
+
+
+
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+            if (results[i].model.toLowerCase() === uniqueResults[j].model.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+for (var i = 0; i < results.length; i++) {
+var speaker = results[i];
+var row = document.createElement("tr");
+row.innerHTML = "<td>" + speaker.model + "</td>" +
+"<td>" + speaker.company + "</td>" +
+"<td>" + speaker.port_type + "</td>" +
+"<td>" + speaker.output_device + "</td>" +
+"<td>" + speaker.power_input + "</td>" +
+"<td>" + speaker.channels + "</td>" +
+"<td>" + speaker.frequency_response + "</td>" +
+"<td>" + speaker.material + "</td>" +
+"<td>" + speaker.size + "</td>" +
+"<td>" + speaker.weight + "</td>" +
+"<td>" + speaker.cable_length + "</td>" +
+"<td>" + speaker.impedance + "</td>" +
+"<td>" + speaker.sensitivity + "</td>" +
+"<td>" + speaker.power_output + "</td>" +
+"<td>" + speaker.price + "</td>" +
+"<td>" + speaker.total_sales + "</td>" +
+"<td>" + speaker.release_date + "</td>" +
+"<td>" + speaker.rating + "</td>" +
+"<td>" + speaker.sound_quality + "</td>" +
+"<td>" + speaker.driver_unit + "</td>" +
+"<td>" + speaker.design + "</td>";
+tableBody.appendChild(row);
+}
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = parseFloat(x.innerHTML);
+        y = parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+
+    
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+
+
+    
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+
+
+</script>
+
+</body>
+</html>

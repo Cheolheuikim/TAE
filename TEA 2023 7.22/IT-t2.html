@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Search Tablet PC</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+
+    th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+
+
+</style>
+</head>
+<body>
+	<h1>Search Tablet PC</h1>
+	<img src="">
+
+  <canvas id="matrix-canvas"></canvas>
+
+
+	<form onsubmit="search(); return false;">
+		<form id="search-form">
+            <input type="text" id="model_name" placeholder="model name">
+            <input type="text" id="operating_system" placeholder="operating system">
+            <input type="text" id="company_name" placeholder="company name">
+            <input type="text" id="display_type" placeholder="display type">
+            <input type="text" id="port_type" placeholder="port type">
+            <input type="text" id="lock_type" placeholder="lock type">
+            <input type="text" id="video_recording" placeholder="video recording capability">
+            <input type="text" id="video_playback" placeholder="video playback capability">
+            <input type="text" id="size" placeholder="size">
+            <input type="text" id="color" placeholder="color">
+            <input type="text" id="storage_capacity" placeholder="storage capacity(GB)">
+            <input type="number" id="ram" placeholder="RAM(GB)">
+            <input type="number" id="display_size" placeholder="display size(inches)">
+            <input type="number" id="weight" placeholder="weight(g)">
+            <input type="number" id="battery_life" placeholder="battery life(hours)">
+            <input type="number" id="price" placeholder="price($)">
+            <input type="number" id="release_date" placeholder="release date (year)">
+            <input type="number" id="total_sales" placeholder="total sales">
+            <input type="number" id="rating" placeholder="rating(0~100)">
+            <input type="number" id="cpu" placeholder="CPU(0~100)">
+            <input type="number" id="display_performance" placeholder="display performance(0~100)">
+            <input type="number" id="speaker_performance" placeholder="speaker performance(0~100)">
+            <input type="number" id="high_resolution_video_playback_capability" placeholder="high resolution video playback capability(0~100)">
+            <input type="number" id="high_performance_gaming_capability" placeholder="high performance gaming capability(0~100)">
+            <input type="number" id="security" placeholder="security capability(0~100)">
+            <button type="submit">Search</button>
+            </form>
+            <table id="search-results">
+                <thead>
+                <tr>
+                <th onclick="sortTable(0)">Model Name<span id="sortIndicator0">▲▼</span></th>
+                <th onclick="sortTable(1)">Operating System<span id="sortIndicator1">▲▼</span></th>
+                <th onclick="sortTable(2)">Company Name<span id="sortIndicator2">▲▼</span></th>
+                <th onclick="sortTable(3)">Display Type<span id="sortIndicator3">▲▼</span></th>
+                <th onclick="sortTable(4)">Port Type<span id="sortIndicator4">▲▼</span></th>
+                <th onclick="sortTable(5)">Lock Type<span id="sortIndicator5">▲▼</span></th>
+                <th onclick="sortTable(6)">Video Recording<span id="sortIndicator6">▲▼</span></th>
+                <th onclick="sortTable(7)">Video Playback<span id="sortIndicator7">▲▼</span></th>
+                <th onclick="sortTable(8)">Size<span id="sortIndicator8">▲▼</span></th>
+                <th onclick="sortTable(9)">Color<span id="sortIndicator9">▲▼</span></th>
+                <th onclick="sortTable(10)">Storage Capacity(GB)<span id="sortIndicator10">▲▼</span></th>
+                <th onclick="sortTable(11)">RAM(GB)<span id="sortIndicator11">▲▼</span></th>
+                <th onclick="sortTable(12)">Display Size(inches)<span id="sortIndicator12">▲▼</span></th>
+                <th onclick="sortTable(13)">Weight(g)<span id="sortIndicator13">▲▼</span></th>
+                <th onclick="sortTable(14)">Battery Life(hours)<span id="sortIndicator14">▲▼</span></th>
+                <th onclick="sortTable(15)">Pric($)<span id="sortIndicator15">▲▼</span></th>
+                <th onclick="sortTable(16)">Release Date<span id="sortIndicator16">▲▼</span></th>
+                <th onclick="sortTable(17)">Total Sales<span id="sortIndicator17">▲▼</span></th>
+                <th onclick="sortTable(18)">Rating(0~100)<span id="sortIndicator18">▲▼</span></th>
+                <th onclick="sortTable(19)">CPU(0~100)<span id="sortIndicator19">▲▼</span></th>
+                <th onclick="sortTable(20)">Display Performance(0~100)<span id="sortIndicator20">▲▼</span></th>
+                <th onclick="sortTable(21)">Speaker Performance(0~100)<span id="sortIndicator21">▲▼</span></th>
+                <th onclick="sortTable(22)">High Resolution Video Playback Capability(0~100)<span id="sortIndicator22">▲▼</span></th>
+                <th onclick="sortTable(23)">High Performance Gaming Capability(0~100)<span id="sortIndicator23">▲▼</span></th>
+                <th onclick="sortTable(24)">Security Capability(0~100)<span id="sortIndicator24">▲▼</span></th>
+        
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<script>
+var tablets = [
+{
+"model_name": "iPad Air",
+"operating_system": "iPadOS",
+"company_name": "Apple",
+"display_type": "Liquid Retina IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Touch ID",
+"video_recording": "4k",
+"video_playback": "4k",
+"size": "247.6 x 178.5 x 6.1 mm",
+"color": "Silver",
+"storage_capacity": "64",
+"ram": 4,
+"display_size": 10.9,
+"weight": 460,
+"battery_life": 10,
+"price": 599,
+"release_date": "2020-10-23",
+"total_sales": 2000000,
+"rating": 93,
+"cpu": 95,
+"display_performance": 95,
+"speaker_performance": 88,
+"high_resolution_video_playback_capability": 100,
+"high_performance_gaming_capability": 85,
+"security": 92
+},
+
+{
+"model_name": "iPad Mini",
+"operating_system": "iPadOS",
+"company_name": "Apple",
+"display_type": "Liquid Retina IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Touch ID",
+"video_recording": "4k",
+"video_playback": "4k",
+"size": "195.4 x 134.8 x 6.1 mm",
+"color": "Space Gray",
+"storage_capacity": "64",
+"ram": 4,
+"display_size": 7.9,
+"weight": 293,
+"battery_life": 10,
+"price": 499,
+"release_date": "2021-09-14",
+"total_sales": 500000,
+"rating": 91,
+"cpu": 85,
+"display_performance": 90,
+"speaker_performance": 80,
+"high_resolution_video_playback_capability": 90,
+"high_performance_gaming_capability": 75,
+"security": 92
+},
+
+{
+"model_name": "Samsung Galaxy Tab S",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "Super AMOLED",
+"port_type": "USB-C",
+"lock_type": "Fingerprint scanner",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "249.3 x 164.3 x 6.3 mm",
+"color": "Mystic Black",
+"storage_capacity": "128",
+"ram": 6,
+"display_size": 10.5,
+"weight": 420,
+"battery_life": 15,
+"price": 449.99,
+"release_date": "2018-08-01",
+"total_sales": 1000000,
+"rating": 89,
+"cpu": 75,
+"display_performance": 90,
+"speaker_performance": 85,
+"high_resolution_video_playback_capability": 90,
+"high_performance_gaming_capability": 80,
+"security": 90
+},
+
+{
+"model_name": "Samsung Galaxy Tab A",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "TFT LCD",
+"port_type": "USB-C",
+"lock_type": "Fingerprint scanner",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "245 x 149 x 7.5 mm",
+"color": "Silver",
+"storage_capacity": "64",
+"ram": 3,
+"display_size": 8.0,
+"weight": 345,
+"battery_life": 13,
+"price": 199.99,
+"release_date": "2019-03-22",
+"total_sales": 5000000,
+"rating": 86,
+"cpu": 60,
+"display_performance": 75,
+"speaker_performance": 70,
+"high_resolution_video_playback_capability": 80,
+"high_performance_gaming_capability": 60,
+"security": 85
+},
+
+{
+"model_name": "Microsoft Surface Go",
+"operating_system": "Windows 10 Home in S mode",
+"company_name": "Microsoft",
+"display_type": "PixelSense",
+"port_type": "USB-C",
+"lock_type": "Windows Hello",
+"video_recording": "1080p",
+"video_playback": "4k",
+"size": "245 x 175 x 8.3 mm",
+"color": "Platinum",
+"storage_capacity": "128",
+"ram": 8,
+"display_size": 10.5,
+"weight": 544,
+"battery_life": 9,
+"price": 399,
+"release_date": "2018-08-02",
+"total_sales": 3000000,
+"rating": 87,
+"cpu": 70,
+"display_performance": 80,
+"speaker_performance": 75,
+"high_resolution_video_playback_capability": 70,
+"high_performance_gaming_capability": 60,
+"security": 90
+},
+
+{
+"model_name": "Amazon Fire HD",
+"operating_system": "Fire OS",
+"company_name": "Amazon",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Amazon Pin",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "262 x 159 x 9.8 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 10.1,
+"weight": 504,
+"battery_life": 12,
+"price": 149.99,
+"release_date": "2021-05-26",
+"total_sales": 4000000,
+"rating": 82,
+"cpu": 55,
+"display_performance": 65,
+"speaker_performance": 60,
+"high_resolution_video_playback_capability": 70,
+"high_performance_gaming_capability": 50,
+"security": 75
+},
+
+{
+"model_name": "Lenovo Tab 4",
+"operating_system": "Android",
+"company_name": "Lenovo",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "211 x 124 x 8.2 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 8.0,
+"weight": 310,
+"battery_life": 8,
+"price": 129.99,
+"release_date": "2017-06-20",
+"total_sales": 2000000,
+"rating": 80,
+"cpu": 50,
+"display_performance": 60,
+"speaker_performance": 55,
+"high_resolution_video_playback_capability": 50,
+"high_performance_gaming_capability": 40,
+"security": 70
+},
+
+{
+"model_name": "ASUS ZenPad",
+"operating_system": "Android",
+"company_name": "ASUS",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "204 x 108 x 8.2 mm",
+"color": "Dark Gray",
+"storage_capacity": "16",
+"ram": 2,
+"display_size": 7.0,
+"weight": 272,
+"battery_life": 8,
+"price": 89.99,
+"release_date": "2017-04-01",
+"total_sales": 1000000,
+"rating": 75,
+"cpu": 45,
+"display_performance": 55,
+"speaker_performance": 50,
+"high_resolution_video_playback_capability": 40,
+"high_performance_gaming_capability": 35,
+"security": 65
+},
+
+{
+"model_name": "Huawei MediaPad",
+"operating_system": "Android",
+"company_name": "Huawei",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Fingerprint reader",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "243 x 164 x 7.8 mm",
+"color": "Champagne Gold",
+"storage_capacity": "64",
+"ram": 4,
+"display_size": 10.8,
+"weight": 498,
+"battery_life": 12,
+"price": 299.99,
+"release_date": "2018-08-01",
+"total_sales": 2500000,
+"rating": 84,
+"cpu": 65,
+"display_performance": 75,
+"speaker_performance": 70,
+"high_resolution_video_playback_capability": 70,
+"high_performance_gaming_capability": 60,
+"security": 80
+},
+
+{
+"model_name": "Google Pixel Slate",
+"operating_system": "Chrome OS",
+"company_name": "Google",
+"display_type": "LTPS LCD",
+"port_type": "USB-C",
+"lock_type": "Pixel Imprint",
+"video_recording": "4k",
+"video_playback": "4k",
+"size": "290.9 x 202 x 7 mm",
+"color": "Midnight Blue",
+"storage_capacity": "128",
+"ram": 8,
+"display_size": 12.3,
+"weight": 731,
+"battery_life": 10,
+"price": 799,
+"release_date": "2018-11-22",
+"total_sales": 1500000,
+"rating": 88,
+"cpu": 80,
+"display_performance": 85,
+"speaker_performance": 80,
+"high_resolution_video_playback_capability": 90,
+"high_performance_gaming_capability": 80,
+"security": 90
+},
+
+{
+"model_name": "Dell Venue",
+"operating_system": "Windows 8.1",
+"company_name": "Dell",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "198.6 x 140.8 x 6 mm",
+"color": "Black",
+"storage_capacity": "64",
+"ram": 2,
+"display_size": 8.0,
+"weight": 338,
+"battery_life": 9,
+"price": 399.99,
+"release_date": "2014-10-06",
+"total_sales": 500000,
+"rating": 72,
+"cpu": 40,
+"display_performance": 50,
+"speaker_performance": 45,
+"high_resolution_video_playback_capability": 40,
+"high_performance_gaming_capability": 30,
+"security": 60
+},
+{
+"model_name": "Acer Iconia",
+"operating_system": "Android",
+"company_name": "Acer",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "259 x 167 x 10.7 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 1,
+"display_size": 10.1,
+"weight": 560,
+"battery_life": 8,
+"price": 149.99,
+"release_date": "2011-04-27",
+"total_sales": 1000000,
+"rating": 68,
+"cpu": 30,
+"display_performance": 40,
+"speaker_performance": 35,
+"high_resolution_video_playback_capability": 30,
+"high_performance_gaming_capability": 20,
+"security": 50
+},
+
+{
+"model_name": "Sony Xperia Z4 Tablet",
+"operating_system": "Android",
+"company_name": "Sony",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "Fingerprint reader",
+"video_recording": "1080p",
+"video_playback": "2k",
+"size": "254 x 167 x 6.1 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 3,
+"display_size": 10.1,
+"weight": 393,
+"battery_life": 17,
+"price": 599.99,
+"release_date": "2015-06-17",
+"total_sales": 500000,
+"rating": 82,
+"cpu": 70,
+"display_performance": 80,
+"speaker_performance": 75,
+"high_resolution_video_playback_capability": 80,
+"high_performance_gaming_capability": 70,
+"security": 85
+},
+
+{
+"model_name": "LG G Pad",
+"operating_system": "Android",
+"company_name": "LG",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "210.8 x 124.2 x 9.9 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 1,
+"display_size": 7.0,
+"weight": 293,
+"battery_life": 10,
+"price": 149.99,
+"release_date": "2013-07-01",
+"total_sales": 800000,
+"rating": 70,
+"cpu": 35,
+"display_performance": 45,
+"speaker_performance": 40,
+"high_resolution_video_playback_capability": 30,
+"high_performance_gaming_capability": 25,
+"security": 55
+},
+
+{
+"model_name": "Dell Venue",
+"operating_system": "Windows 8.1",
+"company_name": "Dell",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "193 x 119.7 x 9.2 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 8.0,
+"weight": 338,
+"battery_life": 9,
+"price": 249.99,
+"release_date": "2014-07-01",
+"total_sales": 500000,
+"rating": 72,
+"cpu": 60,
+"display_performance": 55,
+"speaker_performance": 50,
+"high_resolution_video_playback_capability": 50,
+"high_performance_gaming_capability": 40,
+"security": 60
+},
+
+{
+"model_name": "Acer Iconia One 10",
+"operating_system": "Android",
+"company_name": "Acer",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "259 x 167 x 8.9 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 10.1,
+"weight": 540,
+"battery_life": 10,
+"price": 149.99,
+"release_date": "2016-06-01",
+"total_sales": 1000000,
+"rating": 70,
+"cpu": 45,
+"display_performance": 50,
+"speaker_performance": 45,
+"high_resolution_video_playback_capability": 40,
+"high_performance_gaming_capability": 30,
+"security": 50
+},
+
+{
+"model_name": "Lenovo Tab 2 A10",
+"operating_system": "Android",
+"company_name": "Lenovo",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "247 x 171 x 8.9 mm",
+"color": "Midnight Blue",
+"storage_capacity": "16",
+"ram": 2,
+"display_size": 10.1,
+"weight": 509,
+"battery_life": 10,
+"price": 199.99,
+"release_date": "2015-04-08",
+"total_sales": 800000,
+"rating": 74,
+"cpu": 50,
+"display_performance": 55,
+"speaker_performance": 45,
+"high_resolution_video_playback_capability": 50,
+"high_performance_gaming_capability": 35,
+"security": 60
+}
+,
+{
+"model_name": "Asus ZenPad S 8.0",
+"operating_system": "Android",
+"company_name": "Asus",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "203.2 x 134.5 x 6.6 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 8.0,
+"weight": 298,
+"battery_life": 8,
+"price": 199.99,
+"release_date": "2015-07-30",
+"total_sales": 1200000,
+"rating": 76,
+"cpu": 65,
+"display_performance": 70,
+"speaker_performance": 60,
+"high_resolution_video_playback_capability": 60,
+"high_performance_gaming_capability": 50,
+"security": 70
+},
+
+{
+"model_name": "Samsung Galaxy Tab E",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "TFT",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "720p",
+"video_playback": "720p",
+"size": "241.9 x 149.5 x 8.5 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 1.5,
+"display_size": 9.6,
+"weight": 490,
+"battery_life": 12,
+"price": 199.99,
+"release_date": "2015-06-16",
+"total_sales": 1500000,
+"rating": 68,
+"cpu": 40,
+"display_performance": 45,
+"speaker_performance": 35,
+"high_resolution_video_playback_capability": 40,
+"high_performance_gaming_capability": 30,
+"security": 50
+},
+
+{
+"model_name": "Lenovo Yoga Tab 3",
+"operating_system": "Android",
+"company_name": "Lenovo",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "253 x 185 x 9.5 mm",
+"color": "Slate Black",
+"storage_capacity": "16",
+"ram": 1,
+"display_size": 8.0,
+"weight": 466,
+"battery_life": 15,
+"price": 169.99,
+"release_date": "2015-10-30",
+"total_sales": 900000,
+"rating": 72,
+"cpu": 50,
+"display_performance": 60,
+"speaker_performance": 45,
+"high_resolution_video_playback_capability": 50,
+"high_performance_gaming_capability": 40,
+"security": 55
+}
+,
+{
+"model_name": "Microsoft Surface 3",
+"operating_system": "Windows 10",
+"company_name": "Microsoft",
+"display_type": "ClearType",
+"port_type": "USB 3.0",
+"lock_type": "Windows Hello face authentication camera (front-facing)",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "267 x 187 x 8.7 mm",
+"color": "Silver",
+"storage_capacity": "64",
+"ram": 2,
+"display_size": 10.8,
+"weight": 622,
+"battery_life": 10,
+"price": 499.99,
+"release_date": "2015-05-05",
+"total_sales": 700000,
+"rating": 80,
+"cpu": 60,
+"display_performance": 75,
+"speaker_performance": 70,
+"high_resolution_video_playback_capability": 70,
+"high_performance_gaming_capability": 60,
+"security": 85
+},
+
+{
+"model_name": "Acer Iconia One 10",
+"operating_system": "Android",
+"company_name": "Acer",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "259 x 167 x 9.2 mm",
+"color": "White",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 10.1,
+"weight": 540,
+"battery_life": 10,
+"price": 199.99,
+"release_date": "2015-08-01",
+"total_sales": 1000000,
+"rating": 70,
+"cpu": 50,
+"display_performance": 60,
+"speaker_performance": 50,
+"high_resolution_video_playback_capability": 60,
+"high_performance_gaming_capability": 40,
+"security": 65
+},
+
+{
+"model_name": "Asus Eee Pad Transformer",
+"operating_system": "Android",
+"company_name": "Asus",
+"display_type": "IPS LCD",
+"port_type": "Mini-HDMI, USB 2.0",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "271 x 171 x 12.9 mm",
+"color": "Brown",
+"storage_capacity": "16",
+"ram": 1,
+"display_size": 10.1,
+"weight": 680,
+"battery_life": 9.5,
+"price": 399.99,
+"release_date": "2011-04-26",
+"total_sales": 1500000,
+"rating": 76,
+"cpu": 40,
+"display_performance": 50,
+"speaker_performance": 40,
+"high_resolution_video_playback_capability": 50,
+"high_performance_gaming_capability": 30,
+"security": 50
+}
+,
+{
+"model_name": "Lenovo Tab 4",
+"operating_system": "Android",
+"company_name": "Lenovo",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "211 x 124 x 8.2 mm",
+"color": "Slate Black",
+"storage_capacity": "16",
+"ram": 2,
+"display_size": 8.0,
+"weight": 310,
+"battery_life": 7,
+"price": 129.99,
+"release_date": "2017-05-31",
+"total_sales": 2500000,
+"rating": 74,
+"cpu": 60,
+"display_performance": 65,
+"speaker_performance": 50,
+"high_resolution_video_playback_capability": 60,
+"high_performance_gaming_capability": 50,
+"security": 60
+},
+
+{
+"model_name": "Huawei MediaPad T3",
+"operating_system": "Android",
+"company_name": "Huawei",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "720p",
+"video_playback": "720p",
+"size": "211.1 x 124.7 x 8 mm",
+"color": "Gray",
+"storage_capacity": "16",
+"ram": 2,
+"display_size": 8.0,
+"weight": 350,
+"battery_life": 10,
+"price": 139.99,
+"release_date": "2017-05-23",
+"total_sales": 2000000,
+"rating": 72,
+"cpu": 50,
+"display_performance": 60,
+"speaker_performance": 50,
+"high_resolution_video_playback_capability": 50,
+"high_performance_gaming_capability": 40,
+"security": 55
+},
+
+{
+"model_name": "Google Nexus 10",
+"operating_system": "Android",
+"company_name": "Google",
+"display_type": "PLS TFT",
+"port_type": "Micro-USB",
+"lock_type": "Face Unlock",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "263.9 x 177.6 x 8.9 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 2,
+"display_size": 10.1,
+"weight": 603,
+"battery_life": 9,
+"price": 399.99,
+"release_date": "2012-11-13",
+"total_sales": 800000,
+"rating": 78,
+"cpu": 65,
+"display_performance": 70,
+"speaker_performance": 60,
+"high_resolution_video_playback_capability": 70,
+"high_performance_gaming_capability": 50,
+"security": 75
+}
+,
+{
+"model_name": "Samsung Galaxy Tab S",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "Super AMOLED",
+"port_type": "Micro-USB",
+"lock_type": "Fingerprint scanner",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "243.1 x 171.4 x 6.6 mm",
+"color": "Titanium Bronze",
+"storage_capacity": "16",
+"ram": 3,
+"display_size": 10.5,
+"weight": 465,
+"battery_life": 9,
+"price": 499.99,
+"release_date": "2014-06-27",
+"total_sales": 600000,
+"rating": 82,
+"cpu": 75,
+"display_performance": 85,
+"speaker_performance": 70,
+"high_resolution_video_playback_capability": 80,
+"high_performance_gaming_capability": 60,
+"security": 80
+},
+
+{
+"model_name": "Amazon Fire HD",
+"operating_system": "Fire OS",
+"company_name": "Amazon",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "Amazon Pin",
+"video_recording": "720p",
+"video_playback": "720p",
+"size": "191 x 115 x 10.6 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 1.5,
+"display_size": 6.0,
+"weight": 290,
+"battery_life": 8,
+"price": 49.99,
+"release_date": "2015-09-30",
+"total_sales": 800000,
+"rating": 68,
+"cpu": 30,
+"display_performance": 40,
+"speaker_performance": 40,
+"high_resolution_video_playback_capability": 40,
+"high_performance_gaming_capability": 20,
+"security": 50
+},
+
+{
+"model_name": "Microsoft Surface Go",
+"operating_system": "Windows 10 S",
+"company_name": "Microsoft",
+"display_type": "PixelSense",
+"port_type": "USB-C",
+"lock_type": "Windows Hello",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "245 x 175 x 8.3 mm",
+"color": "Silver",
+"storage_capacity": "64",
+"ram": 4,
+"display_size": 10.0,
+"weight": 522,
+"battery_life": 9,
+"price": 399,
+"release_date": "2018-08-02",
+"total_sales": 1500000,
+"rating": 80,
+"cpu": 70,
+"display_performance": 80,
+"speaker_performance": 60,
+"high_resolution_video_playback_capability": 80,
+"high_performance_gaming_capability": 50,
+"security": 85
+},
+
+{
+"model_name": "Samsung Galaxy Tab A",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "TFT",
+"port_type": "USB-C",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "245.2 x 149.4 x 7.5 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 10.1,
+"weight": 460,
+"battery_life": 13,
+"price": 219.99,
+"release_date": "2019-04-05",
+"total_sales": 500000,
+"rating": 76,
+"cpu": 60,
+"display_performance": 65,
+"speaker_performance": 50,
+"high_resolution_video_playback_capability": 70,
+"high_performance_gaming_capability": 50,
+"security": 60
+},
+
+{
+"model_name": "Asus ZenPad",
+"operating_system": "Android",
+"company_name": "Asus",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "209 x 123 x 8.5 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 2,
+"display_size": 7.0,
+"weight": 272,
+"battery_life": 8,
+"price": 99.99,
+"release_date": "2015-06-30",
+"total_sales": 1000000,
+"rating": 70,
+"cpu": 50,
+"display_performance": 60,
+"speaker_performance": 50,
+"high_resolution_video_playback_capability": 50,
+"high_performance_gaming_capability": 40,
+"security": 55
+}
+,
+{
+"model_name": "Huawei MediaPad",
+"operating_system": "Android",
+"company_name": "Huawei",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Fingerprint scanner",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "243 x 164 x 7.8 mm",
+"color": "Champagne Gold",
+"storage_capacity": "32",
+"ram": 3,
+"display_size": 10.4,
+"weight": 450,
+"battery_life": 12,
+"price": 299,
+"release_date": "2020-05-01",
+"total_sales": 500000,
+"rating": 84,
+"cpu": 65,
+"display_performance": 75,
+"speaker_performance": 70,
+"high_resolution_video_playback_capability": 75,
+"high_performance_gaming_capability": 60,
+"security": 80
+},
+
+{
+"model_name": "Google Pixel Slate",
+"operating_system": "Chrome OS",
+"company_name": "Google",
+"display_type": "LTPS LCD",
+"port_type": "USB-C",
+"lock_type": "Pixel Imprint",
+"video_recording": "4k",
+"video_playback": "4k",
+"size": "290.9 x 202.04 x 7 mm",
+"color": "Midnight Blue",
+"storage_capacity": "64",
+"ram": 8,
+"display_size": 12.3,
+"weight": 731,
+"battery_life": 12,
+"price": 799,
+"release_date": "2018-11-22",
+"total_sales": 200000,
+"rating": 88,
+"cpu": 90,
+"display_performance": 90,
+"speaker_performance": 75,
+"high_resolution_video_playback_capability": 90,
+"high_performance_gaming_capability": 85,
+"security": 90
+},
+
+{
+"model_name": "Acer Iconia",
+"operating_system": "Windows 10 Home",
+"company_name": "Acer",
+"display_type": "IPS LCD",
+"port_type": "Micro-HDMI",
+"lock_type": "Fingerprint scanner",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "275 x 187 x 9.7 mm",
+"color": "Black",
+"storage_capacity": "64",
+"ram": 4,
+"display_size": 10.1,
+"weight": 540,
+"battery_life": 7,
+"price": 449.99,
+"release_date": "2016-05-20",
+"total_sales": 300000,
+"rating": 78,
+"cpu": 70,
+"display_performance": 75,
+"speaker_performance": 60,
+"high_resolution_video_playback_capability": 75,
+"high_performance_gaming_capability": 55,
+"security": 80
+}
+,
+{
+"model_name": "Lenovo Yoga Tablet",
+"operating_system": "Android",
+"company_name": "Lenovo",
+"display_type": "IPS LCD",
+"port_type": "Micro-USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "253 x 183 x 3.7 mm",
+"color": "Platinum",
+"storage_capacity": "16",
+"ram": 1,
+"display_size": 10.1,
+"weight": 655,
+"battery_life": 18,
+"price": 249,
+"release_date": "2013-10-01",
+"total_sales": 200000,
+"rating": 72,
+"cpu": 50,
+"display_performance": 60,
+"speaker_performance": 60,
+"high_resolution_video_playback_capability": 50,
+"high_performance_gaming_capability": 40,
+"security": 55
+},
+
+{
+"model_name": "HP Spectre x2",
+"operating_system": "Windows 10",
+"company_name": "HP",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Fingerprint reader",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "300 x 213 x 8 mm",
+"color": "Black",
+"storage_capacity": "256",
+"ram": 8,
+"display_size": 12.3,
+"weight": 840,
+"battery_life": 8,
+"price": 999,
+"release_date": "2017-05-25",
+"total_sales": 100000,
+"rating": 86,
+"cpu": 80,
+"display_performance": 85,
+"speaker_performance": 75,
+"high_resolution_video_playback_capability": 85,
+"high_performance_gaming_capability": 80,
+"security": 90
+},
+
+{
+"model_name": "Samsung Galaxy Tab S2",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "Super AMOLED",
+"port_type": "Micro-USB",
+"lock_type": "Fingerprint scanner",
+"video_recording": "1440p",
+"video_playback": "1440p",
+"size": "237.3 x 169 x 5.6 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 3,
+"display_size": 9.7,
+"weight": 389,
+"battery_life": 12,
+"price": 499.99,
+"release_date": "2015-09-03",
+"total_sales": 1500000,
+"rating": 82,
+"cpu": 75,
+"display_performance": 85,
+"speaker_performance": 75,
+"high_resolution_video_playback_capability": 90,
+"high_performance_gaming_capability": 80,
+"security": 85
+}
+,
+{
+"model_name": "Acer Chromebook Tab 10",
+"operating_system": "Chrome OS",
+"company_name": "Acer",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "238.2 x 172.2 x 9.9 mm",
+"color": "Indigo blue",
+"storage_capacity": "32",
+"ram": 4,
+"display_size": 9.7,
+"weight": 550,
+"battery_life": 9,
+"price": 329,
+"release_date": "2018-04-01",
+"total_sales": 50000,
+"rating": 78,
+"cpu": 60,
+"display_performance": 75,
+"speaker_performance": 70,
+"high_resolution_video_playback_capability": 75,
+"high_performance_gaming_capability": 60,
+"security": 80
+},
+
+{
+"model_name": "Samsung Galaxy Tab Active",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "TFT LCD",
+"port_type": "Micro-USB",
+"lock_type": "Fingerprint scanner",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "213.1 x 126.2 x 9.75 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 1.5,
+"display_size": 8.0,
+"weight": 393,
+"battery_life": 11,
+"price": 599,
+"release_date": "2014-09-12",
+"total_sales": 200000,
+"rating": 75,
+"cpu": 60,
+"display_performance": 65,
+"speaker_performance": 60,
+"high_resolution_video_playback_capability": 70,
+"high_performance_gaming_capability": 60,
+"security": 85
+},
+
+{
+"model_name": "Lenovo ThinkPad X1 Tablet",
+"operating_system": "Windows 10 Pro",
+"company_name": "Lenovo",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Fingerprint reader",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "291.5 x 209.5 x 8.45 mm",
+"color": "Black",
+"storage_capacity": "512",
+"ram": 16,
+"display_size": 13.0,
+"weight": 890,
+"battery_life": 9,
+"price": 1699,
+"release_date": "2016-02-02",
+"total_sales": 50000,
+"rating": 88,
+"cpu": 85,
+"display_performance": 90,
+"speaker_performance": 80,
+"high_resolution_video_playback_capability": 85,
+"high_performance_gaming_capability": 80,
+"security": 90
+}
+,
+{
+"model_name": "Dell XPS 13 2-in-1",
+"operating_system": "Windows 10 Home",
+"company_name": "Dell",
+"display_type": "IPS LCD",
+"port_type": "Thunderbolt 3",
+"lock_type": "Windows Hello",
+"video_recording": "1080p",
+"video_playback": "4k",
+"size": "296 x 207 x 13.7 mm",
+"color": "Platinum Silver",
+"storage_capacity": "512",
+"ram": 16,
+"display_size": 13.4,
+"weight": 1.32,
+"battery_life": 12,
+"price": 1499,
+"release_date": "2020-02-04",
+"total_sales": 100000,
+"rating": 90,
+"cpu": 90,
+"display_performance": 92,
+"speaker_performance": 85,
+"high_resolution_video_playback_capability": 95,
+"high_performance_gaming_capability": 85,
+"security": 95
+},
+
+{
+"model_name": "Huawei MatePad Pro",
+"operating_system": "Android",
+"company_name": "Huawei",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Fingerprint scanner",
+"video_recording": "4k",
+"video_playback": "4k",
+"size": "246 x 159 x 7.2 mm",
+"color": "Midnight Gray",
+"storage_capacity": "256",
+"ram": 8,
+"display_size": 10.8,
+"weight": 460,
+"battery_life": 10,
+"price": 599,
+"release_date": "2020-04-23",
+"total_sales": 50000,
+"rating": 86,
+"cpu": 80,
+"display_performance": 88,
+"speaker_performance": 82,
+"high_resolution_video_playback_capability": 90,
+"high_performance_gaming_capability": 80,
+"security": 90
+},
+
+{
+"model_name": "Microsoft Surface Book 3",
+"operating_system": "Windows 10 Pro",
+"company_name": "Microsoft",
+"display_type": "PixelSense",
+"port_type": "USB-C",
+"lock_type": "Windows Hello",
+"video_recording": "1080p",
+"video_playback": "4k",
+"size": "232 x 312 x 23 mm",
+"color": "Platinum",
+"storage_capacity": "512",
+"ram": 16,
+"display_size": 13.5,
+"weight": 1.64,
+"battery_life": 15.5,
+"price": 2399,
+"release_date": "2020-05-21",
+"total_sales": 250000,
+"rating": 92,
+"cpu": 95,
+"display_performance": 95,
+"speaker_performance": 90,
+"high_resolution_video_playback_capability": 100,
+"high_performance_gaming_capability": 90,
+"security": 96
+}
+
+,
+{
+"model_name": "Lenovo Yoga C940",
+"operating_system": "Windows 10 Home",
+"company_name": "Lenovo",
+"display_type": "IPS LCD",
+"port_type": "Thunderbolt 3",
+"lock_type": "Fingerprint reader",
+"video_recording": "720p",
+"video_playback": "4k",
+"size": "320 x 215 x 14.5 mm",
+"color": "Mica",
+"storage_capacity": "512",
+"ram": 16,
+"display_size": 14,
+"weight": 1.35,
+"battery_life": 12.5,
+"price": 1299,
+"release_date": "2019-09-01",
+"total_sales": 200000,
+"rating": 88,
+"cpu": 85,
+"display_performance": 90,
+"speaker_performance": 84,
+"high_resolution_video_playback_capability": 95,
+"high_performance_gaming_capability": 85,
+"security": 92
+},
+
+{
+"model_name": "Samsung Galaxy Tab S6",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "Super AMOLED",
+"port_type": "USB-C",
+"lock_type": "Fingerprint scanner",
+"video_recording": "4k",
+"video_playback": "4k",
+"size": "244.5 x 159.5 x 5.7 mm",
+"color": "Mountain Gray",
+"storage_capacity": "256",
+"ram": 8,
+"display_size": 10.5,
+"weight": 420,
+"battery_life": 15,
+"price": 649.99,
+"release_date": "2019-08-07",
+"total_sales": 500000,
+"rating": 90,
+"cpu": 90,
+"display_performance": 95,
+"speaker_performance": 90,
+"high_resolution_video_playback_capability": 100,
+"high_performance_gaming_capability": 90,
+"security": 95
+},
+
+{
+"model_name": "HP Spectre x360",
+"operating_system": "Windows 10 Home",
+"company_name": "HP",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Fingerprint reader",
+"video_recording": "1080p",
+"video_playback": "4k",
+"size": "306.5 x 194.5 x 16.9 mm",
+"color": "Nightfall Black",
+"storage_capacity": "512",
+"ram": 16,
+"display_size": 15.6,
+"weight": 2.02,
+"battery_life": 12,
+"price": 1499.99,
+"release_date": "2019-09-01",
+"total_sales": 150000,
+"rating": 88,
+"cpu": 90,
+"display_performance": 92,
+"speaker_performance": 86,
+"high_resolution_video_playback_capability": 95,
+"high_performance_gaming_capability": 85,
+"security": 94
+}
+
+,
+{
+"model_name": "Apple iPad Air",
+"operating_system": "iPadOS",
+"company_name": "Apple",
+"display_type": "Liquid Retina IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Touch ID",
+"video_recording": "4k",
+"video_playback": "4k",
+"size": "247.6 x 178.5 x 6.1 mm",
+"color": "Space Gray",
+"storage_capacity": "64",
+"ram": 4,
+"display_size": 10.9,
+"weight": 460,
+"battery_life": 10,
+"price": 599,
+"release_date": "2020-10-23",
+"total_sales": 1000000,
+"rating": 92,
+"cpu": 95,
+"display_performance": 94,
+"speaker_performance": 90,
+"high_resolution_video_playback_capability": 100,
+"high_performance_gaming_capability": 90,
+"security": 95
+},
+
+
+{
+"model_name": "Samsung Galaxy Tab S",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "Super AMOLED",
+"port_type": "USB-C",
+"lock_type": "Fingerprint scanner",
+"video_recording": "1080p",
+"video_playback": "4k",
+"size": "245.1 x 149.4 x 6.1 mm",
+"color": "Gray",
+"storage_capacity": "64",
+"ram": 4,
+"display_size": 10.5,
+"weight": 429,
+"battery_life": 15,
+"price": 529.99,
+"release_date": "2019-07-31",
+"total_sales": 200000,
+"rating": 90,
+"cpu": 88,
+"display_performance": 94,
+"speaker_performance": 88,
+"high_resolution_video_playback_capability": 100,
+"high_performance_gaming_capability": 90,
+"security": 94
+},
+
+{
+"model_name": "Samsung Galaxy Tab A",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "TFT LCD",
+"port_type": "USB-C",
+"lock_type": "Face Recognition",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "245 x 149 x 7.5 mm",
+"color": "Gray",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 8.4,
+"weight": 305,
+"battery_life": 10,
+"price": 199.99,
+"release_date": "2020-03-27",
+"total_sales": 500000,
+"rating": 84,
+"cpu": 70,
+"display_performance": 80,
+"speaker_performance": 76,
+"high_resolution_video_playback_capability": 90,
+"high_performance_gaming_capability": 75,
+"security": 88
+},
+
+{
+"model_name": "Microsoft Surface Pro",
+"operating_system": "Windows 10 Pro",
+"company_name": "Microsoft",
+"display_type": "PixelSense",
+"port_type": "USB-C",
+"lock_type": "Windows Hello face authentication",
+"video_recording": "1080p",
+"video_playback": "4k",
+"size": "292 x 201 x 8.5 mm",
+"color": "Platinum",
+"storage_capacity": "128",
+"ram": 8,
+"display_size": 12.3,
+"weight": 770,
+"battery_life": 13.5,
+"price": 899.99,
+"release_date": "2017-06-15",
+"total_sales": 800000,
+"rating": 86,
+"cpu": 85,
+"display_performance": 90,
+"speaker_performance": 84,
+"high_resolution_video_playback_capability": 85,
+"high_performance_gaming_capability": 75,
+"security": 92
+},
+
+{
+"model_name": "Microsoft Surface Go",
+"operating_system": "Windows 10 Home",
+"company_name": "Microsoft",
+"display_type": "PixelSense",
+"port_type": "USB-C",
+"lock_type": "Windows Hello face authentication",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "245 x 175 x 8.3 mm",
+"color": "Silver",
+"storage_capacity": "128",
+"ram": 8,
+"display_size": 10,
+"weight": 544,
+"battery_life": 9,
+"price": 549,
+"release_date": "2018-08-02",
+"total_sales": 600000,
+"rating": 84,
+"cpu": 60,
+"display_performance": 80,
+"speaker_performance": 76,
+"high_resolution_video_playback_capability": 85,
+"high_performance_gaming_capability": 70,
+"security": 88
+},
+
+{
+"model_name": "Amazon Fire HD",
+"operating_system": "Fire OS",
+"company_name": "Amazon",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Pin and password",
+"video_recording": "720p",
+"video_playback": "1080p",
+"size": "192 x 115 x 9.6 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 8,
+"weight": 355,
+"battery_life": 12,
+"price": 89.99,
+"release_date": "2019-06-06",
+"total_sales": 1000000,
+"rating": 82,
+"cpu": 50,
+"display_performance": 70,
+"speaker_performance": 68,
+"high_resolution_video_playback_capability": 75,
+"high_performance_gaming_capability": 60,
+"security": 80
+},
+
+{
+"model_name": "Lenovo Tab 4",
+"operating_system": "Android",
+"company_name": "Lenovo",
+"display_type": "IPS LCD",
+"port_type": "Micro USB",
+"lock_type": "Pattern lock",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size":
+"210 x 123 x 8.2 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 2,
+"display_size": 8,
+"weight": 310,
+"battery_life": 10,
+"price": 129.99,
+"release_date": "2017-02-26",
+"total_sales": 1200000,
+"rating": 80,
+"cpu": 60,
+"display_performance": 70,
+"speaker_performance": 72,
+"high_resolution_video_playback_capability": 80,
+"high_performance_gaming_capability": 65,
+"security": 82
+},
+
+{
+"model_name": "ASUS ZenPad",
+"operating_system": "Android",
+"company_name": "ASUS",
+"display_type": "IPS LCD",
+"port_type": "Micro USB",
+"lock_type": "Face recognition",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "209 x 123 x 8.5 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 2,
+"display_size": 8,
+"weight": 350,
+"battery_life": 8,
+"price": 129.99,
+"release_date": "2015-06-01",
+"total_sales": 800000,
+"rating": 78,
+"cpu": 50,
+"display_performance": 65,
+"speaker_performance": 62,
+"high_resolution_video_playback_capability": 75,
+"high_performance_gaming_capability": 55,
+"security": 80
+},
+
+{
+"model_name": "Huawei MediaPad",
+"operating_system": "Android",
+"company_name": "Huawei",
+"display_type": "IPS LCD",
+"port_type": "Micro USB",
+"lock_type": "Fingerprint scanner",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "214.4 x 124.8 x 7.8 mm",
+"color": "Space Gray",
+"storage_capacity": "16",
+"ram": 2,
+"display_size": 8,
+"weight": 330,
+"battery_life": 8,
+"price": 199.99,
+"release_date": "2016-05-25",
+"total_sales": 500000,
+"rating": 76,
+"cpu": 50,
+"display_performance": 60,
+"speaker_performance": 58,
+"high_resolution_video_playback_capability": 70,
+"high_performance_gaming_capability": 50,
+"security": 82
+},
+
+{
+"model_name": "Google Pixel Slate",
+"operating_system": "Chrome OS",
+"company_name": "Google",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Pixel Imprint",
+"video_recording": "1080p",
+"video_playback": "4k",
+"size": "202.04 x 290.85 x 7.0 mm",
+"color": "Midnight Blue",
+"storage_capacity": "64",
+"ram": 4,
+"display_size": 12.3,
+"weight": 731,
+"battery_life": 10,
+"price": 799,
+"release_date": "2018-11-27",
+"total_sales": 400000,
+"rating": 88,
+"cpu": 85,
+"display_performance": 90,
+"speaker_performance": 82,
+"high_resolution_video_playback_capability": 95,
+"high_performance_gaming_capability": 80,
+"security": 92
+},
+
+{
+"model_name": "Dell Venue",
+"operating_system": "Windows 10",
+"company_name": "Dell",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Fingerprint reader",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "291 x 178.8 x 8.95 mm",
+"color": "Black",
+"storage_capacity": "64",
+"ram": 4,
+"display_size": 10.8,
+"weight": 585,
+"battery_life": 10,
+"price": 399,
+"release_date": "2018-04-10",
+"total_sales": 600000,
+"rating": 80,
+"cpu": 75,
+"display_performance": 78,
+"speaker_performance": 72,
+"high_resolution_video_playback_capability": 85,
+"high_performance_gaming_capability": 70,
+"security": 85
+},
+
+{
+"model_name": "Acer Iconia",
+"operating_system": "Android",
+"company_name": "Acer",
+"display_type": "IPS LCD",
+"port_type": "Micro USB",
+"lock_type": "Fingerprint reader",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "214 x 126 x 9.3 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 1,
+"display_size": 8,
+"weight": 360,
+"battery_life": 8,
+"price": 99.99,
+"release_date": "2013-04-10",
+"total_sales": 1000000,
+"rating": 72,
+"cpu": 40,
+"display_performance": 60,
+"speaker_performance": 55,
+"high_resolution_video_playback_capability": 65,
+"high_performance_gaming_capability": 45,
+"security": 80
+},
+
+{
+"model_name": "Sony Xperia Z4 Tablet",
+"operating_system": "Android",
+"company_name": "Sony",
+"display_type": "IPS LCD",
+"port_type": "Micro USB",
+"lock_type": "Fingerprint reader",
+"video_recording": "1080p",
+"video_playback": "4k",
+"size": "254 x 167 x 6.1 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 3,
+"display_size": 10.1,
+"weight": 389,
+"battery_life": 17,
+"price": 699,
+"release_date": "2015-06-17",
+"total_sales": 500000,
+"rating": 84,
+"cpu": 80,
+"display_performance": 90,
+"speaker_performance": 80,
+"high_resolution_video_playback_capability": 95,
+"high_performance_gaming_capability": 75,
+"security": 90
+},
+
+{
+"model_name": "LG G Pad",
+"operating_system": "Android",
+"company_name": "LG",
+"display_type": "IPS LCD",
+"port_type": "Micro USB",
+"lock_type": "Knock code",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "210.8 x 124.2 x 8.9 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 1,
+"display_size": 8,
+"weight": 342,
+"battery_life": 10,
+"price": 299,
+"release_date": "2014-07-07",
+"total_sales": 300000,
+"rating": 76,
+"cpu": 70,
+"display_performance": 72,
+"speaker_performance": 68,
+"high_resolution_video_playback_capability": 80,
+"high_performance_gaming_capability": 60,
+"security": 75
+},
+
+{
+"model_name": "Lenovo Yoga Tablet",
+"operating_system": "Android",
+"company_name": "Lenovo",
+"display_type": "IPS LCD",
+"port_type": "Micro USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "261 x 180 x 8.1 mm",
+"color": "Black",
+"storage_capacity": "16",
+"ram": 1,
+"display_size": 10.1,
+"weight": 605,
+"battery_life": 18,
+"price": 299,
+"release_date": "2013-10-30",
+"total_sales": 2000000,
+"rating": 76,
+"cpu": 60,
+"display_performance": 70,
+"speaker_performance": 65,
+"high_resolution_video_playback_capability": 75,
+"high_performance_gaming_capability": 55,
+"security": 60
+},
+
+{
+"model_name": "Samsung Galaxy Tab A with S Pen",
+"operating_system": "Android",
+"company_name": "Samsung",
+"display_type": "TFT LCD",
+"port_type": "Micro USB",
+"lock_type": "Fingerprint reader",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "245.2 x 149.4 x 7.5 mm",
+"color": "Black",
+"storage_capacity": "32",
+"ram": 3,
+"display_size": 8,
+"weight": 325,
+"battery_life": 13,
+"price": 279.99,
+"release_date": "2019-03-29",
+"total_sales": 1500000,
+"rating": 80,
+"cpu": 70,
+"display_performance": 75,
+"speaker_performance": 72,
+"high_resolution_video_playback_capability": 75,
+"high_performance_gaming_capability": 65,
+"security": 85
+},
+
+{
+"model_name": "Google Nexus 9",
+"operating_system": "Android",
+"company_name": "Google",
+"display_type": "IPS LCD",
+"port_type": "Micro USB",
+"lock_type": "None",
+"video_recording": "1080p",
+"video_playback": "1080p",
+"size": "228.2 x 153.7 x 8 mm",
+"color": "Indigo Black",
+"storage_capacity": "32",
+"ram": 2,
+"display_size": 8.9,
+"weight": 425,
+"battery_life": 9.5,
+"price": 399,
+"release_date": "2014-11-03",
+"total_sales": 800000,
+"rating": 78,
+"cpu": 75,
+"display_performance": 80,
+"speaker_performance": 70,
+"high_resolution_video_playback_capability": 85,
+"high_performance_gaming_capability": 70,
+"security": 70
+},
+
+{
+"model_name": "iPad Pro",
+"operating_system": "iPadOS",
+"company_name": "Apple",
+"display_type": "IPS LCD",
+"port_type": "USB-C",
+"lock_type": "Face ID",
+"video_recording": "4k",
+"video_playback": "4k",
+"size": "247.6 x 178.5 x 5.9 mm",
+"color": "Space Gray",
+"storage_capacity": "256",
+"ram": 8,
+"display_size": 12.9,
+"weight": 682,
+"battery_life": 10,
+"price": 1099,
+"release_date": "2021-05-21",
+"total_sales": 2000000,
+"rating": 95,
+"cpu": 100,
+"display_performance": 98,
+"speaker_performance": 90,
+"high_resolution_video_playback_capability": 100,
+"high_performance_gaming_capability": 95,
+"security": 96,
+}
+
+];
+
+
+function search() {
+  var input_model_name = document.getElementById("model_name").value.toLowerCase();
+  var input_operating_system = document.getElementById("operating_system").value.toLowerCase();
+  var input_company_name = document.getElementById("company_name").value.toLowerCase();
+  var input_display_type = document.getElementById("display_type").value.toLowerCase();
+  var input_port_type = document.getElementById("port_type").value.toLowerCase();
+  var input_lock_type = document.getElementById("lock_type").value.toLowerCase();
+  var input_video_recording = document.getElementById("video_recording").value.toLowerCase();
+  var input_video_playback = document.getElementById("video_playback").value.toLowerCase();
+  var input_size = document.getElementById("size").value.toLowerCase();
+  var input_color = document.getElementById("color").value.toLowerCase();
+  var input_storage_capacity = document.getElementById("storage_capacity").value.toLowerCase();
+  var input_ram = document.getElementById("ram").value;
+  var input_display_size = document.getElementById("display_size").value;
+  var input_weight = document.getElementById("weight").value;
+  var input_battery_life = document.getElementById("battery_life").value;
+  var input_price = document.getElementById("price").value;
+  var input_release_date = document.getElementById("release_date").value;
+  var input_total_sales = document.getElementById("total_sales").value;
+  var input_rating = document.getElementById("rating").value;
+  var input_cpu = document.getElementById("cpu").value;
+  var input_display_performance = document.getElementById("display_performance").value;
+  var input_speaker_performance = document.getElementById("speaker_performance").value;
+  var input_high_resolution_video_playback_capability = document.getElementById("high_resolution_video_playback_capability").value;
+  var input_high_performance_gaming_capability = document.getElementById("high_performance_gaming_capability").value;
+  var input_security = document.getElementById("security").value;
+
+
+
+  var results = [];
+
+  for (var i = 0; i < tablets.length; i++) {
+    var tablet = tablets[i];
+    if (input_model_name && !tablet.model_name.toLowerCase().includes(input_model_name)) {
+continue;
+}
+if (input_operating_system && !tablet.operating_system.toLowerCase().includes(input_operating_system)) {
+continue;
+}
+if (input_company_name && !tablet.company_name.toLowerCase().includes(input_company_name)) {
+continue;
+}
+if (input_display_type && !tablet.display_type.toLowerCase().includes(input_display_type)) {
+continue;
+}
+if (input_port_type && !tablet.port_type.toLowerCase().includes(input_port_type)) {
+continue;
+}
+if (input_lock_type && !tablet.lock_type.toLowerCase().includes(input_lock_type)) {
+continue;
+}
+if (input_video_recording && !tablet.video_recording.toLowerCase().includes(input_video_recording)) {
+continue;
+}
+if (input_video_playback && !tablet.video_playback.toLowerCase().includes(input_video_playback)) {
+continue;
+}
+if (input_size && !tablet.size.toLowerCase().includes(input_size)) {
+continue;
+}
+if (input_color && !tablet.color.toLowerCase().includes(input_color)) {
+continue;
+}
+if (input_storage_capacity && !tablet.storage_capacity.toLowerCase().includes(input_storage_capacity)) {
+continue;
+}
+if (input_ram && tablet.ram < Number(input_ram)) {
+continue;
+}
+if (input_display_size && tablet.display_size < Number(input_display_size)) {
+continue;
+}
+if (input_weight && tablet.weight < Number(input_weight)) {
+continue;
+}
+if (input_battery_life && tablet.battery_life < Number(input_battery_life)) {
+continue;
+}
+if (input_price && tablet.price < Number(input_price)) {
+continue;  
+
+}
+if (input_release_date && !String(tablet.release_date).startsWith(input_release_date)) {
+    continue;
+}
+if (input_total_sales && tablet.total_sales < Number(input_total_sales)) {
+continue;
+}
+if (input_rating && tablet.rating < Number(input_rating)) {
+continue;
+}
+if (input_cpu && tablet.cpu < Number(input_cpu)) {
+continue;
+}
+if (input_display_performance && tablet.display_performance < Number(input_display_performance)) {
+continue;
+}
+if (input_speaker_performance && tablet.speaker_performance < Number(input_speaker_performance)) {
+continue;
+}
+if (input_high_resolution_video_playback_capability && tablet.high_resolution_video_playback_capability < Number(input_high_resolution_video_playback_capability)) {
+continue;
+}
+if (input_high_performance_gaming_capability && tablet.high_performance_gaming_capability < Number(input_high_performance_gaming_capability)) {
+continue;
+}
+if (input_security && tablet.security < Number(input_security)) {
+continue;
+}
+
+
+
+if (
+  !input_model_name &&
+  !input_operating_system &&
+  !input_company_name &&
+  !input_display_type &&
+  !input_port_type &&
+  !input_lock_type &&
+  !input_video_recording &&
+  !input_video_playback &&
+  !input_size &&
+  !input_color &&
+  !input_storage_capacity &&
+  !input_ram &&
+  !input_display_size &&
+  !input_weight &&
+  !input_battery_life &&
+  !input_price &&
+  !input_release_date &&
+  !input_total_sales &&
+  !input_rating &&
+  !input_cpu &&
+  !input_display_performance &&
+  !input_speaker_performance &&
+  !input_high_resolution_video_playback_capability &&
+  !input_high_performance_gaming_capability &&
+  !input_security
+) {
+  var tableBody = document.querySelector("#search-results tbody");
+  tableBody.innerHTML = "";
+  return;
+}
+
+
+
+results.push(tablet);
+}
+
+
+
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+            if (results[i].model_name.toLowerCase() === uniqueResults[j].model_name.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+for (var i = 0; i < results.length; i++) {
+var tablet = results[i];
+var row = document.createElement("tr");
+row.innerHTML = 
+"<td>" + tablet.model_name + "</td>" +
+"<td>" + tablet.operating_system + "</td>" +
+"<td>" + tablet.company_name + "</td>" +
+"<td>" + tablet.display_type + "</td>" +
+"<td>" + tablet.port_type + "</td>" +
+"<td>" + tablet.lock_type + "</td>" +
+"<td>" + tablet.video_recording + "</td>" +
+"<td>" + tablet.video_playback + "</td>" +
+"<td>" + tablet.size + "</td>" +
+"<td>" + tablet.color + "</td>" +
+"<td>" + tablet.storage_capacity + "</td>" +
+"<td>" + tablet.ram + "</td>" +
+"<td>" + tablet.display_size + "</td>" +
+"<td>" + tablet.weight + "</td>" +
+"<td>" + tablet.battery_life + "</td>" +
+"<td>" + tablet.price + "</td>" +
+"<td>" + tablet.release_date + "</td>" +
+"<td>" + tablet.total_sales + "</td>" +
+"<td>" + tablet.rating + "</td>" +
+"<td>" + tablet.cpu + "</td>" +
+"<td>" + tablet.display_performance + "</td>" +
+"<td>" + tablet.speaker_performance + "</td>" +
+"<td>" + tablet.high_resolution_video_playback_capability + "</td>" +
+"<td>" + tablet.high_performance_gaming_capability + "</td>" +
+"<td>" + tablet.security + "</td>";
+tableBody.appendChild(row);
+}
+}
+
+
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = parseFloat(x.innerHTML);
+        y = parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+
+    
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+
+
+    
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,3356 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Cricket</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+
+    th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+
+    
+	</style>
+</head>
+<body>
+	<h1>Indian Premier League (IPL)</h1>
+	<img src="">
+
+    <canvas id="matrix-canvas"></canvas>
+
+	<form onsubmit="search(); return false;">
+		
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="team" placeholder="Team">
+<input type="text" id="nationality" placeholder="Nationality">
+<input type="text" id="position" placeholder="Position">
+<input type="number" step="0.01" id="age" placeholder="Age">
+<input type="number" step="0.01" id="height" placeholder="Height(cm)">
+<input type="number" step="0.01" id="weight" placeholder="Weight(kg)">
+<input type="number" step="0.01" id="overall" placeholder="Overall(0~100)">
+<input type="number" step="0.01" id="batting_average" placeholder="Batting Average">
+<input type="number" step="0.01" id="sr_bt" placeholder="SR-BT(Strike Rate for Batting)">
+<input type="number" step="0.01" id="hs" placeholder="HS(Highest Score)">
+<input type="number" step="0.01" id="100s" placeholder="100s(Centuries)">
+<input type="number" step="0.01" id="50s" placeholder="50s(Half Centuries)">
+<input type="number" step="0.01" id="econ" placeholder="Econ(Economy Rate)">
+<input type="number" step="0.01" id="bowling_average" placeholder="Bowling Average">
+<input type="number" step="0.01" id="sr_bl" placeholder="SR-BL(Strike Rate for Bowling)">
+<input type="number" step="0.01" id="5wi" placeholder="5WI(Five Wicket Innings)">
+<input type="number" step="0.01" id="ct" placeholder="Ct(Catches)">
+<input type="number" step="0.01" id="st" placeholder="St(Stumpings)">
+		
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+
+<thead>
+  <tr>
+
+    <th onclick="sortTable(0)">Name<span id="sortIndicator0">▲▼</span></th>
+    <th onclick="sortTable(1)">Team<span id="sortIndicator1">▲▼</span></th>
+    <th onclick="sortTable(2)">Nationality<span id="sortIndicator2">▲▼</span></th>
+    <th onclick="sortTable(3)">Position<span id="sortIndicator3">▲▼</span></th>
+    <th onclick="sortTable(4)">Age<span id="sortIndicator4">▲▼</span></th>
+    <th onclick="sortTable(5)">Height(cm)<span id="sortIndicator5">▲▼</span></th>
+    <th onclick="sortTable(6)">Weight(kg)<span id="sortIndicator6">▲▼</span></th>
+    <th onclick="sortTable(7)">Overall(0~100)<span id="sortIndicator7">▲▼</span></th>
+    <th onclick="sortTable(8)">Batting Average<span id="sortIndicator8">▲▼</span></th>
+    <th onclick="sortTable(9)">SR-BT(Strike Rate for Batting)<span id="sortIndicator9">▲▼</span></th>
+    <th onclick="sortTable(10)">HS(Highest Score)<span id="sortIndicator10">▲▼</span></th>
+    <th onclick="sortTable(11)">100s(Centuries)<span id="sortIndicator11">▲▼</span></th>
+    <th onclick="sortTable(12)">50s(Half Centuries)<span id="sortIndicator12">▲▼</span></th>
+    <th onclick="sortTable(13)">Econ(Economy Rate)<span id="sortIndicator13">▲▼</span></th>
+    <th onclick="sortTable(14)">Bowling Average<span id="sortIndicator14">▲▼</span></th>
+    <th onclick="sortTable(15)">SR-BL(Strike Rate for Bowling)<span id="sortIndicator15">▲▼</span></th>
+    <th onclick="sortTable(16)">5WI(Five Wicket Innings)<span id="sortIndicator16">▲▼</span></th>
+    <th onclick="sortTable(17)">Ct(Catches)<span id="sortIndicator17">▲▼</span></th>
+    <th onclick="sortTable(18)">St(Stumpings)<span id="sortIndicator18">▲▼</span></th>
+    
+  </tr>
+  </thead>
+  
+  
+<tbody></tbody>
+</table>
+<script>
+
+var players = [
+{
+"name": "Rohit Sharma",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 34,
+"height": 173,
+"weight": 72,
+"overall": 90,
+"batting_average": 31.24,
+"sr_bt": 130.61,
+"hs": 109,
+"100s": 1,
+"50s": 39,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 30,
+"st": 5
+},
+{
+"name": "Jasprit Bumrah",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 27,
+"height": 175,
+"weight": 68,
+"overall": 88,
+"batting_average": 7.62,
+"sr_bt": 113.84,
+"hs": 16,
+"100s": 0,
+"50s": 0,
+"econ": 7.41,
+"bowling_average": 25.33,
+"sr_bl": 19.5,
+"5wi": 1,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Quinton de Kock",
+"team": "Mumbai Indians",
+"nationality": "South African",
+"position": "Wicketkeeper",
+"age": 29,
+"height": 178,
+"weight": 70,
+"overall": 87,
+"batting_average": 30.02,
+"sr_bt": 132.38,
+"hs": 108,
+"100s": 1,
+"50s": 19,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 19,
+"st": 6
+},
+{
+"name": "Kieron Pollard",
+"team": "Mumbai Indians",
+"nationality": "West Indian",
+"position": "All-rounder",
+"age": 34,
+"height": 196,
+"weight": 98,
+"overall": 85,
+"batting_average": 29.82,
+"sr_bt": 151.97,
+"hs": 83,
+"100s": 0,
+"50s": 17,
+"econ": 8.39,
+"bowling_average": 35.22,
+"sr_bl": 23.9,
+"5wi": 0,
+"ct": 54,
+"st": 0
+},
+{
+"name": "Hardik Pandya",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 28,
+"height": 185,
+"weight": 75,
+"overall": 85,
+"batting_average": 29.79,
+"sr_bt": 116.23,
+"hs": 92,
+"100s": 0,
+"50s": 5,
+"econ": 5.56,
+"bowling_average": 40.97,
+"sr_bl": 44.8,
+"5wi": 0,
+"ct": null,
+"st": null
+},
+{
+"name": "Trent Boult",
+"team": "Mumbai Indians",
+"nationality": "New Zealand",
+"position": "Bowler",
+"age": 32,
+"height": 182,
+"weight": 82,
+"overall": 83,
+"batting_average": 8.15,
+"sr_bt": 103.55,
+"hs": 33,
+"100s": 0,
+"50s": 0,
+"econ": 8.41,
+"bowling_average": 24.22,
+"sr_bl": 17.2,
+"5wi": 0,
+"ct": 6,
+"st": 0
+},
+{
+"name": "Suryakumar Yadav",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 31,
+"height": 173,
+"weight": 65,
+"overall": 82,
+"batting_average": 28.99,
+"sr_bt": 134.57,
+"hs": 79,
+"100s": 0,
+"50s": 7,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 29,
+"st": 0
+},
+{
+"name": "Rahul Chahar",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 22,
+"height": 175,
+"weight": 68,
+"overall": 80,
+"batting_average": 6.75,
+"sr_bt": 71.43,
+"hs": 9,
+"100s": 0,
+"50s": 0,
+"econ": 7.43,
+"bowling_average": 29.42,
+"sr_bl": 23.8,
+"5wi": 0,
+"ct": 4,
+"st": 0
+},
+{
+"name": "Ishan Kishan",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Wicketkeeper",
+"age": 23,
+"height": 175,
+"weight": 62,
+"overall": 78,
+"batting_average": 25.96,
+"sr_bt": 134.24,
+"hs": 99,
+"100s": 0,
+"50s": 7,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 6,
+"st": 3
+},
+{
+"name": "Surya Kumar Yadav",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 31,
+"height": 173,
+"weight": 65,
+"overall": 78,
+"batting_average": 28.99,
+"sr_bt": 134.57,
+"hs": 79,
+"100s": 0,
+"50s": 7,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 29,
+"st": 0
+},
+{
+"name": "Adam Milne",
+"team": "Mumbai Indians",
+"nationality": "New Zealand",
+"position": "Bowler",
+"age": 30,
+"height": 193,
+"weight": 94,
+"overall": 77,
+"batting_average": 11,
+"sr_bt": 118.75,
+"hs": 10,
+"100s": 0,
+"50s": 0,
+"econ": 7.14,
+"bowling_average": 28.8,
+"sr_bl": 24.2,
+"5wi": 0,
+"ct": 3,
+"st": 0
+},
+{
+"name": "Krunal Pandya",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 30,
+"height": 180,
+"weight": 70,
+"overall": 76,
+"batting_average": 23.92,
+"sr_bt": 136.38,
+"hs": 86,
+"100s": 0,
+"50s": 2,
+"econ": 7.28,
+"bowling_average": 31.92,
+"sr_bl": 26.2,
+"5wi": 0,
+"ct": 22,
+"st": 0
+},
+{
+"name": "Jaspreet Bumrah",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 27,
+"height": 175,
+"weight": 68,
+"overall": 74,
+"batting_average": 3,
+"sr_bt": 60,
+"hs": 3,
+"100s": 0,
+"50s": 0,
+"econ": 6.61,
+"bowling_average": 33.18,
+"sr_bl": 30.1,
+"5wi": 0,
+"ct": 7,
+"st": 0
+},
+{
+"name": "Rahul Chahr",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 22,
+"height": 175,
+"weight": 68,
+"overall": 73,
+"batting_average": 6.75,
+"sr_bt": 71.43,
+"hs": 9,
+"100s": 0,
+"50s": 0,
+"econ": 7.43,
+"bowling_average": 29.42,
+"sr_bl": 23.8,
+"5wi": 0,
+"ct": 4,
+"st": 0
+},
+{
+"name": "Marco Jansen",
+"team": "Mumbai Indians",
+"nationality": "South African",
+"position": "Bowler",
+"age": 21,
+"height": 201,
+"weight": 95,
+"overall": 71,
+"batting_average": 0,
+"sr_bt": 0,
+"hs": 0,
+"100s": 0,
+"50s": 0,
+"econ": 9.45,
+"bowling_average": 40.45,
+"sr_bl": 25.7,
+"5wi": 0,
+"ct": 0,
+"st": 0
+},
+{
+"name": "Ishan Porel",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 23,
+"height": 183,
+"weight": 75,
+"overall": 70,
+"batting_average": 4,
+"sr_bt": 33.33,
+"hs": 4,
+"100s": 0,
+"50s": 0,
+"econ": 7.15,
+"bowling_average": 33.5,
+"sr_bl": 28,
+"5wi": 0,
+"ct": 2,
+"st": 0
+},
+{
+"name": "Saurabh Tiwary",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 31,
+"height": 175,
+"weight": 70,
+"overall": 69,
+"batting_average": 27.93,
+"sr_bt": 123.79,
+"hs": 61,
+"100s": 0,
+"50s": 3,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 24,
+"st": 0
+},
+{
+"name": "Aditya Tare",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Wicketkeeper",
+"age": 34,
+"height": 175,
+"weight": 68,
+"overall": 68,
+"batting_average": 10.15,
+"sr_bt": 110.39,
+"hs": 24,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 12,
+"st": 7
+},
+{
+"name": "Jasprit Bhumrah",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 27,
+"height": 175,
+"weight": 68,
+"overall": 66,
+"batting_average": 3,
+"sr_bt": 60,
+"hs": 3,
+"100s": 0,
+"50s": 0,
+"econ": 6.61,
+"bowling_average": 33.18,
+"sr_bl": 30.1,
+"5wi": 0,
+"ct": 7,
+"st": 0
+},
+{
+"name": "Jayant Yadav",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 31,
+"height": 188,
+"weight": 85,
+"overall": 65,
+"batting_average": 7.33,
+"sr_bt": 92.44,
+"hs": 23,
+"100s": 0,
+"50s": 0,
+"econ": 7.26,
+"bowling_average": 30.14,
+"sr_bl": 24.9,
+"5wi": 0,
+"ct": 8,
+"st": 0
+},
+{
+"name": "Anmolpreet Singh",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 23,
+"height": 183,
+"weight": 73,
+"overall": 63,
+"batting_average": 19.33,
+"sr_bt": 119.23,
+"hs": 34,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Arjun Tendulkar",
+"team": "Mumbai Indians",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 22,
+"height": 180,
+"weight": 70,
+"overall": 60,
+"batting_average": 9,
+"sr_bt": 69.23,
+"hs": 15,
+"100s": 0,
+"50s": 0,
+"econ": 7.4,
+"bowling_average": 31.8,
+"sr_bl": 25.8,
+"5wi": 0,
+"ct": 1,
+"st": 0
+},
+{
+"name": "Chris Lynn",
+"team": "Mumbai Indians",
+"nationality": "Australian",
+"position": "Batsman",
+"age": 32,
+"height": 183,
+"weight": 90,
+"overall": 57,
+"batting_average": 21.61,
+"sr_bt": 141.07,
+"hs": 93,
+"100s": 0,
+"50s": 1,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 9,
+"st": 0
+},
+{
+"name": "MS Dhoni",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "Wicketkeeper",
+"age": 40,
+"height": 178,
+"weight": 75,
+"overall": 90,
+"batting_average": 40.99,
+"sr_bt": 136.75,
+"hs": 84,
+"100s": 0,
+"50s": 23,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 42,
+"st": 23
+},
+{
+"name": "Suresh Raina",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 34,
+"height": 175,
+"weight": 73,
+"overall": 88,
+"batting_average": 33.34,
+"sr_bt": 137.14,
+"hs": 100,
+"100s": 1,
+"50s": 38,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 57,
+"st": 0
+},
+{
+"name": "Ravindra Jadeja",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 32,
+"height": 183,
+"weight": 78,
+"overall": 87,
+"batting_average": 26.81,
+"sr_bt": 126.72,
+"hs": 87,
+"100s": 0,
+"50s": 16,
+"econ": 6.86,
+"bowling_average": 31.86,
+"sr_bl": 22.3,
+"5wi": 1,
+"ct": 61,
+"st": 0
+},
+{
+"name": "Faf du Plessis",
+"team": "Chennai Super Kings",
+"nationality": "South African",
+"position": "Batsman",
+"age": 37,
+"height": 180,
+"weight": 78,
+"overall": 86,
+"batting_average": 31.51,
+"sr_bt": 127.04,
+"hs": 96,
+"100s": 0,
+"50s": 22,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 34,
+"st": 0
+},
+{
+"name": "Imran Tahir",
+"team": "Chennai Super Kings",
+"nationality": "South African",
+"position": "Bowler",
+"age": 42,
+"height": 178,
+"weight": 73,
+"overall": 85,
+"batting_average": 3.77,
+"sr_bt": 76.79,
+"hs": 15,
+"100s": 0,
+"50s": 0,
+"econ": 7.55,
+"bowling_average": 21.5,
+"sr_bl": 17.1,
+"5wi": 0,
+"ct": 23,
+"st": 0
+},
+{
+"name": "Ruturaj Gaikwad",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 24,
+"height": 178,
+"weight": 68,
+"overall": 83,
+"batting_average": 32.72,
+"sr_bt": 132.46,
+"hs": 88,
+"100s": 0,
+"50s": 6,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 12,
+"st": 0
+},
+{
+"name": "Sam Curran",
+"team": "Chennai Super Kings",
+"nationality": "English",
+"position": "All-rounder",
+"age": 23,
+"height": 178,
+"weight": 65,
+"overall": 82,
+"batting_average": 20.53,
+"sr_bt": 137.02,
+"hs": 95,
+"100s": 0,
+"50s": 2,
+"econ": 8.12,
+"bowling_average": 30.27,
+"sr_bl": 22.7,
+"5wi": 0,
+"ct": 22,
+"st": 0
+},
+{
+"name": "Dwayne Bravo",
+"team": "Chennai Super Kings",
+"nationality": "West Indian",
+"position": "All-rounder",
+"age": 38,
+"height": 178,
+"weight": 80,
+"overall": 81,
+"batting_average": 23.57,
+"sr_bt": 128.34,
+"hs": 70,
+"100s": 0,
+"50s": 4,
+"econ": 8.44,
+"bowling_average": 24.84,
+"sr_bl": 17.7,
+"5wi": 1,
+"ct": 65,
+"st": 0
+},
+{
+"name": "Shardul Thakur",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 29,
+"height": 178,
+"weight": 68,
+"overall": 80,
+"batting_average": 10.82,
+"sr_bt": 111.32,
+"hs": 22,
+"100s": 0,
+"50s": 0,
+"econ": 9.34,
+"bowling_average": 29.52,
+"sr_bl": 18.9,
+"5wi": 0,
+"ct": 11,
+"st": 0
+},
+{
+"name": "Ambati Rayudu",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 35,
+"height": 170,
+"weight": 70,
+"overall": 79,
+"batting_average": 28.69,
+"sr_bt": 126.21,
+"hs": 100,
+"100s": 1,
+"50s": 11,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 35,
+"st": 0
+},
+{
+"name": "Deepak Chahar",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 28,
+"height": 180,
+"weight": 78,
+"overall": 79,
+"batting_average": 8.29,
+"sr_bt": 91.21,
+"hs": 39,
+"100s": 0,
+"50s": 0,
+"econ": 8.17,
+"bowling_average": 29.26,
+"sr_bl": 21.4,
+"5wi": 0,
+"ct": 12,
+"st": 0
+},
+{
+"name": "Moeen Ali",
+"team": "Chennai Super Kings",
+"nationality": "English",
+"position": "All-rounder",
+"age": 34,
+"height": 183,
+"weight": 76,
+"overall": 78,
+"batting_average": 22.73,
+"sr_bt": 137.01,
+"hs": 66,
+"100s": 0,
+"50s": 2,
+"econ": 6.56,
+"bowling_average": 28.52,
+"sr_bl": 24.7,
+"5wi": 0,
+"ct": 14,
+"st": 0
+},
+{
+"name": "Lungi Ngidi",
+"team": "Chennai Super Kings",
+"nationality": "South African",
+"position": "Bowler",
+"age": 25,
+"height": 193,
+"weight": 90,
+"overall": 77,
+"batting_average": 4.2,
+"sr_bt": 80.39,
+"hs": 9,
+"100s": 0,
+"50s": 0,
+"econ": 8.15,
+"bowling_average": 25.84,
+"sr_bl": 19.2,
+"5wi": 0,
+"ct": 6,
+"st": 0
+},
+{
+"name": "Robin Uthappa",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 36,
+"height": 175,
+"weight": 75,
+"overall": 76,
+"batting_average": 24.27,
+"sr_bt": 128.29,
+"hs": 87,
+"100s": 0,
+"50s": 9,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 21,
+"st": 0
+},
+{
+"name": "Josh Hazlewood",
+"team": "Chennai Super Kings",
+"nationality": "Australian",
+"position": "Bowler",
+"age": 30,
+"height": 196,
+"weight": 95,
+"overall": 75,
+"batting_average": 9.5,
+"sr_bt": 70.37,
+"hs": 13,
+"100s": 0,
+"50s": 0,
+"econ": 7.57,
+"bowling_average": 26.25,
+"sr_bl": 20.8,
+"5wi": 0,
+"ct": 3,
+"st": 0
+},
+{
+"name": "Karn Sharma",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 34,
+"height": 175,
+"weight": 70,
+"overall": 73,
+"batting_average": 2.75,
+"sr_bt": 50,
+"hs": 3,
+"100s": 0,
+"50s": 0,
+"econ": 8.26,
+"bowling_average": 28.68,
+"sr_bl": 20.8,
+"5wi": 0,
+"ct": 9,
+"st": 0
+},
+{
+"name": "R. Sai Kishore",
+"team": "Chennai Super Kings",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 24,
+"height": 175,
+"weight": 70,
+"overall": 71,
+"batting_average": 2.6,
+"sr_bt": 52,
+"hs": 4,
+"100s": 0,
+"50s": 0,
+"econ": 9.68,
+"bowling_average": 30.43,
+"sr_bl": 18.9,
+"5wi": 0,
+"ct": 0,
+"st": 0
+},
+{
+"name": "Mitchell Santner",
+"team": "Chennai Super Kings",
+"nationality": "New Zealand",
+"position": "All-rounder",
+"age": 30,
+"height": 188,
+"weight": 85,
+"overall": 70,
+"batting_average": 14.9,
+"sr_bt": 110.81,
+"hs": 32,
+"100s": 0,
+"50s": 0,
+"econ": 6.55,
+"bowling_average": 21.92,
+"sr_bl": 20,
+"5wi": 0,
+"ct": 12,
+"st": 0
+},
+{
+"name": "Virat Kohli",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 32,
+"height": 175,
+"weight": 70,
+"overall": 94,
+"batting_average": 50.8,
+"sr_bt": 137.85,
+"hs": 113,
+"100s": 5,
+"50s": 40,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 40,
+"st": 0
+},
+{
+"name": "AB de Villiers",
+"team": "Royal Challengers Bangalore",
+"nationality": "South African",
+"position": "Batsman",
+"age": 37,
+"height": 180,
+"weight": 77,
+"overall": 93,
+"batting_average": 39.95,
+"sr_bt": 151.23,
+"hs": 133,
+"100s": 3,
+"50s": 40,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 48,
+"st": 0
+},
+{
+"name": "Glenn Maxwell",
+"team": "Royal Challengers Bangalore",
+"nationality": "Australian",
+"position": "All-rounder",
+"age": 33,
+"height": 180,
+"weight": 78,
+"overall": 87,
+"batting_average": 22.95,
+"sr_bt": 154.67,
+"hs": 95,
+"100s": 0,
+"50s": 2,
+"econ": 8.3,
+"bowling_average": 32.91,
+"sr_bl": 23.88,
+"5wi": 0,
+"ct": 28,
+"st": 0
+},
+{
+"name": "Yuzvendra Chahal",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 31,
+"height": 170,
+"weight": 62,
+"overall": 86,
+"batting_average": 7.06,
+"sr_bt": 74.34,
+"hs": 18,
+"100s": 0,
+"50s": 0,
+"econ": 7.67,
+"bowling_average": 23.18,
+"sr_bl": 18.08,
+"5wi": 2,
+"ct": 20,
+"st": 0
+},
+{
+"name": "Devdutt Padikkal",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 21,
+"height": 180,
+"weight": 68,
+"overall": 84,
+"batting_average": 43.17,
+"sr_bt": 148.94,
+"hs": 101,
+"100s": 1,
+"50s": 5,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 16,
+"st": 0
+},
+{
+"name": "Mohammed Siraj",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 27,
+"height": 180,
+"weight": 68,
+"overall": 83,
+"batting_average": 4.17,
+"sr_bt": 87.82,
+"hs": 16,
+"100s": 0,
+"50s": 0,
+"econ": 8.27,
+"bowling_average": 25.06,
+"sr_bl": 18.11,
+"5wi": 0,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Kyle Jamieson",
+"team": "Royal Challengers Bangalore",
+"nationality": "New Zealand",
+"position": "All-rounder",
+"age": 26,
+"height": 201,
+"weight": 98,
+"overall": 82,
+"batting_average": 19.5,
+"sr_bt": 136.59,
+"hs": 50,
+"100s": 0,
+"50s": 1,
+"econ": 8.13,
+"bowling_average": 26.57,
+"sr_bl": 19.56,
+"5wi": 0,
+"ct": 8,
+"st": 0
+},
+{
+"name": "Washington Sundar",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 21,
+"height": 185,
+"weight": 74,
+"overall": 81,
+"batting_average": 18.46,
+"sr_bt": 116.26,
+"hs": 96,
+"100s": 0,
+"50s": 1,
+"econ": 6.17,
+"bowling_average": 28.37,
+"sr_bl": 27.64,
+"5wi": 0,
+"ct": 8,
+"st": 0
+},
+{
+"name": "Daniel Sams",
+"team": "Royal Challengers Bangalore",
+"nationality": "Australian",
+"position": "All-rounder",
+"age": 29,
+"height": 191,
+"weight": 80,
+"overall": 80,
+"batting_average": 16.33,
+"sr_bt": 143.91,
+"hs": 32,
+"100s": 0,
+"50s": 0,
+"econ": 8.15,
+"bowling_average": 27.38,
+"sr_bl": 20.18,
+"5wi": 0,
+"ct": 5,
+"st": 0
+},
+{
+"name": "Shahbaz Ahmed",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 26,
+"height": 175,
+"weight": 70,
+"overall": 79,
+"batting_average": 19.75,
+"sr_bt": 131.35,
+"hs": 22,
+"100s": 0,
+"50s": 0,
+"econ": 8.09,
+"bowling_average": 26.06,
+"sr_bl": 19.29,
+"5wi": 0,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Navdeep Saini",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 28,
+"height": 180,
+"weight": 75,
+"overall": 78,
+"batting_average": 7.87,
+"sr_bt": 85.46,
+"hs": 24,
+"100s": 0,
+"50s": 0,
+"econ": 8.27,
+"bowling_average": 27.52,
+"sr_bl": 19.93,
+"5wi": 0,
+"ct": 7,
+"st": 0
+},
+{
+"name": "Harshal Patel",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 30,
+"height": 180,
+"weight": 70,
+"overall": 77,
+"batting_average": 9.17,
+"sr_bt": 105.23,
+"hs": 36,
+"100s": 0,
+"50s": 0,
+"econ": 9.17,
+"bowling_average": 22.69,
+"sr_bl": 14.79,
+"5wi": 1,
+"ct": 10,
+"st": 0
+},
+{
+"name": "Adam Zampa",
+"team": "Royal Challengers Bangalore",
+"nationality": "Australian",
+"position": "Bowler",
+"age": 29,
+"height": 180,
+"weight": 75,
+"overall": 76,
+"batting_average": 2.6,
+"sr_bt": 44.44,
+"hs": 5,
+"100s": 0,
+"50s": 0,
+"econ": 7.69,
+"bowling_average": 26.05,
+"sr_bl": 20.32,
+"5wi": 0,
+"ct": 3,
+"st": 0
+},
+{
+"name": "Pavan Deshpande",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 31,
+"height": 170,
+"weight": 65,
+"overall": 74,
+"batting_average": 16.25,
+"sr_bt": 111.63,
+"hs": 28,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 1,
+"st": 0
+},
+{
+"name": "KS Bharat",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "Wicketkeeper",
+"age": 27,
+"height": 170,
+"weight": 60,
+"overall": 72,
+"batting_average": 24.0,
+"sr_bt": 123.07,
+"hs": 25,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 4,
+"st": 2
+},
+{
+"name": "Dan Christian",
+"team": "Royal Challengers Bangalore",
+"nationality": "Australian",
+"position": "All-rounder",
+"age": 38,
+"height": 193,
+"weight": 86,
+"overall": 70,
+"batting_average": 17.57,
+"sr_bt": 129.37,
+"hs": 39,
+"100s": 0,
+"50s": 0,
+"econ": 8.3,
+"bowling_average": 33.95,
+"sr_bl": 24.53,
+"5wi": 0,
+"ct": 10,
+"st": 0
+},
+{
+"name": "Suyash Prabhudessai",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 23,
+"height": 175,
+"weight": 70,
+"overall": 70,
+"batting_average": 15.0,
+"sr_bt": 115.38,
+"hs": 15,
+"100s": 0,
+"50s": 0,
+"econ": 6.0,
+"bowling_average": 31.5,
+"sr_bl": 31.5,
+"5wi": 0,
+"ct": 1,
+"st": 0
+},
+{
+"name": "Rajat Patidar",
+"team": "Royal Challengers Bangalore",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 29,
+"height": 178,
+"weight": 72,
+"overall": 69,
+"batting_average": 15.0,
+"sr_bt": 108.47,
+"hs": 31,
+"100s": 0,
+"50s": 0,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 0,
+"st": 0
+},
+{
+"name": "Shubman Gill",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 22,
+"height": 178,
+"weight": 68,
+"overall": 84,
+"batting_average": 33.23,
+"sr_bt": 125.2,
+"hs": 76,
+"100s": 0,
+"50s": 7,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 13,
+"st": 0
+},
+{
+"name": "Eoin Morgan",
+"team": "Kolkata Knight Riders",
+"nationality": "English",
+"position": "Batsman",
+"age": 35,
+"height": 183,
+"weight": 75,
+"overall": 83,
+"batting_average": 26.73,
+"sr_bt": 125.65,
+"hs": 68,
+"100s": 0,
+"50s": 5,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 19,
+"st": 0
+},
+{
+"name": "Andre Russell",
+"team": "Kolkata Knight Riders",
+"nationality": "West Indian",
+"position": "All-rounder",
+"age": 33,
+"height": 188,
+"weight": 88,
+"overall": 82,
+"batting_average": 27.64,
+"sr_bt": 186.41,
+"hs": 88,
+"100s": 0,
+"50s": 5,
+"econ": 9.49,
+"bowling_average": 32.43,
+"sr_bl": 20.43,
+"5wi": 0,
+"ct": 36,
+"st": 0
+},
+{
+"name": "Nitish Rana",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 27,
+"height": 178,
+"weight": 68,
+"overall": 81,
+"batting_average": 28.05,
+"sr_bt": 135.99,
+"hs": 87,
+"100s": 0,
+"50s": 8,
+"econ": 6.92,
+"bowling_average": 32.68,
+"sr_bl": 28.35,
+"5wi": 0,
+"ct": 20,
+"st": 0
+},
+{
+"name": "Dinesh Karthik",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Wicketkeeper",
+"age": 36,
+"height": 170,
+"weight": 70,
+"overall": 80,
+"batting_average": 26.13,
+"sr_bt": 129.8,
+"hs": 97,
+"100s": 0,
+"50s": 14,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 55,
+"st": 31
+},
+{
+"name": "Sunil Narine",
+"team": "Kolkata Knight Riders",
+"nationality": "West Indian",
+"position": "All-rounder",
+"age": 33,
+"height": 175,
+"weight": 80,
+"overall": 81,
+"batting_average": 17.95,
+"sr_bt": 141.95,
+"hs": 75,
+"100s": 0,
+"50s": 5,
+"econ": 6.76,
+"bowling_average": 23.31,
+"sr_bl": 19.2,
+"5wi": 0,
+"ct": 33,
+"st": 0
+},
+{
+"name": "Pat Cummins",
+"team": "Kolkata Knight Riders",
+"nationality": "Australian",
+"position": "Bowler",
+"age": 28,
+"height": 193,
+"weight": 88,
+"overall": 87,
+"batting_average": 15.29,
+"sr_bt": 136.94,
+"hs": 53,
+"100s": 0,
+"50s": 1,
+"econ": 7.77,
+"bowling_average": 27.39,
+"sr_bl": 21.17,
+"5wi": 0,
+"ct": 13,
+"st": 0
+},
+{
+"name": "Varun Chakravarthy",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 29,
+"height": 180,
+"weight": 80,
+"overall": 85,
+"batting_average": 15.33,
+"sr_bt": 118.8,
+"hs": 22,
+"100s": 0,
+"50s": 0,
+"econ": 7.31,
+"bowling_average": 27.01,
+"sr_bl": 22.17,
+"5wi": 1,
+"ct": 5,
+"st": 0
+},
+{
+"name": "Lockie Ferguson",
+"team": "Kolkata Knight Riders",
+"nationality": "New Zealand",
+"position": "Bowler",
+"age": 30,
+"height": 193,
+"weight": 90,
+"overall": 83,
+"batting_average": 14.67,
+"sr_bt": 115.94,
+"hs": 24,
+"100s": 0,
+"50s": 0,
+"econ": 7.75,
+"bowling_average": 23.38,
+"sr_bl": 18.06,
+"5wi": 0,
+"ct": 8,
+"st": 0
+},
+{
+"name": "Kuldeep Yadav",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 27,
+"height": 170,
+"weight": 65,
+"overall": 82,
+"batting_average": 7.4,
+"sr_bt": 63.86,
+"hs": 16,
+"100s": 0,
+"50s": 0,
+"econ": 8.44,
+"bowling_average": 24.85,
+"sr_bl": 17.65,
+"5wi": 1,
+"ct": 7,
+"st": 0
+},
+{
+"name": "Rahul Tripathi",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 30,
+"height": 180,
+"weight": 70,
+"overall": 79,
+"batting_average": 24.65,
+"sr_bt": 133.67,
+"hs": 93,
+"100s": 0,
+"50s": 7,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 20,
+"st": 0
+},
+{
+"name": "Prasidh Krishna",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 25,
+"height": 183,
+"weight": 73,
+"overall": 78,
+"batting_average": 5.67,
+"sr_bt": 71.01,
+"hs": 11,
+"100s": 0,
+"50s": 0,
+"econ": 9.03,
+"bowling_average": 31.61,
+"sr_bl": 21,
+"5wi": 0,
+"ct": 3,
+"st": 0
+},
+{
+"name": "Kamlesh Nagarkoti",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 22,
+"height": 178,
+"weight": 70,
+"overall": 76,
+"batting_average": 13.5,
+"sr_bt": 132.35,
+"hs": 35,
+"100s": 0,
+"50s": 0,
+"econ": 9.37,
+"bowling_average": 29.56,
+"sr_bl": 18.96,
+"5wi": 0,
+"ct": 5,
+"st": 0
+},
+{
+"name": "Harbhajan Singh",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 41,
+"height": 180,
+"weight": 75,
+"overall": 77,
+"batting_average": 9.17,
+"sr_bt": 94.36,
+"hs": 15,
+"100s": 0,
+"50s": 0,
+"econ": 7.05,
+"bowling_average": 26.45,
+"sr_bl": 22.52,
+"5wi": 0,
+"ct": 6,
+"st": 0
+},
+{
+"name": "Shakib Al Hasan",
+"team": "Kolkata Knight Riders",
+"nationality": "Bangladeshi",
+"position": "All-rounder",
+"age": 34,
+"height": 178,
+"weight": 75,
+"overall": 78,
+"batting_average": 21.79,
+"sr_bt": 128.06,
+"hs": 66,
+"100s": 0,
+"50s": 1,
+"econ": 7.47,
+"bowling_average": 29.44,
+"sr_bl": 23.67,
+"5wi": 0,
+"ct": 7,
+"st": 0
+},
+{
+"name": "Karun Nair",
+"team": "Kolkata Knight Riders",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 30,
+"height": 175,
+"weight": 68,
+"overall": 76,
+"batting_average": 17.93,
+"sr_bt": 126.29,
+"hs": 83,
+"100s": 0,
+"50s": 4,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 11,
+"st": 0
+},
+{
+"name": "David Warner",
+"team": "Sunrisers Hyderabad",
+"nationality": "Australian",
+"position": "Batsman",
+"age": 34,
+"height": 170,
+"weight": 68,
+"overall": 88,
+"batting_average": 42.71,
+"sr_bt": 141.54,
+"hs": 126,
+"100s": 4,
+"50s": 50,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 55,
+"st": 0
+},
+{
+"name": "Kane Williamson",
+"team": "Sunrisers Hyderabad",
+"nationality": "New Zealand",
+"position": "Batsman",
+"age": 31,
+"height": 173,
+"weight": 68,
+"overall": 87,
+"batting_average": 39.75,
+"sr_bt": 136.05,
+"hs": 89,
+"100s": 1,
+"50s": 41,
+"econ": 7.81,
+"bowling_average": 32.21,
+"sr_bl": 24.8,
+"5wi": 0,
+"ct": 31,
+"st": 0
+},
+{
+"name": "Rashid Khan",
+"team": "Sunrisers Hyderabad",
+"nationality": "Afghan",
+"position": "Bowler",
+"age": 23,
+"height": 168,
+"weight": 64,
+"overall": 86,
+"batting_average": 10.36,
+"sr_bt": 124.88,
+"hs": 34,
+"100s": 0,
+"50s": 0,
+"econ": 6.14,
+"bowling_average": 21.69,
+"sr_bl": 20.15,
+"5wi": 0,
+"ct": 26,
+"st": 0
+},
+{
+"name": "Jonny Bairstow",
+"team": "Sunrisers Hyderabad",
+"nationality": "English",
+"position": "Wicketkeeper",
+"age": 31,
+"height": 180,
+"weight": 78,
+"overall": 85,
+"batting_average": 35.67,
+"sr_bt": 141.83,
+"hs": 114,
+"100s": 1,
+"50s": 9,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 28,
+"st": 0
+},
+{
+"name": "Bhuvneshwar Kumar",
+"team": "Sunrisers Hyderabad",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 31,
+"height": 178,
+"weight": 70,
+"overall": 85,
+"batting_average": 7.58,
+"sr_bt": 96.5,
+"hs": 17,
+"100s": 0,
+"50s": 0,
+"econ": 7.24,
+"bowling_average": 23.71,
+"sr_bl": 19.63,
+"5wi": 0,
+"ct": 34,
+"st": 0
+},
+{
+"name": "Manish Pandey",
+"team": "Sunrisers Hyderabad",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 31,
+"height": 175,
+"weight": 72,
+"overall": 83,
+"batting_average": 30.02,
+"sr_bt": 121.55,
+"hs": 114,
+"100s": 1,
+"50s": 15,
+"econ": 9.6,
+"bowling_average": 30.75,
+"sr_bl": 19.18,
+"5wi": 0,
+"ct": 50,
+"st": 0
+},
+{
+"name": "Mohammad Nabi",
+"team": "Sunrisers Hyderabad",
+"nationality": "Afghan",
+"position": "All-rounder",
+"age": 36,
+"height": 180,
+"weight": 78,
+"overall": 81,
+"batting_average": 15.75,
+"sr_bt": 145.97,
+"hs": 61,
+"100s": 0,
+"50s": 1,
+"econ": 6.65,
+"bowling_average": 29.37,
+"sr_bl": 26.45,
+"5wi": 0,
+"ct": 15,
+"st": 0
+},
+{
+"name": "Vijay Shankar",
+"team": "Sunrisers Hyderabad",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 30,
+"height": 183,
+"weight": 75,
+"overall": 79,
+"batting_average": 23.34,
+"sr_bt": 126.75,
+"hs": 63,
+"100s": 0,
+"50s": 1,
+"econ": 8.58,
+"bowling_average": 45.2,
+"sr_bl": 31.6,
+"5wi": 0,
+"ct": 15,
+"st": 0
+},
+{
+"name": "Wriddhiman Saha",
+"team": "Sunrisers Hyderabad",
+"nationality": "Indian",
+"position": "Wicketkeeper",
+"age": 36,
+"height": 165,
+"weight": 62,
+"overall": 80,
+"batting_average": 25.06,
+"sr_bt": 135.8,
+"hs": 115,
+"100s": 2,
+"50s": 8,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 48,
+"st": 12
+},
+{
+"name": "Shikhar Dhawan",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 35,
+"height": 180,
+"weight": 75,
+"overall": 88,
+"batting_average": 35.01,
+"sr_bt": 126.67,
+"hs": 106,
+"100s": 2,
+"50s": 44,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 38,
+"st": 0
+},
+{
+"name": "Rishabh Pant",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "Wicketkeeper",
+"age": 23,
+"height": 170,
+"weight": 65,
+"overall": 87,
+"batting_average": 35.96,
+"sr_bt": 151.97,
+"hs": 128,
+"100s": 1,
+"50s": 12,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 50,
+"st": 12
+},
+{
+"name": "Kagiso Rabada",
+"team": "Delhi Capitals",
+"nationality": "South African",
+"position": "Bowler",
+"age": 26,
+"height": 190,
+"weight": 85,
+"overall": 88,
+"batting_average": 8.0,
+"sr_bt": 113.59,
+"hs": 12,
+"100s": 0,
+"50s": 0,
+"econ": 8.22,
+"bowling_average": 18.34,
+"sr_bl": 13.34,
+"5wi": 2,
+"ct": 19,
+"st": 0
+},
+{
+"name": "Prithvi Shaw",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 21,
+"height": 173,
+"weight": 65,
+"overall": 84,
+"batting_average": 23.17,
+"sr_bt": 140.83,
+"hs": 99,
+"100s": 0,
+"50s": 6,
+"econ": 13.0,
+"bowling_average": 55.0,
+"sr_bl": 25.38,
+"5wi": 0,
+"ct": 12,
+"st": 0
+},
+{
+"name": "Shreyas Iyer",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 26,
+"height": 180,
+"weight": 70,
+"overall": 86,
+"batting_average": 31.88,
+"sr_bt": 126.87,
+"hs": 96,
+"100s": 0,
+"50s": 9,
+"econ": 18.0,
+"bowling_average": 9.0,
+"sr_bl": 6.0,
+"5wi": 0,
+"ct": 26,
+"st": 0
+},
+{
+"name": "Axar Patel",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 27,
+"height": 182,
+"weight": 75,
+"overall": 84,
+"batting_average": 17.96,
+"sr_bt": 125.77,
+"hs": 42,
+"100s": 0,
+"50s": 0,
+"econ": 7.44,
+"bowling_average": 30.49,
+"sr_bl": 24.67,
+"5wi": 0,
+"ct": 25,
+"st": 0
+},
+{
+"name": "Marcus Stoinis",
+"team": "Delhi Capitals",
+"nationality": "Australian",
+"position": "All-rounder",
+"age": 31,
+"height": 185,
+"weight": 80,
+"overall": 84,
+"batting_average": 24.87,
+"sr_bt": 137.76,
+"hs": 103,
+"100s": 1,
+"50s": 7,
+"econ": 8.19,
+"bowling_average": 25.5,
+"sr_bl": 18.67,
+"5wi": 0,
+"ct": 20,
+"st": 0
+},
+{
+"name": "Shimron Hetmyer",
+"team": "Delhi Capitals",
+"nationality": "West Indian",
+"position": "Batsman",
+"age": 24,
+"height": 183,
+"weight": 75,
+"overall": 82,
+"batting_average": 23.42,
+"sr_bt": 136.31,
+"hs": 75,
+"100s": 0,
+"50s": 5,
+"econ": 9.0,
+"bowling_average": 70.0,
+"sr_bl": 46.0,
+"5wi": 0,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Chris Woakes",
+"team": "Delhi Capitals",
+"nationality": "English",
+"position": "All-rounder",
+"age": 32,
+"height": 191,
+"weight": 85,
+"overall": 82,
+"batting_average": 15.83,
+"sr_bt": 120.76,
+"hs": 45,
+"100s": 0,
+"50s": 0,
+"econ": 8.28,
+"bowling_average": 28.32,
+"sr_bl": 20.43,
+"5wi": 0,
+"ct": 12,
+"st": 0
+},
+{
+"name": "Ishant Sharma",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 32,
+"height": 193,
+"weight": 85,
+"overall": 80,
+"batting_average": 5.14,
+"sr_bt": 65.38,
+"hs": 10,
+"100s": 0,
+"50s": 0,
+"econ": 8.09,
+"bowling_average": 36.18,
+"sr_bl": 26.87,
+"5wi": 1,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Ajinkya Rahane",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 33,
+"height": 168,
+"weight": 60,
+"overall": 80,
+"batting_average": 32.93,
+"sr_bt": 121.63,
+"hs": 103,
+"100s": 2,
+"50s": 12,
+"econ": 9.0,
+"bowling_average": 12.0,
+"sr_bl": 8.0,
+"5wi": 0,
+"ct": 32,
+"st": 0
+},
+{
+"name": "Umesh Yadav",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 33,
+"height": 183,
+"weight": 75,
+"overall": 79,
+"batting_average": 5.56,
+"sr_bt": 65.45,
+"hs": 7,
+"100s": 0,
+"50s": 0,
+"econ": 9.48,
+"bowling_average": 31.83,
+"sr_bl": 20.16,
+"5wi": 0,
+"ct": 8,
+"st": 0
+},
+{
+"name": "Tom Curran",
+"team": "Delhi Capitals",
+"nationality": "English",
+"position": "All-rounder",
+"age": 26,
+"height": 185,
+"weight": 75,
+"overall": 78,
+"batting_average": 14.88,
+"sr_bt": 130.79,
+"hs": 54,
+"100s": 0,
+"50s": 1,
+"econ": 9.23,
+"bowling_average": 35.95,
+"sr_bl": 23.32,
+"5wi": 0,
+"ct": 14,
+"st": 0
+},
+{
+"name": "Ravichandran Ashwin",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 35,
+"height": 183,
+"weight": 76,
+"overall": 84,
+"batting_average": 12.73,
+"sr_bt": 125.53,
+"hs": 45,
+"100s": 0,
+"50s": 0,
+"econ": 7.7,
+"bowling_average": 26.48,
+"sr_bl": 20.65,
+"5wi": 0,
+"ct": 33,
+"st": 0
+},
+{
+"name": "Avesh Khan",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 24,
+"height": 180,
+"weight": 75,
+"overall": 77,
+"batting_average": 4.33,
+"sr_bt": 66.66,
+"hs": 8,
+"100s": 0,
+"50s": 0,
+"econ": 7.92,
+"bowling_average": 25.66,
+"sr_bl": 19.48,
+"5wi": 0,
+"ct": 3,
+"st": 0
+},
+{
+"name": "Lalit Yadav",
+"team": "Delhi Capitals",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 24,
+"height": 178,
+"weight": 72,
+"overall": 73,
+"batting_average": 18.25,
+"sr_bt": 118.88,
+"hs": 22,
+"100s": 0,
+"50s": 0,
+"econ": 12.0,
+"bowling_average": 42.0,
+"sr_bl": 21.0,
+"5wi": 0,
+"ct": 0,
+"st": 0
+},
+{
+"name": "Chris Green",
+"team": "Delhi Capitals",
+"nationality": "Australian",
+"position": "Bowler",
+"age": 28,
+"height": 188,
+"weight": 85,
+"overall": 72,
+"batting_average": 9.0,
+"sr_bt": 90.0,
+"hs": 9,
+"100s": 0,
+"50s": 0,
+"econ": 7.6,
+"bowling_average": 21.5,
+"sr_bl": 16.91,
+"5wi": 0,
+"ct": 2,
+"st": 0
+},
+{
+"name": "KL Rahul",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 29,
+"height": 180,
+"weight": 74,
+"overall": 89,
+"batting_average": 46.41,
+"sr_bt": 136.29,
+"hs": 132,
+"100s": 2,
+"50s": 23,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 39,
+"st": 0
+},
+{
+"name": "Chris Gayle",
+"team": "Punjab Kings",
+"nationality": "West Indian",
+"position": "Batsman",
+"age": 42,
+"height": 191,
+"weight": 98,
+"overall": 88,
+"batting_average": 41.14,
+"sr_bt": 150.11,
+"hs": 175,
+"100s": 6,
+"50s": 31,
+"econ": 9.49,
+"bowling_average": 37.94,
+"sr_bl": 23.96,
+"5wi": 0,
+"ct": 20,
+"st": 0
+},
+{
+"name": "Mayank Agarwal",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 30,
+"height": 175,
+"weight": 65,
+"overall": 85,
+"batting_average": 27.33,
+"sr_bt": 132.31,
+"hs": 106,
+"100s": 1,
+"50s": 7,
+"econ": 9.54,
+"bowling_average": 23.5,
+"sr_bl": 14.76,
+"5wi": 0,
+"ct": 14,
+"st": 0
+},
+{
+"name": "Nicholas Pooran",
+"team": "Punjab Kings",
+"nationality": "West Indian",
+"position": "Wicketkeeper",
+"age": 25,
+"height": 178,
+"weight": 68,
+"overall": 82,
+"batting_average": 23.88,
+"sr_bt": 136.9,
+"hs": 77,
+"100s": 0,
+"50s": 4,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 29,
+"st": 2
+},
+{
+"name": "Mohammed Shami",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 30,
+"height": 180,
+"weight": 76,
+"overall": 87,
+"batting_average": 5.58,
+"sr_bt": 61.2,
+"hs": 14,
+"100s": 0,
+"50s": 0,
+"econ": 8.79,
+"bowling_average": 25.58,
+"sr_bl": 17.48,
+"5wi": 1,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Ravi Bishnoi",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 21,
+"height": 175,
+"weight": 65,
+"overall": 81,
+"batting_average": 6.33,
+"sr_bt": 88.03,
+"hs": 12,
+"100s": 0,
+"50s": 0,
+"econ": 8.38,
+"bowling_average": 22.54,
+"sr_bl": 16.13,
+"5wi": 0,
+"ct": 7,
+"st": 0
+},
+{
+"name": "Dawid Malan",
+"team": "Punjab Kings",
+"nationality": "English",
+"position": "Batsman",
+"age": 34,
+"height": 178,
+"weight": 68,
+"overall": 84,
+"batting_average": 33.23,
+"sr_bt": 129.66,
+"hs": 103,
+"100s": 1,
+"50s": 9,
+"econ": 11.5,
+"bowling_average": 29.5,
+"sr_bl": 15.39,
+"5wi": 0,
+"ct": 3,
+"st": 0
+},
+{
+"name": "Arshdeep Singh",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 22,
+"height": 183,
+"weight": 70,
+"overall": 79,
+"batting_average": 6.0,
+"sr_bt": 66.66,
+"hs": 6,
+"100s": 0,
+"50s": 0,
+"econ": 8.42,
+"bowling_average": 31.27,
+"sr_bl": 22.26,
+"5wi": 0,
+"ct": 8,
+"st": 0
+},
+{
+"name": "Fabian Allen",
+"team": "Punjab Kings",
+"nationality": "West Indian",
+"position": "All-rounder",
+"age": 26,
+"height": 183,
+"weight": 77,
+"overall": 78,
+"batting_average": 11.2,
+"sr_bt": 120.51,
+"hs": 27,
+"100s": 0,
+"50s": 0,
+"econ": 7.66,
+"bowling_average": 37.5,
+"sr_bl": 29.26,
+"5wi": 0,
+"ct": 8,
+"st": 0
+},
+{
+"name": "Jhye Richardson",
+"team": "Punjab Kings",
+"nationality": "Australian",
+"position": "Bowler",
+"age": 25,
+"height": 180,
+"weight": 74,
+"overall": 79,
+"batting_average": 10.8,
+"sr_bt": 100.0,
+"hs": 15,
+"100s": 0,
+"50s": 0,
+"econ": 8.37,
+"bowling_average": 28.44,
+"sr_bl": 20.33,
+"5wi": 0,
+"ct": 4,
+"st": 0
+},
+{
+"name": "Deepak Hooda",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 26,
+"height": 170,
+"weight": 70,
+"overall": 76,
+"batting_average": 16.66,
+"sr_bt": 137.33,
+"hs": 62,
+"100s": 0,
+"50s": 1,
+"econ": 8.47,
+"bowling_average": 36.66,
+"sr_bl": 25.94,
+"5wi": 0,
+"ct": 11,
+"st": 0
+},
+{
+"name": "Sarfaraz Khan",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 24,
+"height": 165,
+"weight": 62,
+"overall": 75,
+"batting_average": 22.66,
+"sr_bt": 129.93,
+"hs": 67,
+"100s": 0,
+"50s": 1,
+"econ": 14.5,
+"bowling_average": 75.0,
+"sr_bl": 30.0,
+"5wi": 0,
+"ct": 7,
+"st": 0
+},
+{
+"name": "Riley Meredith",
+"team": "Punjab Kings",
+"nationality": "Australian",
+"position": "Bowler",
+"age": 25,
+"height": 187,
+"weight": 85,
+"overall": 74,
+"batting_average": 3.66,
+"sr_bt": 50.0,
+"hs": 5,
+"100s": 0,
+"50s": 0,
+"econ": 9.38,
+"bowling_average": 28.0,
+"sr_bl": 17.88,
+"5wi": 0,
+"ct": 1,
+"st": 0
+},
+{
+"name": "Jalaj Saxena",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 35,
+"height": 173,
+"weight": 70,
+"overall": 72,
+"batting_average": 13.71,
+"sr_bt": 121.03,
+"hs": 27,
+"100s": 0,
+"50s": 0,
+"econ": 8.5,
+"bowling_average": 38.0,
+"sr_bl": 26.82,
+"5wi": 0,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Mandeep Singh",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 30,
+"height": 173,
+"weight": 68,
+"overall": 71,
+"batting_average": 22.92,
+"sr_bt": 126.23,
+"hs": 77,
+"100s": 0,
+"50s": 5,
+"econ": 9.0,
+"bowling_average": 20.0,
+"sr_bl": 13.33,
+"5wi": 0,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Harpreet Brar",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 23,
+"height": 173,
+"weight": 70,
+"overall": 71,
+"batting_average": 10.66,
+"sr_bt": 138.9,
+"hs": 25,
+"100s": 0,
+"50s": 0,
+"econ": 7.68,
+"bowling_average": 19.33,
+"sr_bl": 15.1,
+"5wi": 0,
+"ct": 1,
+"st": 0
+},
+{
+"name": "Chris Jordan",
+"team": "Punjab Kings",
+"nationality": "English",
+"position": "Bowler",
+"age": 33,
+"height": 183,
+"weight": 73,
+"overall": 73,
+"batting_average": 13.5,
+"sr_bt": 104.47,
+"hs": 13,
+"100s": 0,
+"50s": 0,
+"econ": 9.57,
+"bowling_average": 35.38,
+"sr_bl": 22.1,
+"5wi": 0,
+"ct": 6,
+"st": 0
+},
+{
+"name": "Shahrukh Khan",
+"team": "Punjab Kings",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 25,
+"height": 180,
+"weight": 80,
+"overall": 70,
+"batting_average": 11.33,
+"sr_bt": 118.75,
+"hs": 22,
+"100s": 0,
+"50s": 0,
+"econ": 20.66,
+"bowling_average": 34.66,
+"sr_bl": 10.0,
+"5wi": 0,
+"ct": 1,
+"st": 0
+},
+{
+"name": "Sanju Samson",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "Wicketkeeper",
+"age": 26,
+"height": 180,
+"weight": 62,
+"overall": 87,
+"batting_average": 27.61,
+"sr_bt": 133.97,
+"hs": 119,
+"100s": 2,
+"50s": 15,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 39,
+"st": 2
+},
+{
+"name": "Jos Buttler",
+"team": "Rajasthan Royals",
+"nationality": "English",
+"position": "Wicketkeeper",
+"age": 30,
+"height": 180,
+"weight": 73,
+"overall": 88,
+"batting_average": 35.42,
+"sr_bt": 150.38,
+"hs": 95,
+"100s": 0,
+"50s": 23,
+"econ": null,
+"bowling_average": null,
+"sr_bl": null,
+"5wi": null,
+"ct": 43,
+"st": 11
+},
+{
+"name": "Ben Stokes",
+"team": "Rajasthan Royals",
+"nationality": "English",
+"position": "All-rounder",
+"age": 30,
+"height": 183,
+"weight": 80,
+"overall": 88,
+"batting_average": 27.79,
+"sr_bt": 135.62,
+"hs": 103,
+"100s": 1,
+"50s": 10,
+"econ": 8.56,
+"bowling_average": 34.41,
+"sr_bl": 24.09,
+"5wi": 0,
+"ct": 32,
+"st": 0
+},
+{
+"name": "Jofra Archer",
+"team": "Rajasthan Royals",
+"nationality": "English",
+"position": "Bowler",
+"age": 26,
+"height": 188,
+"weight": 80,
+"overall": 87,
+"batting_average": 13.0,
+"sr_bt": 140.83,
+"hs": 27,
+"100s": 0,
+"50s": 0,
+"econ": 7.32,
+"bowling_average": 23.34,
+"sr_bl": 19.08,
+"5wi": 0,
+"ct": 9,
+"st": 0
+},
+{
+"name": "Riyan Parag",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 19,
+"height": 175,
+"weight": 60,
+"overall": 77,
+"batting_average": 20.76,
+"sr_bt": 118.0,
+"hs": 50,
+"100s": 0,
+"50s": 1,
+"econ": 10.6,
+"bowling_average": 21.14,
+"sr_bl": 12.0,
+"5wi": 0,
+"ct": 11,
+"st": 0
+},
+{
+"name": "Shreyas Gopal",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 28,
+"height": 170,
+"weight": 64,
+"overall": 79,
+"batting_average": 11.2,
+"sr_bt": 120.25,
+"hs": 24,
+"100s": 0,
+"50s": 0,
+"econ": 7.78,
+"bowling_average": 24.62,
+"sr_bl": 18.98,
+"5wi": 0,
+"ct": 13,
+"st": 0
+},
+{
+"name": "David Miller",
+"team": "Rajasthan Royals",
+"nationality": "South African",
+"position": "Batsman",
+"age": 32,
+"height": 185,
+"weight": 75,
+"overall": 82,
+"batting_average": 29.64,
+"sr_bt": 138.78,
+"hs": 101,
+"100s": 1,
+"50s": 6,
+"econ": 8.04,
+"bowling_average": 33.0,
+"sr_bl": 24.75,
+"5wi": 0,
+"ct": 23,
+"st": 0
+},
+{
+"name": "Chris Morris",
+"team": "Rajasthan Royals",
+"nationality": "South African",
+"position": "All-rounder",
+"age": 34,
+"height": 193,
+"weight": 95,
+"overall": 85,
+"batting_average": 23.82,
+"sr_bt": 157.87,
+"hs": 82,
+"100s": 0,
+"50s": 1,
+"econ": 7.81,
+"bowling_average": 23.99,
+"sr_bl": 18.39,
+"5wi": 0,
+"ct": 10,
+"st": 0
+},
+{
+"name": "Mustafizur Rahman",
+"team": "Rajasthan Royals",
+"nationality": "Bangladeshi",
+"position": "Bowler",
+"age": 25,
+"height": 188,
+"weight": 74,
+"overall": 83,
+"batting_average": 7.28,
+"sr_bt": 79.12,
+"hs": 16,
+"100s": 0,
+"50s": 0,
+"econ": 7.23,
+"bowling_average": 25.86,
+"sr_bl": 21.4,
+"5wi": 1,
+"ct": 5,
+"st": 0
+},
+{
+"name": "Jaydev Unadkat",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 29,
+"height": 178,
+"weight": 77,
+"overall": 82,
+"batting_average": 6.38,
+"sr_bt": 77.21,
+"hs": 24,
+"100s": 0,
+"50s": 0,
+"econ": 8.66,
+"bowling_average": 28.71,
+"sr_bl": 19.8,
+"5wi": 0,
+"ct": 12,
+"st": 0
+},
+{
+"name": "Yashasvi Jaiswal",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "Batsman",
+"age": 20,
+"height": 170,
+"weight": 60,
+"overall": 74,
+"batting_average": 14.8,
+"sr_bt": 122.86,
+"hs": 50,
+"100s": 0,
+"50s": 1,
+"econ": 16.5,
+"bowling_average": 66.0,
+"sr_bl": 24.0,
+"5wi": 0,
+"ct": 6,
+"st": 0
+},
+{
+"name": "Kartik Tyagi",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 20,
+"height": 178,
+"weight": 72,
+"overall": 74,
+"batting_average": 7.0,
+"sr_bt": 116.66,
+"hs": 8,
+"100s": 0,
+"50s": 0,
+"econ": 9.14,
+"bowling_average": 40.0,
+"sr_bl": 26.21,
+"5wi": 0,
+"ct": 3,
+"st": 0
+},
+{
+"name": "Rahul Tewatia",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 28,
+"height": 175,
+"weight": 70,
+"overall": 77,
+"batting_average": 20.13,
+"sr_bt": 137.34,
+"hs": 53,
+"100s": 0,
+"50s": 1,
+"econ": 8.34,
+"bowling_average": 34.48,
+"sr_bl": 24.78,
+"5wi": 0,
+"ct": 13,
+"st": 0
+},
+{
+"name": "Chetan Sakariya",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 23,
+"height": 183,
+"weight": 70,
+"overall": 72,
+"batting_average": 4.66,
+"sr_bt": 57.5,
+"hs": 13,
+"100s": 0,
+"50s": 0,
+"econ": 8.22,
+"bowling_average": 31.16,
+"sr_bl": 22.74,
+"5wi": 0,
+"ct": 3,
+"st": 0
+},
+{
+"name": "Andrew Tye",
+"team": "Rajasthan Royals",
+"nationality": "Australian",
+"position": "Bowler",
+"age": 35,
+"height": 188,
+"weight": 76,
+"overall": 72,
+"batting_average": 5.8,
+"sr_bt": 79.45,
+"hs": 17,
+"100s": 0,
+"50s": 0,
+"econ": 8.43,
+"bowling_average": 26.66,
+"sr_bl": 19.0,
+"5wi": 0,
+"ct": 10,
+"st": 0
+},
+{
+"name": "Shivam Dube",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 28,
+"height": 185,
+"weight": 75,
+"overall": 75,
+"batting_average": 14.02,
+"sr_bt": 122.47,
+"hs": 46,
+"100s": 0,
+"50s": 0,
+"econ": 8.57,
+"bowling_average": 37.8,
+"sr_bl": 26.4,
+"5wi": 0,
+"ct": 13,
+"st": 0
+},
+{
+"name": "Mahipal Lomror",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "All-rounder",
+"age": 22,
+"height": 180,
+"weight": 70,
+"overall": 72,
+"batting_average": 14.16,
+"sr_bt": 110.69,
+"hs": 47,
+"100s": 0,
+"50s": 0,
+"econ": 6.7,
+"bowling_average": 19.0,
+"sr_bl": 16.96,
+"5wi": 0,
+"ct": 7,
+"st": 0
+},
+{
+"name": "Kuldip Yadav",
+"team": "Rajasthan Royals",
+"nationality": "Indian",
+"position": "Bowler",
+"age": 27,
+"height": 183,
+"weight": 72,
+"overall": 68,
+"batting_average": 2.0,
+"sr_bt": 66.66,
+"hs": 2,
+"100s": 0,
+"50s": 0,
+"econ": 9.86,
+"bowling_average": 50.0,
+"sr_bl": 30.4,
+"5wi": 0,
+"ct": 1,
+"st": 0
+},
+
+
+
+]
+
+function search() {
+  var input_name = document.getElementById("name").value.toLowerCase();
+  var input_team = document.getElementById("team").value.toLowerCase();
+  var input_nationality = document.getElementById("nationality").value.toLowerCase();
+  var input_position = document.getElementById("position").value.toLowerCase();
+  var input_age = document.getElementById("age").value;
+  var input_height = document.getElementById("height").value;
+  var input_weight = document.getElementById("weight").value;
+  var input_overall = document.getElementById("overall").value;
+  var input_batting_average = document.getElementById("batting_average").value;
+  var input_sr_bt = document.getElementById("sr_bt").value;
+  var input_hs = document.getElementById("hs").value;
+  var input_100s = document.getElementById("100s").value;
+  var input_50s = document.getElementById("50s").value;
+  var input_econ = document.getElementById("econ").value;
+  var input_bowling_average = document.getElementById("bowling_average").value;
+  var input_sr_bl = document.getElementById("sr_bl").value;
+  var input_5wi = document.getElementById("5wi").value;
+  var input_ct = document.getElementById("ct").value;
+  var input_st = document.getElementById("st").value;
+  
+
+  var results = [];
+  
+  for (var i = 0; i < players.length; i++) {
+    var player = players[i];
+    if (input_name && !player.name.toLowerCase().includes(input_name)) {
+      continue;
+    }
+    if (input_team && !player.team.toLowerCase().includes(input_team)) {
+      continue;
+    }
+    if (input_nationality && !player.nationality.toLowerCase().includes(input_nationality)) {
+      continue;
+    }
+    if (input_position && !player.position.toLowerCase().includes(input_position)) {
+      continue;
+    }
+    if (input_age && player.age < parseFloat(input_age)) {
+      continue;
+    }
+    if (input_height && player.height < parseFloat(input_height)) {
+      continue;
+    }
+    if (input_weight && player.weight < parseFloat(input_weight)) {
+      continue;
+    }
+    if (input_overall && player.overall < parseFloat(input_overall)) {
+      continue;
+    }
+    if (input_batting_average && player.batting_average < parseFloat(input_batting_average)) {
+      continue;
+    }
+    if (input_sr_bt && player.sr_bt < parseFloat(input_sr_bt)) {
+      continue;
+    }
+    if (input_hs && player.hs < parseFloat(input_hs)) {
+      continue;
+    }
+    if (input_100s && player["100s"] < parseFloat(input_100s)) {
+      continue;
+    }
+    if (input_50s && player["50s"] < parseFloat(input_50s)) {
+      continue;
+    }
+    if (input_econ && player.econ < parseFloat(input_econ)) {
+      continue;
+    }
+    if (input_bowling_average && player.bowling_average < parseFloat(input_bowling_average)) {
+      continue;
+    }
+    if (input_sr_bl && player.sr_bl < parseFloat(input_sr_bl)) {
+      continue;
+    }
+    if (input_5wi && player["5wi"] < parseFloat(input_5wi)) {
+      continue;
+    }
+    if (input_ct && player.ct < parseFloat(input_ct)) {
+      continue;
+    }
+    if (input_st && player.st < parseFloat(input_st)) {
+      continue;
+    }
+
+
+    if (
+  !input_name &&
+  !input_team &&
+  !input_nationality &&
+  !input_position &&
+  !input_age &&
+  !input_height &&
+  !input_weight &&
+  !input_overall &&
+  !input_batting_average &&
+  !input_sr_bt &&
+  !input_hs &&
+  !input_100s &&
+  !input_50s &&
+  !input_econ &&
+  !input_bowling_average &&
+  !input_sr_bl &&
+  !input_5wi &&
+  !input_ct &&
+  !input_st
+) {
+    
+    var tableBody = document.querySelector("#search-results tbody");
+    tableBody.innerHTML = "";
+    return;
+}
+
+
+
+
+results.push(player);
+}
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+          if (results[i].name.toLowerCase() === uniqueResults[j].name.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+
+for (var i = 0; i < results.length; i++) {
+var player = results[i];
+var row = document.createElement("tr");
+row.innerHTML = 
+"<td>" + player.name + "</td>" +
+                    "<td>" + player.team + "</td>" +
+                    "<td>" + player.nationality + "</td>" +
+                    "<td>" + player.position + "</td>" +
+                    "<td>" + player.age + "</td>" +
+                    "<td>" + player.height + "</td>" +
+                    "<td>" + player.weight + "</td>" +
+                    "<td>" + player.overall + "</td>" +
+                    "<td>" + player.batting_average + "</td>" +
+                    "<td>" + player.sr_bt + "</td>" +
+                    "<td>" + player.hs + "</td>" +
+                    "<td>" + player["100s"] + "</td>" +
+                    "<td>" + player["50s"] + "</td>" +
+                    "<td>" + player.econ + "</td>" +
+                    "<td>" + player.bowling_average + "</td>" +
+                    "<td>" + player.sr_bl + "</td>" +
+                    "<td>" + player["5wi"] + "</td>" +
+                    "<td>" + player.ct + "</td>" +
+                    "<td>" + player.st + "</td>";
+
+
+
+
+
+
+
+
+
+tableBody.appendChild(row);
+}
+}
+
+
+
+
+
+function compareNumbers(a, b) {
+    var numA = a.era === null ? Infinity : parseFloat(a.era);
+    var numB = b.era === null ? Infinity : parseFloat(b.era);
+
+    return numA - numB;
+}
+
+players.sort(compareNumbers);
+
+console.log(players);
+
+
+
+
+
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = x.innerHTML.toLowerCase() == "null" ? Infinity : parseFloat(x.innerHTML);
+        y = y.innerHTML.toLowerCase() == "null" ? Infinity : parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+</script>
+
+</body>
+</html>

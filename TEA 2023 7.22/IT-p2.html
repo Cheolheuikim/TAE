@@ -1,0 +1,2991 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Search Mobile Phone</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+
+    th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+
+</style>
+</head>
+<body>
+	<h1>Search Mobile Phone</h1>
+	<img src="">
+
+  <canvas id="matrix-canvas"></canvas>
+
+	<form onsubmit="search(); return false;">
+		<input type="text" id="product_name" placeholder="product name">
+		<input type="text" id="company_name" placeholder="company name">
+		<input type="text" id="operating_system" placeholder="operating system">
+		<input type="text" id="ports" placeholder="ports">
+		<input type="text" id="charging_type" placeholder="charging type">
+		<input type="text" id="lock_type" placeholder="lock type">
+        <input type="number" id="weight" placeholder="weight(g)">
+		<input type="number" id="rom" placeholder="rom(GB)">
+		<input type="number" id="ram" placeholder="ram(GB)">
+		<input type="number" id="display_size" placeholder="display size(inches)">
+		<input type="number" id="price" placeholder="price($)">
+		<input type="number" id="total_sales" placeholder="total sales">
+		<input type="number" id="release_date" placeholder="release date(year)">
+		<input type="number" id="rating" placeholder="rating(0~100)">
+		<input type="number" id="cpu_performance" placeholder="cpu performance(0~100)">
+		<input type="number" id="display_performance" placeholder="display performance(0~100)">
+		<input type="number" id="front_camera_performance" placeholder="front_camera performance(0~100)">
+		<input type="number" id="rear_camera_performance" placeholder="rear camera performance(0~100)">
+		<input type="number" id="speaker_performance" placeholder="speaker performance(0~100)">
+		<input type="number" id="battery_life" placeholder="battery life(0~100)">
+        <input type="number" id="durability" placeholder="durability(0~100)">
+        <input type="number" id="design" placeholder="design(0~100)">
+        <input type="number" id="security" placeholder="security(0~100)">
+        <input type="number" id="water_resistance" placeholder="water resistance(0~100)">
+        <input type="number" id="high_performance_gaming_capability" placeholder="high performance gaming capability(0~100)">
+
+
+
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+<thead>
+<tr>
+    <th onclick="sortTable(0)">Product Name<span id="sortIndicator0">▲▼</span></th>
+<th onclick="sortTable(1)">Company Name<span id="sortIndicator1">▲▼</span></th>
+<th onclick="sortTable(2)">Operating System<span id="sortIndicator2">▲▼</span></th>
+<th onclick="sortTable(3)">Ports<span id="sortIndicator3">▲▼</span></th>
+<th onclick="sortTable(4)">Charging Type<span id="sortIndicator4">▲▼</span></th>
+<th onclick="sortTable(5)">Lock Type<span id="sortIndicator5">▲▼</span></th>
+<th onclick="sortTable(6)">Weight(g)<span id="sortIndicator6">▲▼</span></th>
+<th onclick="sortTable(7)">ROM(GB)<span id="sortIndicator7">▲▼</span></th>
+<th onclick="sortTable(8)">RAM(GB)<span id="sortIndicator8">▲▼</span></th>
+<th onclick="sortTable(9)">Display Size(inches)<span id="sortIndicator9">▲▼</span></th>
+<th onclick="sortTable(10)">Price($)<span id="sortIndicator10">▲▼</span></th>
+<th onclick="sortTable(11)">Total Sales<span id="sortIndicator11">▲▼</span></th>
+<th onclick="sortTable(12)">Release Date<span id="sortIndicator12">▲▼</span></th>
+<th onclick="sortTable(13)">Rating(0~100)<span id="sortIndicator13">▲▼</span></th>
+<th onclick="sortTable(14)">CPU Performance(0~100)<span id="sortIndicator14">▲▼</span></th>
+<th onclick="sortTable(15)">Display Performance(0~100)<span id="sortIndicator15">▲▼</span></th>
+<th onclick="sortTable(16)">Front Camera Performance(0~100)<span id="sortIndicator16">▲▼</span></th>
+<th onclick="sortTable(17)">Rear Camera Performance(0~100)<span id="sortIndicator17">▲▼</span></th>
+<th onclick="sortTable(18)">Speaker Performance(0~100)<span id="sortIndicator18">▲▼</span></th>
+<th onclick="sortTable(19)">Battery Life(0~100)<span id="sortIndicator19">▲▼</span></th>
+<th onclick="sortTable(20)">Durability(0~100)<span id="sortIndicator20">▲▼</span></th>
+<th onclick="sortTable(21)">Design(0~100)<span id="sortIndicator21">▲▼</span></th>
+<th onclick="sortTable(22)">Security(0~100)<span id="sortIndicator22">▲▼</span></th>
+<th onclick="sortTable(23)">Water Resistance(0~100)<span id="sortIndicator23">▲▼</span></th>
+<th onclick="sortTable(24)">High Performance Gaming Capability(0~100)<span id="sortIndicator24">▲▼</span></th>
+
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<script>
+var products = [
+
+{
+"product_name": "Samsung Galaxy S21 Ultra 5G",
+"company_name": "Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "25W Fast Charging, 15W Fast Wireless Charging, 4.5W Reverse Wireless Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 227,
+"rom": 128,
+"ram": 12,
+"display_size": 6.8,
+"price": 1199,
+"total_sales": 800000,
+"release_date": "2021-01-29",
+"rating": 92,
+"cpu_performance": 100,
+"display_performance": 95,
+"front_camera_performance": 95,
+"rear_camera_performance": 100,
+"speaker_performance": 85,
+"battery_life": 85,
+"durability": 80,
+"design": 90,
+"security": 90,
+"water_resistance": 90,
+"high_performance_gaming_capability": 95
+},
+{
+"product_name": "iPhone 12 Mini",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "20W Fast Charging, 12W Fast Wireless Charging, MagSafe Wireless Charging",
+"lock_type": "Face ID",
+"weight": 133,
+"rom": 128,
+"ram": 4,
+"display_size": 5.4,
+"price": 699,
+"total_sales": 1000000,
+"release_date": "2020-11-13",
+"rating": 88,
+"cpu_performance": 100,
+"display_performance": 90,
+"front_camera_performance": 90,
+"rear_camera_performance": 95,
+"speaker_performance": 80,
+"battery_life": 75,
+"durability": 70,
+"design": 90,
+"security": 90,
+"water_resistance": 60,
+"high_performance_gaming_capability": 90
+},
+{
+"product_name": "Samsung Galaxy S20 FE",
+"company_name": "Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "15W Fast Charging, 15W Fast Wireless Charging, 4.5W Reverse Wireless Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 190,
+"rom": 128,
+"ram": 6,
+"display_size": 6.5,
+"price": 699,
+"total_sales": 1500000,
+"release_date": "2020-10-02",
+"rating": 88,
+"cpu_performance": 95,
+"display_performance": 90,
+"front_camera_performance": 85,
+"rear_camera_performance": 90,
+"speaker_performance": 80,
+"battery_life": 75,
+"durability": 70,
+"design": 85,
+"security": 90,
+"water_resistance": 60,
+"high_performance_gaming_capability": 90
+},
+{
+"product_name": "iPhone 11 Pro Max",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "18W Fast Charging, 7.5W Fast Wireless Charging",
+"lock_type": "Face ID",
+"weight": 226,
+"rom": 256,
+"ram": 4,
+"display_size": 6.5,
+"price": 1099,
+"total_sales": 2000000,
+"release_date": "2019-09-10",
+"rating": 90,
+"cpu_performance": 100,
+"display_performance": 90,
+"front_camera_performance": 90,
+"rear_camera_performance": 100,
+"speaker_performance": 80,
+"battery_life": 80,
+"durability": 70,
+"design": 90,
+"security": 90,
+"water_resistance": 60,
+"high_performance_gaming_capability": 90
+},
+{
+"product_name": "Samsung Galaxy S20 Ultra 5G",
+"company_name": "Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "45W Fast Charging, 15W Fast Wireless Charging, 9W Reverse Wireless Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 222,
+"rom": 128,
+"ram": 12,
+"display_size": 6.9,
+"price": 1399,
+"total_sales": 1000000,
+"release_date": "2020-03-06",
+"rating": 90,
+"cpu_performance": 95,
+"display_performance": 95,
+"front_camera_performance": 85,
+"rear_camera_performance": 100,
+"speaker_performance": 80,
+"battery_life": 75,
+"durability": 70,
+"design": 85,
+"security": 90,
+"water_resistance": 60,
+"high_performance_gaming_capability": 95
+},
+{
+"product_name": "iPhone XR",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "15W Fast Charging, 7.5W Fast Wireless Charging",
+"lock_type": "Face ID",
+"weight": 194,
+"rom": 128,
+"ram": 3,
+"display_size": 6.1,
+"price": 499,
+"total_sales": 5000000,
+"release_date": "2018-10-26",
+"rating": 85,
+"cpu_performance": 90,
+"display_performance": 90,
+"front_camera_performance": 85,
+"rear_camera_performance": 90,
+"speaker_performance": 75,
+"battery_life": 75,
+"durability": 70,
+"design": 85,
+"security": 90,
+"water_resistance": 60,
+"high_performance_gaming_capability": 80
+},
+{
+"product_name": "Samsung Galaxy Note 20 Ultra 5G",
+"company_name": "Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "25W Fast Charging, 15W Fast Wireless Charging, 4.5W Reverse Wireless Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 208,
+"rom": 256,
+"ram": 12,
+"display_size": 6.9,
+"price": 1299,
+"total_sales": 1500000,
+"release_date": "2020-08-21",
+"rating": 91,
+"cpu_performance": 95,
+"display_performance": 95,
+"front_camera_performance": 90,
+"rear_camera_performance": 95,
+"speaker_performance": 80,
+"battery_life": 75,
+"durability": 70,
+"design": 90,
+"security": 90,
+"water_resistance": 60,
+"high_performance_gaming_capability": 95
+}
+,
+{
+"product_name": "iPhone SE (2020)",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "18W Fast Charging, 7.5W Fast Wireless Charging",
+"lock_type": "Touch ID",
+"weight": 148,
+"rom": 64,
+"ram": 3,
+"display_size": 4.7,
+"price": 399,
+"total_sales": 4000000,
+"release_date": "2020-04-24",
+"rating": 84,
+"cpu_performance": 90,
+"display_performance": 80,
+"front_camera_performance": 80,
+"rear_camera_performance": 85,
+"speaker_performance": 70,
+"battery_life": 75,
+"durability": 70,
+"design": 85,
+"security": 90,
+"water_resistance": 60,
+"high_performance_gaming_capability": 75
+},
+{
+"product_name": "Samsung Galaxy A52",
+"company_name": "Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "25W Fast Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 189,
+"rom": 128,
+"ram": 6,
+"display_size": 6.5,
+"price": 449,
+"total_sales": 1000000,
+"release_date": "2021-03-26",
+"rating": 87,
+"cpu_performance": 85,
+"display_performance": 85,
+"front_camera_performance": 80,
+"rear_camera_performance": 85,
+"speaker_performance": 75,
+"battery_life": 80,
+"durability": 75,
+"design": 85,
+"security": 90,
+"water_resistance": 67,
+"high_performance_gaming_capability": 80
+},
+{
+"product_name": "iPhone X",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "15W Fast Charging, 7.5W Fast Wireless Charging",
+"lock_type": "Face ID",
+"weight": 174,
+"rom": 64,
+"ram": 3,
+"display_size": 5.8,
+"price": 699,
+"total_sales": 4000000,
+"release_date": "2017-11-03",
+"rating": 86,
+"cpu_performance": 85,
+"display_performance": 90,
+"front_camera_performance": 85,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 70,
+"design": 90,
+"security": 90,
+"water_resistance": 67,
+"high_performance_gaming_capability": 75
+},
+{
+"product_name": "OnePlus 8 Pro",
+"company_name": "OnePlus",
+"operating_system": "Android 11, OxygenOS 11.0.8.8",
+"ports": "USB Type-C",
+"charging_type": "30W Fast Charging, 30W Fast Wireless Charging, 3W Reverse Wireless Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 199,
+"rom": 128,
+"ram": 8,
+"display_size": 6.78,
+"price": 899,
+"total_sales": 500000,
+"release_date": "2020-04-21",
+"rating": 89,
+"cpu_performance": 95,
+"display_performance": 90,
+"front_camera_performance": 85,
+"rear_camera_performance": 95,
+"speaker_performance": 75,
+"battery_life": 75,
+"durability": 80,
+"design": 85,
+"security": 90,
+"water_resistance": 68,
+"high_performance_gaming_capability": 90
+},
+{
+"product_name": "Google Pixel 5",
+"company_name": "Google",
+"operating_system": "Android 11",
+"ports": "USB Type-C",
+"charging_type": "18W Fast Charging, 12W Fast Wireless Charging, 5W Reverse Wireless Charging",
+"lock_type": "Rear-mounted Fingerprint Sensor",
+"weight": 151,
+"rom": 128,
+"ram": 8,
+"display_size": 6.0,
+"price": 699,
+"total_sales": 500000,
+"release_date": "2020-10-29",
+"rating": 87,
+"cpu_performance": 85,
+"display_performance": 85,
+"front_camera_performance": 85,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 80,
+"durability": 70,
+"design": 85,
+"security": 90,
+"water_resistance": 68,
+"high_performance_gaming_capability": 80
+},
+{
+"product_name": "iPhone XS Max",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "15W Fast Charging, 7.5W Fast Wireless Charging",
+"lock_type": "Face ID",
+"weight": 208,
+"rom": 64,
+"ram": 4,
+"display_size": 6.5,
+"price": 999,
+"total_sales": 3000000,
+"release_date": "2018-09-21",
+"rating": 88,
+"cpu_performance": 90,
+"display_performance":
+90,
+"front_camera_performance": 85,
+"rear_camera_performance": 95,
+"speaker_performance": 70,
+"battery_life": 75,
+"durability": 70,
+"design": 90,
+"security": 90,
+"water_resistance": 68,
+"high_performance_gaming_capability": 80
+},
+{
+"product_name": "OnePlus Nord",
+"company_name": "OnePlus",
+"operating_system": "Android 11, OxygenOS 11.1.4.4",
+"ports": "USB Type-C",
+"charging_type": "30W Fast Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 184,
+"rom": 128,
+"ram": 8,
+"display_size": 6.44,
+"price": 399,
+"total_sales": 2000000,
+"release_date": "2020-07-21",
+"rating": 85,
+"cpu_performance": 85,
+"display_performance": 85,
+"front_camera_performance": 80,
+"rear_camera_performance": 85,
+"speaker_performance": 70,
+"battery_life": 80,
+"durability": 75,
+"design": 85,
+"security": 90,
+"water_resistance": 67,
+"high_performance_gaming_capability": 75
+},
+{
+"product_name": "Samsung Galaxy A51",
+"company_name": "Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "15W Fast Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 172,
+"rom": 128,
+"ram": 4,
+"display_size": 6.5,
+"price": 399,
+"total_sales": 5000000,
+"release_date": "2019-12-16",
+"rating": 85,
+"cpu_performance": 75,
+"display_performance": 85,
+"front_camera_performance": 80,
+"rear_camera_performance": 85,
+"speaker_performance": 70,
+"battery_life": 75,
+"durability": 70,
+"design": 85,
+"security": 90,
+"water_resistance": 67,
+"high_performance_gaming_capability": 70
+},
+{
+"product_name": "iPhone 8 Plus",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "15W Fast Charging, 7.5W Fast Wireless Charging",
+"lock_type": "Touch ID",
+"weight": 202,
+"rom": 64,
+"ram": 3,
+"display_size": 5.5,
+"price": 549,
+"total_sales": 3000000,
+"release_date": "2017-09-22",
+"rating": 85,
+"cpu_performance": 80,
+"display_performance": 85,
+"front_camera_performance": 80,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 70,
+"design": 85,
+"security": 90,
+"water_resistance": 67,
+"high_performance_gaming_capability": 75
+},
+{
+"product_name": "Samsung Galaxy A71",
+"company_name": "Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "25W Fast Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 179,
+"rom": 128,
+"ram": 6,
+"display_size": 6.7,
+"price": 599,
+"total_sales": 2000000,
+"release_date": "2019-12-20",
+"rating": 87,
+"cpu_performance": 80,
+"display_performance": 85,
+"front_camera_performance": 80,
+"rear_camera_performance": 90,
+"speaker_performance": 75,
+"battery_life": 75,
+"durability": 70,
+"design": 85,
+"security": 90,
+"water_resistance": 67,
+"high_performance_gaming_capability": 75
+},
+{
+"product_name": "iPhone 7 Plus",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "15W Fast Charging, 7.5W Fast Wireless Charging",
+"lock_type": "Touch ID",
+"weight": 188,
+"rom": 128,
+"ram": 3,
+"display_size": 5.5,
+"price": 449,
+"total_sales": 5000000,
+"release_date": "2016-09-16",
+"rating": 83,
+"cpu_performance": 75,
+"display_performance": 85,
+"front_camera_performance": 80,
+"rear_camera_performance": 85,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 70,
+"design": 80,
+"security": 90,
+"water_resistance": 67,
+"high_performance_gaming_capability": 70
+},
+{
+"product_name": "Xiaomi Redmi Note 10 Pro",
+"company_name": "Xiaomi",
+"operating_system": "Android 11, MIUI 12",
+"ports": "USB Type-C",
+"charging_type": "33W Fast Charging",
+"lock_type": "Side-mounted Fingerprint Sensor",
+"weight": 193,
+"rom": 128,
+"ram": 6,
+"display_size": 6.67,
+"price": 279,
+"total_sales": 3000000,
+"release_date": "2021-03-04",
+"rating": 85,
+"cpu_performance": 80,
+"display_performance": 85,
+"front_camera_performance": 80,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 80,
+"durability": 70,
+"design": 80,
+"security": 85,
+"water_resistance": 67,
+"high_performance_gaming_capability": 75
+},
+{
+"product_name": "iPhone SE (2016)",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "5W Charging, 7.5W Fast Wireless Charging",
+"lock_type": "Touch ID",
+"weight": 113,
+"rom": 16,
+"ram": 2,
+"display_size": 4.0,
+"price": 399,
+"total_sales": 3000000,
+"release_date": "2016-03-31",
+"rating": 80,
+"cpu_performance": 70,
+"display_performance": 80,
+"front_camera_performance": 75,
+"rear_camera_performance": 75,
+"speaker_performance": 60,
+"battery_life": 60,
+"durability": 70,
+"design": 75,
+"security": 85,
+"water_resistance": 0,
+"high_performance_gaming_capability": 60
+},
+{
+"product_name": "Xiaomi Mi 11",
+"company_name": "Xiaomi",
+"operating_system": "Android",
+"ports": "USB Type-C",
+"charging_type": "55W Fast Charging, 50W Wireless Fast Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 196,
+"rom": 128,
+"ram": 8,
+"display_size": 6.81,
+"price": 749,
+"total_sales": 1000000,
+"release_date": "2021-02-08",
+"rating": 90,
+"cpu_performance": 95,
+"display_performance": 95,
+"front_camera_performance": 85,
+"rear_camera_performance": 95,
+"speaker_performance": 80,
+"battery_life": 80,
+"durability": 80,
+"design": 90,
+"security": 90,
+"water_resistance": 0,
+"high_performance_gaming_capability": 95
+},
+{
+"product_name": "Google Pixel 4a",
+"company_name": "Google",
+"operating_system": "Android 11",
+"ports": "USB Type-C",
+"charging_type": "18W Fast Charging, USB Power Delivery 2.0, Qi Wireless Charging",
+"lock_type": "Rear-mounted Fingerprint Sensor",
+"weight": 143,
+"rom": 128,
+"ram": 6,
+"display_size": 5.81,
+"price": 349,
+"total_sales": 2000000,
+"release_date": "2020-08-20",
+"rating": 87,
+"cpu_performance": 70,
+"display_performance": 85,
+"front_camera_performance": 85,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 75,
+"durability": 70,
+"design": 85,
+"security": 85,
+"water_resistance": 0,
+"high_performance_gaming_capability": 70
+},
+{
+"product_name": "Samsung Galaxy S10 Plus",
+"company_name": "Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "15W Fast Charging, 15W Fast Wireless Charging, 9W Reverse Wireless Charging",
+"lock_type": "Ultrasonic In-display Fingerprint Sensor",
+"weight": 175,
+"rom": 128,
+"ram": 8,
+"display_size": 6.4,
+"price": 999,
+"total_sales": 2000000,
+"release_date": "2019-03-08",
+"rating": 86,
+"cpu_performance": 75,
+"display_performance": 90,
+"front_camera_performance": 85,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 75,
+"durability": 70,
+"design": 85,
+"security": 90,
+"water_resistance": 68,
+"high_performance_gaming_capability": 75
+},
+{
+"product_name": "Huawei P30 Pro",
+"company_name": "Huawei",
+"operating_system": "Android 10, EMUI 10.1",
+"ports": "USB Type-C",
+"charging_type": "40W Fast Charging, 15W Fast Wireless Charging, Reverse Wireless Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 192,
+"rom": 128,
+"ram": 8,
+"display_size": 6.47,
+"price": 799,
+"total_sales": 1000000,
+"release_date": "2019-03-26",
+"rating": 88,
+"cpu_performance": 80,
+"display_performance": 90,
+"front_camera_performance": 85,
+"rear_camera_performance": 95,
+"speaker_performance": 75,
+"battery_life": 80,
+"durability": 75,
+"design": 90,
+"security": 85,
+"water_resistance": 68,
+"high_performance_gaming_capability": 80
+},
+{
+"product_name": "Samsung Galaxy A50",
+"company_name": "Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "15W Fast Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 166,
+"rom": 128,
+"ram": 4,
+"display_size": 6.4,
+"price": 299,
+"total_sales": 5000000,
+"release_date": "2019-03-18",
+"rating": 82,
+"cpu_performance": 70,
+"display_performance": 85,
+"front_camera_performance": 75,
+"rear_camera_performance": 80,
+"speaker_performance": 65,
+"battery_life": 70,
+"durability": 70,
+"design": 80,
+"security": 85,
+"water_resistance": 68,
+"high_performance_gaming_capability": 70
+},
+{
+"product_name": "iPhone 6s Plus",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "5W Charging, 7.5W Fast Wireless Charging",
+"lock_type": "Touch ID",
+"weight": 192,
+"rom": 64,
+"ram": 2,
+"display_size": 5.5,
+"price": 299,
+"total_sales": 5000000,
+"release_date": "2015-09-25",
+"rating": 79,
+"cpu_performance": 60,
+"display_performance": 75,
+"front_camera_performance": 75,
+"rear_camera_performance": 75,
+"speaker_performance": 60,
+"battery_life": 60,
+"durability": 70,
+"design": 75,
+"security": 85,
+"water_resistance": 0,
+"high_performance_gaming_capability": 60
+},
+{
+"product_name": "OnePlus 8T",
+"company_name": "OnePlus",
+"operating_system": "Android 11, OxygenOS 11",
+"ports": "USB Type-C",
+"charging_type": "65W Fast Charging, 15W Fast Wireless Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 188,
+"rom": 128,
+"ram": 8,
+"display_size": 6.55,
+"price": 749,
+"total_sales": 1000000,
+"release_date": "2020-10-16",
+"rating": 89,
+"cpu_performance": 90,
+"display_performance": 90,
+"front_camera_performance": 80,
+"rear_camera_performance": 90,
+"speaker_performance": 75,
+"battery_life": 80,
+"durability": 75,
+"design": 85,
+"security": 90,
+"water_resistance": 68,
+"high_performance_gaming_capability": 85
+},
+
+{
+"product_name": "iPhone SE 2nd Generation (2018)",
+"company_name": "Apple",
+"operating_system": "iOS 14",
+"ports": "Lightning port",
+"charging_type": "18W Fast Charging",
+"lock_type": "Touch ID",
+"weight": 148,
+"rom": 64,
+"ram": 3,
+"display_size": 4.7,
+"price": 399,
+"total_sales": 2000000,
+"release_date": "2020-04-24",
+"rating": 84,
+"cpu_performance": 80,
+"display_performance": 75,
+"front_camera_performance": 75,
+"rear_camera_performance": 75,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 70,
+"design": 75,
+"security": 85,
+"water_resistance": 0,
+"high_performance_gaming_capability": 70
+},
+{
+"product_name": "OnePlus 7T Pro",
+"company_name": "OnePlus",
+"operating_system": "Android 10, OxygenOS 10.0.5",
+"ports": "USB Type-C",
+"charging_type": "30W Fast Charging",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 206,
+"rom": 256,
+"ram": 8,
+"display_size": 6.67,
+"price": 699,
+"total_sales": 1000000,
+"release_date": "2019-10-17",
+"rating": 87,
+"cpu_performance": 90,
+"display_performance": 90,
+"front_camera_performance": 80,
+"rear_camera_performance": 90,
+"speaker_performance": 75,
+"battery_life": 75,
+"durability": 75,
+"design": 85,
+"security": 90,
+"water_resistance": 0,
+"high_performance_gaming_capability": 85
+},
+{
+"product_name": "Google Pixel 4",
+"company_name": "Google",
+"operating_system": "Android 11",
+"ports": "USB Type-C",
+"charging_type": "18W Fast Charging, USB Power Delivery 2.0, Qi Wireless Charging",
+"lock_type": "Face Unlock, Motion Sense, Titan M Security Module",
+"weight": 162,
+"rom": 64,
+"ram": 6,
+"display_size": 5.7,
+"price": 799,
+"total_sales": 1000000,
+"release_date": "2019-10-24",
+"rating": 86,
+"cpu_performance": 75,
+"display_performance": 90,
+"front_camera_performance": 85,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 70,
+"design": 80,
+"security": 90,
+"water_resistance": 68,
+"high_performance_gaming_capability": 75
+},
+{
+"product_name": "Samsung Galaxy A20e",
+"company_name": 
+"Samsung",
+"operating_system": "Android 11, One UI 3.1",
+"ports": "USB Type-C",
+"charging_type": "15W Fast Charging",
+"lock_type": "Rear-mounted Fingerprint Sensor",
+"weight": 141,
+"rom": 32,
+"ram": 3,
+"display_size": 5.8,
+"price": 149,
+"total_sales": 3000000,
+"release_date": "2019-05-02",
+"rating": 78,
+"cpu_performance": 60,
+"display_performance": 75,
+"front_camera_performance": 70,
+"rear_camera_performance": 75,
+"speaker_performance": 65,
+"battery_life": 70,
+"durability": 70,
+"design": 75,
+"security": 80,
+"water_resistance": 68,
+"high_performance_gaming_capability": 60
+},
+{
+"product_name": "Huawei P20 Pro",
+"company_name": "Huawei",
+"operating_system": "Android 9.0, EMUI 9.1",
+"ports": "USB Type-C",
+"charging_type": "22.5W Fast Charging, 15W Fast Wireless Charging",
+"lock_type": "Fingerprint Sensor (front-mounted)",
+"weight": 180,
+"rom": 128,
+"ram": 6,
+"display_size": 6.1,
+"price": 799,
+"total_sales": 2000000,
+"release_date": "2018-03-27",
+"rating": 80,
+"cpu_performance": 70,
+"display_performance": 80,
+"front_camera_performance": 75,
+"rear_camera_performance": 85,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 70,
+"design": 80,
+"security": 85,
+"water_resistance": 67,
+"high_performance_gaming_capability": 70
+},
+{
+"product_name": "Samsung Galaxy A10",
+"company_name": "Samsung",
+"operating_system": "Android 10, One UI 2.0",
+"ports": "Micro-USB",
+"charging_type": "15W Fast Charging",
+"lock_type": "Face Unlock",
+"weight": 168,
+"rom": 32,
+"ram": 2,
+"display_size": 6.2,
+"price": 149,
+"total_sales": 5000000,
+"release_date": "2019-03-02",
+"rating": 75,
+"cpu_performance": 50,
+"display_performance": 70,
+"front_camera_performance": 65,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 70,
+"design": 70,
+"security": 75,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+},
+{
+"product_name": "iPhone 5s",
+"company_name": "Apple",
+"operating_system": "iOS 12.5.3",
+"ports": "Lightning port",
+"charging_type": "5W Charging",
+"lock_type": "Touch ID",
+"weight": 112,
+"rom": 16,
+"ram": 1,
+"display_size": 4,
+"price": 99,
+"total_sales": 50000000,
+"release_date": "2013-09-20",
+"rating": 70,
+"cpu_performance": 40,
+"display_performance": 55,
+"front_camera_performance": 60,
+"rear_camera_performance": 65,
+"speaker_performance": 50,
+"battery_life": 50,
+"durability": 60,
+"design": 70,
+"security": 75,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+},
+{
+"product_name": "Xiaomi Redmi Note 9S",
+"company_name": "Xiaomi",
+"operating_system": "Android 10, MIUI 12",
+"ports": "USB Type-C",
+"charging_type": "18W Fast Charging",
+"lock_type": "Side-mounted Fingerprint Sensor",
+"weight": 209,
+"rom": 64,
+"ram": 4,
+"display_size": 6.67,
+"price": 249,
+"total_sales": 5000000,
+"release_date": "2020-04-30",
+"rating": 82,
+"cpu_performance": 70,
+"display_performance": 75,
+"front_camera_performance": 70,
+"rear_camera_performance": 75,
+"speaker_performance": 65,
+"battery_life": 75,
+"durability": 70,
+"design": 75,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 70
+},
+{
+"product_name": "Samsung Galaxy J7 (2017)",
+"company_name": "Samsung",
+"operating_system": "Android 9.0, Samsung Experience 9.5",
+"ports": "Micro-USB",
+"charging_type": "15W Fast Charging",
+"lock_type": "Fingerprint Sensor (front-mounted)",
+"weight": 181,
+"rom": 16,
+"ram": 3,
+"display_size": 5.5,
+"price": 219,
+"total_sales": 1000000,
+"release_date": "2017-07-01",
+"rating": 73,
+"cpu_performance": 50,
+"display_performance": 70,
+"front_camera_performance": 65,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 70,
+"design": 70,
+"security": 75,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+},
+{
+"product_name": "Sony Xperia XZ2",
+"company_name": "Sony",
+"operating_system": "Android 9.0",
+"ports": "USB Type-C",
+"charging_type": "18W Fast Charging, Qi Wireless Charging",
+"lock_type": "Fingerprint Sensor (rear-mounted)",
+"weight": 198,
+"rom": 64,
+"ram": 4,
+"display_size": 5.7,
+"price": 799,
+"total_sales": 500000,
+"release_date": "2018-04-05",
+"rating": 79,
+"cpu_performance": 70,
+"display_performance": 80,
+"front_camera_performance": 75,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 70,
+"design": 75,
+"security": 80,
+"water_resistance": 68,
+"high_performance_gaming_capability": 70
+},
+{
+"product_name": "Xiaomi Redmi 9",
+"company_name": "Xiaomi",
+"operating_system": "Android 10, MIUI 12",
+"ports": "USB Type-C",
+"charging_type": "18W Fast Charging",
+"lock_type": "Rear-mounted Fingerprint Sensor",
+"weight": 198,
+"rom": 64,
+"ram": 4,
+"display_size": 6.53,
+"price": 149,
+"total_sales": 10000000,
+"release_date": "2020-06-10",
+"rating": 80,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 65,
+"rear_camera_performance": 70,
+"speaker_performance": 65,
+"battery_life": 75,
+"durability": 70,
+"design": 70,
+"security": 75,
+"water_resistance": 0,
+"high_performance_gaming_capability": 60
+},
+{
+"product_name": "Samsung Galaxy S8",
+"company_name": "Samsung",
+"operating_system": "Android 9.0, Samsung Experience 9.0",
+"ports": "USB Type-C",
+"charging_type": "15W Fast Charging, Qi Wireless Charging",
+"lock_type": "Fingerprint Sensor (rear-mounted)",
+"weight": 155,
+"rom": 64,
+"ram": 4,
+"display_size": 5.8,
+"price": 599,
+"total_sales": 5000000,
+"release_date": "2017-04-21",
+"rating": 78,
+"cpu_performance": 60,
+"display_performance": 75,
+"front_camera_performance": 70,
+"rear_camera_performance": 75,
+"speaker_performance": 65,
+"battery_life": 70,
+"durability": 70,
+"design": 80,
+"security": 80,
+"water_resistance": 68,
+"high_performance_gaming_capability": 60
+},
+{
+"product_name": "Vivo V20",
+"company_name": "Vivo",
+"operating_system": "Android 11, Funtouch 11",
+"ports": "USB Type-C",
+"charging_type": "33W FlashCharge",
+"lock_type": "In-display Fingerprint Sensor",
+"weight": 171,
+"rom": 128,
+"ram": 8,
+"display_size": 6.44,
+"price": 399,
+"total_sales": 1000000,
+"release_date": "2020-10-12",
+"rating": 85,
+"cpu_performance": 75,
+"display_performance": 80,
+"front_camera_performance": 85,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 75,
+"durability": 70,
+"design": 80,
+"security": 85,
+"water_resistance": 0,
+"high_performance_gaming_capability": 70
+},
+
+{
+"product_name": "Oppo A15",
+"company_name": "Oppo",
+"operating_system": "Android 10",
+"ports": "Micro-USB port",
+"charging_type": "10W charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 175,
+"rom": 32,
+"ram": 3,
+"display_size": 6.52,
+"price": 149,
+"total_sales": 1000000,
+"release_date": "2020-10-15",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 60,
+"durability": 50,
+"design": 60,
+"security": 50,
+"water_resistance": 0,
+"high_performance_gaming_capability": 40
+}
+,
+{
+"product_name": "Xiaomi Mi Mix 2S",
+"company_name": "Xiaomi",
+"operating_system": "Android 9",
+"ports": "USB Type-C port",
+"charging_type": "18W fast charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 189,
+"rom": 64,
+"ram": 6,
+"display_size": 5.99,
+"price": 599,
+"total_sales": 500000,
+"release_date": "2018-04-03",
+"rating": 80,
+"cpu_performance": 90,
+"display_performance": 80,
+"front_camera_performance": 70,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 60,
+"design": 80,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 80
+}
+,
+{
+"product_name": "Nokia 3.2",
+"company_name": "Nokia",
+"operating_system": "Android 9",
+"ports": "Micro-USB port",
+"charging_type": "10W charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 181,
+"rom": 16,
+"ram": 2,
+"display_size": 6.26,
+"price": 139,
+"total_sales": 300000,
+"release_date": "2019-05-21",
+"rating": 60,
+"cpu_performance": 40,
+"display_performance": 60,
+"front_camera_performance": 40,
+"rear_camera_performance": 50,
+"speaker_performance": 40,
+"battery_life": 50,
+"durability": 50,
+"design": 50,
+"security": 50,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+}
+,
+
+
+{
+"product_name": "Samsung Galaxy M11",
+"company_name": "Samsung",
+"operating_system": "Android 10",
+"ports": "USB Type-C port",
+"charging_type": "15W fast charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 197,
+"rom": 32,
+"ram": 3,
+"display_size": 6.4,
+"price": 199,
+"total_sales": 800000,
+"release_date": "2020-03-30",
+"rating": 70,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 60,
+"durability": 50,
+"design": 50,
+"security": 50,
+"water_resistance": 0,
+"high_performance_gaming_capability": 40
+},
+
+{
+"product_name": "LG K41S",
+"company_name": "LG",
+"operating_system": "Android 9",
+"ports": "USB Type-C port",
+"charging_type": "Fast charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 190,
+"rom": 32,
+"ram": 3,
+"display_size": 6.55,
+"price": 199,
+"total_sales": 400000,
+"release_date": "2020-02-25",
+"rating": 60,
+"cpu_performance": 40,
+"display_performance": 50,
+"front_camera_performance": 40,
+"rear_camera_performance": 50,
+"speaker_performance": 40,
+"battery_life": 50,
+"durability": 50,
+"design": 50,
+"security": 50,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+}
+,
+{
+"product_name": "Xiaomi Redmi Note 10T 5G",
+"company_name": "Xiaomi",
+"operating_system": "Android 11",
+"ports": "USB Type-C port",
+"charging_type": "18W fast charging",
+"lock_type": "Side-mounted fingerprint sensor",
+"weight": 190,
+"rom": 64,
+"ram": 4,
+"display_size": 6.5,
+"price": 249,
+"total_sales": 900000,
+"release_date": "2021-07-20",
+"rating": 80,
+"cpu_performance": 80,
+"display_performance": 80,
+"front_camera_performance": 70,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 80
+},
+
+{
+"product_name": "Motorola Moto G6",
+"company_name": "Motorola",
+"operating_system": "Android 8.0",
+"ports": "USB Type-C port",
+"charging_type": "15W TurboPower charging",
+"lock_type": "Front-mounted fingerprint sensor",
+"weight": 167,
+"rom": 32,
+"ram": 3,
+"display_size": 5.7,
+"price": 249,
+"total_sales": 600000,
+"release_date": "2018-04-19",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance":
+60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+}
+,
+{
+"product_name": "Samsung Galaxy J2 Core",
+"company_name": "Samsung",
+"operating_system": "Android 8.1",
+"ports": "Micro-USB port",
+"charging_type": "5W charging",
+"lock_type": "Front-mounted face recognition",
+"weight": 154,
+"rom": 8,
+"ram": 1,
+"display_size": 5,
+"price": 79,
+"total_sales": 200000,
+"release_date": "2018-08-24",
+"rating": 50,
+"cpu_performance": 30,
+"display_performance": 40,
+"front_camera_performance": 30,
+"rear_camera_performance": 40,
+"speaker_performance": 30,
+"battery_life": 40,
+"durability": 40,
+"design": 40,
+"security": 40,
+"water_resistance": 0,
+"high_performance_gaming_capability": 20
+}
+,
+{
+"product_name": "Oppo A5s",
+"company_name": "Oppo",
+"operating_system": "Android 8.1",
+"ports": "Micro-USB port",
+"charging_type": "10W charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 170,
+"rom": 32,
+"ram": 3,
+"display_size": 6.2,
+"price": 169,
+"total_sales": 800000,
+"release_date": "2019-04-22",
+"rating": 60,
+"cpu_performance": 40,
+"display_performance": 50,
+"front_camera_performance": 40,
+"rear_camera_performance": 50,
+"speaker_performance": 40,
+"battery_life": 50,
+"durability": 50,
+"design": 50,
+"security": 50,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+}
+,
+{
+"product_name": "Xiaomi Mi 11i",
+"company_name": "Xiaomi",
+"operating_system": "Android 11",
+"ports": "USB Type-C port",
+"charging_type": "33W fast charging",
+"lock_type": "Side-mounted fingerprint sensor",
+"weight": 196,
+"rom": 128,
+"ram": 8,
+"display_size": 6.67,
+"price": 499,
+"total_sales": 400000,
+"release_date": "2021-04-23",
+"rating": 90,
+"cpu_performance": 100,
+"display_performance": 90,
+"front_camera_performance": 90,
+"rear_camera_performance": 100,
+"speaker_performance": 80,
+"battery_life": 80,
+"durability": 70,
+"design": 90,
+"security": 90,
+"water_resistance": 0,
+"high_performance_gaming_capability": 90
+},
+
+{
+"product_name": "Huawei Mate 30 Pro",
+"company_name": "Huawei",
+"operating_system": "Android 10",
+"ports": "USB Type-C port",
+"charging_type": "40W fast charging",
+"lock_type": "In-display fingerprint sensor",
+"weight": 198,
+"rom": 256,
+"ram": 8,
+"display_size": 6.53,
+"price": 1099,
+"total_sales": 300000,
+"release_date": "2019-09-19",
+"rating": 80,
+"cpu_performance": 90,
+"display_performance": 90,
+"front_camera_performance": 80,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 70,
+"design": 80,
+"security": 90,
+"water_resistance": 0,
+"high_performance_gaming_capability": 80
+},
+{
+"product_name": "Sony Xperia XA1",
+"company_name": "Sony",
+"operating_system": "Android 7.0",
+"ports": "USB Type-C port",
+"charging_type": "23W fast charging",
+"lock_type": "Side-mounted fingerprint sensor",
+"weight": 143,
+"rom": 32,
+"ram": 3,
+"display_size": 5,
+"price": 249,
+"total_sales": 200000,
+"release_date": "2017-02-27",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 60,
+"durability": 50,
+"design": 60,
+"security": 50,
+"water_resistance": 0,
+"high_performance_gaming_capability": 40
+},
+
+{
+"product_name": "Samsung Galaxy A9 (2018)",
+"company_name": "Samsung",
+"operating_system": "Android 8.0",
+"ports": "USB Type-C port",
+"charging_type": "18W fast charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 183,
+"rom": 128,
+"ram": 6,
+"display_size": 6.3,
+"price": 599,
+"total_sales": 500000,
+"release_date": "2018-11-20",
+"rating": 80,
+"cpu_performance": 80,
+"display_performance": 80,
+"front_camera_performance": 70,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 80
+},
+
+{
+"product_name": "Vivo V15 Pro",
+"company_name": "Vivo",
+"operating_system": "Android 9.0",
+"ports": "Micro-USB port",
+"charging_type": "18W fast charging",
+"lock_type": "In-display fingerprint sensor",
+"weight": 185,
+"rom": 128,
+"ram": 6,
+"display_size": 6.39,
+"price": 399,
+"total_sales": 300000,
+"release_date": "2019-02-20",
+"rating": 80,
+"cpu_performance": 80,
+"display_performance": 80,
+"front_camera_performance": 90,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 60,
+"design": 80,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 80
+},
+
+{
+"product_name": "Xiaomi Redmi Note 5",
+"company_name": "Xiaomi",
+"operating_system": "Android 7.1.2",
+"ports": "Micro-USB port",
+"charging_type": "Quick Charge 2.0",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 180,
+"rom": 32,
+"ram": 3,
+"display_size": 5.99,
+"price": 179,
+"total_sales": 1000000,
+"release_date": "2018-02-22",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 60
+},
+
+{
+"product_name": "LG K40",
+"company_name": "LG",
+"operating_system": "Android 8.1",
+"ports": "Micro-USB port",
+"charging_type": "10W charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 144,
+"rom": 32,
+"ram": 2,
+"display_size": 5.7,
+"price": 149,
+"total_sales": 500000,
+"release_date": "2019-02-21",
+"rating": 60,
+"cpu_performance": 40,
+"display_performance": 50,
+"front_camera_performance": 40,
+"rear_camera_performance": 50,
+"speaker_performance": 40,
+"battery_life": 50,
+"durability": 50,
+"design": 50,
+"security": 50,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+}
+,
+{
+"product_name": "Nokia 4.2",
+"company_name": "Nokia",
+"operating_system": "Android 9.0",
+"ports": "USB Type-C port",
+"charging_type": "10W charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 161,
+"rom": 32,
+"ram": 3,
+"display_size": 5.71,
+"price": 169,
+"total_sales": 200000,
+"release_date": "2019-05-07",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+}
+,
+{
+"product_name": "Samsung Galaxy S6",
+"company_name": "Samsung",
+"operating_system": "Android 5.0.2",
+"ports": "Micro-USB port",
+"charging_type": "Fast charging",
+"lock_type": "Fingerprint sensor (front-mounted)",
+"weight": 138,
+"rom": 32,
+"ram": 3,
+"display_size": 5.1,
+"price": 599,
+"total_sales": 400000,
+"release_date": "2015-04-10",
+"rating": 70,
+"cpu_performance": 70,
+"display_performance": 80,
+"front_camera_performance": 70,
+"rear_camera_performance": 80,
+"speaker_performance": 60,
+"battery_life": 60,
+"durability": 70,
+"design": 80,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 70
+},
+
+{
+"product_name": "Oppo A3s",
+"company_name": "Oppo",
+"operating_system": "Android 8.1",
+"ports":
+"Micro-USB port",
+"charging_type": "5V/2A charging",
+"lock_type": "Face unlock",
+"weight": 168,
+"rom": 16,
+"ram": 2,
+"display_size": 6.2,
+"price": 129,
+"total_sales": 1000000,
+"release_date": "2018-07-13",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 70,
+"durability": 60,
+"design": 60,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 40
+},
+
+{
+"product_name": "Xiaomi Mi 9T",
+"company_name": "Xiaomi",
+"operating_system": "Android 9.0",
+"ports": "USB Type-C port",
+"charging_type": "18W fast charging",
+"lock_type": "In-display fingerprint sensor",
+"weight": 191,
+"rom": 64,
+"ram": 6,
+"display_size": 6.39,
+"price": 299,
+"total_sales": 500000,
+"release_date": "2019-06-12",
+"rating": 80,
+"cpu_performance": 80,
+"display_performance": 80,
+"front_camera_performance": 80,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 60,
+"design": 80,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 80
+},
+
+{
+"product_name": "Huawei P20 Lite",
+"company_name": "Huawei",
+"operating_system": "Android 8.0",
+"ports": "USB Type-C port",
+"charging_type": "18W fast charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 145,
+"rom": 64,
+"ram": 4,
+"display_size": 5.84,
+"price": 399,
+"total_sales": 300000,
+"release_date": "2018-03-27",
+"rating": 70,
+"cpu_performance": 70,
+"display_performance": 70,
+"front_camera_performance": 70,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 60,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 60
+}
+,
+
+
+{
+"product_name": "Samsung Galaxy A12",
+"company_name": "Samsung",
+"operating_system": "Android 10",
+"ports": "USB Type-C port",
+"charging_type": "15W fast charging",
+"lock_type": "Side-mounted fingerprint sensor",
+"weight": 205,
+"rom": 64,
+"ram": 4,
+"display_size": 6.5,
+"price": 179,
+"total_sales": 1000000,
+"release_date": "2020-11-25",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 80,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+}
+,
+{
+"product_name": "LG K31",
+"company_name": "LG",
+"operating_system": "Android 10",
+"ports": "Micro-USB port",
+"charging_type": "10W charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 146,
+"rom": 32,
+"ram": 2,
+"display_size": 5.7,
+"price": 149,
+"total_sales": 300000,
+"release_date": "2020-08-06",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 70,
+"durability": 60,
+"design": 50,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+}
+,
+{
+"product_name": "Nokia 2.4",
+"company_name": "Nokia",
+"operating_system": "Android 10",
+"ports": "USB Type-C port",
+"charging_type": "5W charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 195,
+"rom": 32,
+"ram": 2,
+"display_size": 6.5,
+"price": 139,
+"total_sales": 500000,
+"release_date": "2020-09-22",
+"rating": 60,
+"cpu_performance": 40,
+"display_performance": 50,
+"front_camera_performance": 40,
+"rear_camera_performance": 50,
+"speaker_performance": 40,
+"battery_life": 70,
+"durability": 60,
+"design": 50,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+}
+,
+{
+"product_name": "Xiaomi Mi Note 10 Lite",
+"company_name": "Xiaomi",
+"operating_system": "Android 10",
+"ports": "USB Type-C port",
+"charging_type": "30W fast charging",
+"lock_type": "In-display fingerprint sensor",
+"weight": 204,
+"rom": 64,
+"ram": 6,
+"display_size": 6.47,
+"price": 349,
+"total_sales": 500000,
+"release_date": "2020-05-01",
+"rating": 80,
+"cpu_performance": 70,
+"display_performance": 80,
+"front_camera_performance": 70,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 60,
+"design":
+80,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 80
+},
+
+{
+"product_name": "Huawei P Smart (2021)",
+"company_name": "Huawei",
+"operating_system": "Android 10",
+"ports": "USB Type-C port",
+"charging_type": "22.5W fast charging",
+"lock_type": "Side-mounted fingerprint sensor",
+"weight": 206,
+"rom": 128,
+"ram": 4,
+"display_size": 6.67,
+"price": 249,
+"total_sales": 500000,
+"release_date": "2021-01-05",
+"rating": 70,
+"cpu_performance": 70,
+"display_performance": 70,
+"front_camera_performance": 70,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 60
+},
+
+{
+"product_name": "Samsung Galaxy J6",
+"company_name": "Samsung",
+"operating_system": "Android 8.0",
+"ports": "Micro-USB port",
+"charging_type": "10W charging",
+"lock_type": "Fingerprint sensor",
+"weight": 154,
+"rom": 32,
+"ram": 3,
+"display_size": 5.6,
+"price": 219,
+"total_sales": 500000,
+"release_date": "2018-05-22",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 70,
+"durability": 60,
+"design": 60,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 40
+}
+,
+{
+"product_name": "Oppo A31",
+"company_name": "Oppo",
+"operating_system": "Android 10",
+"ports": "Micro-USB port",
+"charging_type": "10W charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 423,
+"rom": 128,
+"ram": 4,
+"display_size": 6.5,
+"price": 199,
+"total_sales": 500000,
+"release_date": "2020-02-14",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 80,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+},
+
+{
+"product_name": "LG Q6",
+"company_name": "LG",
+"operating_system": "Android 7.1.1",
+"ports": "Micro-USB port",
+"charging_type": "5W charging",
+"lock_type": "Face recognition",
+"weight": 149,
+"rom": 32,
+"ram": 3,
+"display_size": 5.5,
+"price": 249,
+"total_sales": 300000,
+"release_date": "2017-08-01",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 70,
+"durability": 60,
+"design": 60,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+},
+{
+"product_name": "Samsung Galaxy S6",
+"company_name": "Samsung",
+"operating_system": "Android 5.0.2",
+"ports": "Micro-USB port",
+"charging_type": "Fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 138,
+"rom": 32,
+"ram": 3,
+"display_size": 5.1,
+"price": 599,
+"total_sales": 500000,
+"release_date": "2015-04-10",
+"rating": 80,
+"cpu_performance": 80,
+"display_performance": 90,
+"front_camera_performance": 70,
+"rear_camera_performance": 90,
+"speaker_performance": 70,
+"battery_life": 60,
+"durability": 70,
+"design": 90,
+"security": 90,
+"water_resistance": 0,
+"high_performance_gaming_capability": 70
+},
+
+{
+"product_name": "Oppo F15",
+"company_name": "Oppo",
+"operating_system": "Android 9.0",
+"ports": "USB Type-C port",
+"charging_type": "20W fast charging",
+"lock_type": "In-display fingerprint sensor",
+"weight": 172,
+"rom": 128,
+"ram": 8,
+"display_size": 6.4,
+"price": 299,
+"total_sales": 500000,
+"release_date": "2020-01-24",
+"rating": 80,
+"cpu_performance": 80,
+"display_performance": 80,
+"front_camera_performance": 80,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 60,
+"design": 80,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 70
+},
+
+{
+"product_name": "Nokia 2.3",
+"company_name": "Nokia",
+"operating_system": "Android 9.0",
+"ports": "Micro-USB port",
+"charging_type": "5W charging",
+"lock_type": "Face recognition",
+"weight": 183,
+"rom": 32,
+"ram": 2,
+"display_size": 6.2,
+"price": 129,
+"total_sales": 500000,
+"release_date": "2019-12-13",
+"rating": 60,
+"cpu_performance": 40,
+"display_performance": 50,
+"front_camera_performance": 40,
+"rear_camera_performance": 50,
+"speaker_performance": 40,
+"battery_life": 70,
+"durability": 60,
+"design": 50,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+},
+
+{
+"product_name": "Huawei P10 Lite",
+"company_name": "Huawei",
+"operating_system": "Android 7.0",
+"ports": "Micro-USB port",
+"charging_type": "Fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 146,
+"rom": 32,
+"ram": 4,
+"display_size": 5.2,
+"price": 229,
+"total_sales": 500000,
+"release_date": "2017-03-01",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+},
+
+{
+"product_name": "Xiaomi Mi 8 Lite",
+"company_name": "Xiaomi",
+"operating_system": "Android 8.1",
+"ports": "USB Type-C port",
+"charging_type": "Quick Charge 3.0",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 169,
+"rom": 64,
+"ram": 4,
+"display_size": 6.26,
+"price": 229,
+"total_sales": 500000,
+"release_date": "2018-09-21",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 70,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 60,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 60
+},
+
+{
+"product_name": "LG K51",
+"company_name": "LG",
+"operating_system": "Android 9.0",
+"ports": "USB Type-C port",
+"charging_type": "Fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 186,
+"rom": 32,
+"ram": 3,
+"display_size": 6.5,
+"price": 149,
+"total_sales": 500000,
+"release_date": "2020-04-29",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 70,
+"durability": 60,
+"design": 60,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+},
+
+{
+"product_name": "Samsung Galaxy A6 (2018)",
+"company_name": "Samsung",
+"operating_system": "Android 8.0",
+"ports": "Micro-USB port",
+"charging_type": "Fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 159,
+"rom": 32,
+"ram": 3,
+"display_size": 5.6,
+"price": 329,
+"total_sales": 500000,
+"release_date": "2018-05-22",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+},
+
+{
+"product_name": "Vivo V17 Pro",
+"company_name": "Vivo",
+"operating_system": "Android 9.0",
+"ports": "USB Type-C port",
+"charging_type": "18W fast charging",
+"lock_type": "In-display fingerprint sensor",
+"weight": 201,
+"rom": 128,
+"ram": 8,
+"display_size": 6.44,
+"price": 429,
+"total_sales": 500000,
+"release_date": "2019-09-20",
+"rating": 80,
+"cpu_performance": 80,
+"display_performance": 80,
+"front_camera_performance": 90,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 70,
+"durability": 70,
+"design": 80,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 70
+}
+,
+{
+"product_name": "Motorola Moto E5",
+"company_name": "Motorola",
+"operating_system": "Android 8.0",
+"ports": "Micro-USB port",
+"charging_type": "10W fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 174,
+"rom": 16,
+"ram": 2,
+"display_size": 5.7,
+"price": 99,
+"total_sales": 500000,
+"release_date": "2018-04-03",
+"rating": 60,
+"cpu_performance": 40,
+"display_performance": 50,
+"front_camera_performance": 40,
+"rear_camera_performance": 50,
+"speaker_performance": 50,
+"battery_life": 70,
+"durability": 60,
+"design": 50,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 20
+},
+
+{
+"product_name": "Nokia 5.1 Plus",
+"company_name": "Nokia",
+"operating_system": "Android 8.1",
+"ports": "USB Type-C port",
+"charging_type": "Fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 160,
+"rom": 32,
+"ram": 3,
+"display_size": 5.86,
+"price": 149,
+"total_sales": 500000,
+"release_date": "2018-09-24",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+},
+
+{
+"product_name": "Xiaomi Redmi Note 4",
+"company_name": "Xiaomi",
+"operating_system": "Android 6.0",
+"ports": "Micro-USB port",
+"charging_type": "Fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 165,
+"rom": 64,
+"ram": 4,
+"display_size": 5.5,
+"price": 199,
+"total_sales": 500000,
+"release_date": "2017-01-19",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+},
+
+
+
+{
+"product_name": "Samsung Galaxy J6",
+"company_name": "Samsung",
+"operating_system": "Android 8.0",
+"ports": "Micro-USB port",
+"charging_type": "Fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 154,
+"rom": 32,
+"ram": 3,
+"display_size": 5.6,
+"price": 249,
+"total_sales": 500000,
+"release_date": "2018-05-25",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+},
+
+{
+"product_name": "Oppo A31",
+"company_name": "Oppo",
+"operating_system": "Android 9.0",
+"ports": "Micro-USB port",
+"charging_type": "Fast charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 423,
+"rom": 64,
+"ram": 4,
+"display_size": 6.5,
+"price": 229,
+"total_sales": 500000,
+"release_date": "2020-02-14",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 70,
+"durability": 60,
+"design": 60,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+},
+
+{
+"product_name": "LG Q6",
+"company_name": "LG",
+"operating_system": "Android 7.1",
+"ports": "Micro-USB port",
+"charging_type": "Fast charging",
+"lock_type": "Face recognition",
+"weight": 149,
+"rom": 32,
+"ram": 3,
+"display_size": 5.5,
+"price": 299,
+"total_sales": 500000,
+"release_date": "2017-08-01",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 70,
+"durability": 60,
+"design": 60,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+},
+
+{
+"product_name": "Xiaomi Redmi 6A",
+"company_name": "Xiaomi",
+"operating_system": "Android 8.1",
+"ports": "Micro-USB port",
+"charging_type": "Standard charging",
+"lock_type": "Face unlock",
+"weight": 145,
+"rom": 16,
+"ram": 2,
+"display_size": 5.45,
+"price": 99,
+"total_sales": 500000,
+"release_date": "2018-06-12",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 60,
+"durability": 60,
+"design": 60,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 20
+},
+
+{
+"product_name": "Samsung Galaxy A6 Plus (2018)",
+"company_name": "Samsung",
+"operating_system": "Android 8.0",
+"ports": "Micro-USB port",
+"charging_type": "Fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 191,
+"rom": 64,
+"ram": 4,
+"display_size": 6.0,
+"price": 349,
+"total_sales": 500000,
+"release_date": "2018-05-22",
+"rating": 80,
+"cpu_performance": 70,
+"display_performance": 80,
+"front_camera_performance": 70,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 80,
+"durability": 70,
+"design": 80,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 50
+}
+,
+{
+"product_name": "Vivo Y53s",
+"company_name": "Vivo",
+"operating_system": "Android 11",
+"ports": "USB Type-C port",
+"charging_type": "18W fast charging",
+"lock_type": "Side-mounted fingerprint sensor",
+"weight": 190,
+"rom": 128,
+"ram": 8,
+"display_size": 6.58,
+"price": 279,
+"total_sales": 500000,
+"release_date": "2021-08-02",
+"rating": 80,
+"cpu_performance": 80,
+"display_performance": 80,
+"front_camera_performance": 80,
+"rear_camera_performance": 80,
+"speaker_performance": 70,
+"battery_life": 80,
+"durability": 70,
+"design": 80,
+"security": 80,
+"water_resistance": 0,
+"high_performance_gaming_capability": 70
+}
+,
+{
+"product_name": "Motorola Moto E7",
+"company_name": "Motorola",
+"operating_system": "Android 10",
+"ports": "USB Type-C port",
+"charging_type": "10W fast charging",
+"lock_type": "Fingerprint sensor",
+"weight": 180,
+"rom": 32,
+"ram": 2,
+"display_size": 6.5,
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 60,
+"durability": 60,
+"design": 60,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+},
+
+{
+"product_name": "Nokia 2.2",
+"company_name": "Nokia",
+"operating_system": "Android 9.0",
+"ports": "Micro-USB port",
+"charging_type": "Standard charging",
+"lock_type": "Face unlock",
+"weight": 153,
+"rom": 16,
+"ram": 2,
+"display_size": 5.71,
+"price": 99,
+"total_sales": 500000,
+"release_date": "2019-06-06",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 60,
+"durability": 60,
+"design": 60,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 20
+},
+
+{
+"product_name": "Huawei Y5p",
+"company_name": "Huawei",
+"operating_system": "Android 10",
+"ports": "Micro-USB port",
+"charging_type": "Standard charging",
+"lock_type": "Face unlock",
+"weight": 144,
+"rom": 32,
+"ram": 2,
+"display_size": 5.45,
+"price": 119,
+"total_sales": 500000,
+"release_date": "2020-05-29",
+"rating": 60,
+"cpu_performance": 50,
+"display_performance": 60,
+"front_camera_performance": 50,
+"rear_camera_performance": 60,
+"speaker_performance": 50,
+"battery_life": 60,
+"durability": 60,
+"design": 60,
+"security": 60,
+"water_resistance": 0,
+"high_performance_gaming_capability": 20
+},
+
+{
+"product_name": "Xiaomi Poco C3",
+"company_name": "Xiaomi",
+"operating_system": "Android 10",
+"ports": "Micro-USB port",
+"charging_type": "Standard charging",
+"lock_type": "Rear-mounted fingerprint sensor",
+"weight": 194,
+"rom": 64,
+"ram": 4,
+"display_size": 6.53,
+"price": 149,
+"total_sales": 500000,
+"release_date": "2020-10-16",
+"rating": 70,
+"cpu_performance": 60,
+"display_performance": 70,
+"front_camera_performance": 60,
+"rear_camera_performance": 70,
+"speaker_performance": 60,
+"battery_life": 70,
+"durability": 60,
+"design": 70,
+"security": 70,
+"water_resistance": 0,
+"high_performance_gaming_capability": 30
+}
+
+
+];
+
+
+function search() {
+  var input_product_name = document.getElementById("product_name").value.toLowerCase();
+  var input_company_name = document.getElementById("company_name").value.toLowerCase();
+  var input_operating_system = document.getElementById("operating_system").value.toLowerCase();
+  var input_ports = document.getElementById("ports").value.toLowerCase();
+  var input_charging_type = document.getElementById("charging_type").value.toLowerCase();
+  var input_lock_type = document.getElementById("lock_type").value.toLowerCase();
+  var input_weight = document.getElementById("weight").value;
+  var input_rom = document.getElementById("rom").value;
+  var input_ram = document.getElementById("ram").value;
+  var input_display_size = document.getElementById("display_size").value;
+  var input_price = document.getElementById("price").value;
+  var input_total_sales = document.getElementById("total_sales").value;
+  var input_release_date = document.getElementById("release_date").value;
+  var input_rating = document.getElementById("rating").value;
+  var input_cpu_performance = document.getElementById("cpu_performance").value;
+  var input_display_performance = document.getElementById("display_performance").value;
+  var input_front_camera_performance = document.getElementById("front_camera_performance").value;
+  var input_rear_camera_performance = document.getElementById("rear_camera_performance").value;
+  var input_speaker_performance = document.getElementById("speaker_performance").value;
+  var input_battery_life = document.getElementById("battery_life").value;
+  var input_durability = document.getElementById("durability").value;
+  var input_design = document.getElementById("design").value;
+  var input_security = document.getElementById("security").value;
+  var input_water_resistance = document.getElementById("water_resistance").value;
+  var input_high_performance_gaming_capability = document.getElementById("high_performance_gaming_capability").value;
+
+  var results = [];
+
+  for (var i = 0; i < products.length; i++) {
+    var product = products[i];
+    if (input_product_name && !product.product_name.toLowerCase().includes(input_product_name)) {
+      continue;
+    }
+    if (input_company_name && !product.company_name.toLowerCase().includes(input_company_name)) {
+      continue;
+    }
+    if (input_operating_system && !product.operating_system.toLowerCase().includes(input_operating_system)) {
+      continue;
+    }
+    if (input_ports && !product.ports.toLowerCase().includes(input_ports)) {
+      continue;  
+
+}
+if (input_charging_type && !product.charging_type.toLowerCase().includes(input_charging_type)) {
+continue;
+}
+if (input_lock_type && !product.lock_type.toLowerCase().includes(input_lock_type)) {
+continue;
+}
+if (input_weight && product.weight < Number(input_weight)) {
+continue;
+}
+if (input_rom && product.rom < Number(input_rom)) {
+continue;
+}
+if (input_ram && product.ram < Number(input_ram)) {
+continue;
+}
+if (input_display_size && product.display_size < Number(input_display_size)) {
+continue;
+}
+if (input_price && product.price < Number(input_price)) {
+continue;
+}
+if (input_total_sales && product.total_sales < Number(input_total_sales)) {
+continue;
+}
+if (input_release_date && !product.release_date.startsWith(input_release_date)) {
+continue;
+}
+if (input_rating && product.rating < Number(input_rating)) {
+continue;
+}
+if (input_cpu_performance && product.cpu_performance < Number(input_cpu_performance)) {
+continue;
+}
+if (input_display_performance && product.display_performance < Number(input_display_performance)) {
+continue;
+}
+if (input_front_camera_performance && product.front_camera_performance < Number(input_front_camera_performance)) {
+continue;
+}
+if (input_rear_camera_performance && product.rear_camera_performance < Number(input_rear_camera_performance)) {
+continue;
+}
+if (input_speaker_performance && product.speaker_performance < Number(input_speaker_performance)) {
+continue;
+}
+if (input_battery_life && product.battery_life < Number(input_battery_life)) {
+continue;
+}
+if (input_durability && product.durability < Number(input_durability)) {
+continue;
+}
+if (input_design && product.design < Number(input_design)) {
+continue;
+}
+if (input_security && product.security < Number(input_security)) {
+continue;
+}
+if (input_water_resistance && product.water_resistance < Number(input_water_resistance)) {
+continue;
+}
+if (input_high_performance_gaming_capability && product.high_performance_gaming_capability < Number(input_high_performance_gaming_capability)) {
+continue;
+}
+
+
+
+
+if (
+  !input_product_name &&
+  !input_company_name &&
+  !input_operating_system &&
+  !input_ports &&
+  !input_charging_type &&
+  !input_lock_type &&
+  !input_weight &&
+  !input_rom &&
+  !input_ram &&
+  !input_display_size &&
+  !input_price &&
+  !input_total_sales &&
+  !input_release_date &&
+  !input_rating &&
+  !input_cpu_performance &&
+  !input_display_performance &&
+  !input_front_camera_performance &&
+  !input_rear_camera_performance &&
+  !input_speaker_performance &&
+  !input_battery_life &&
+  !input_durability &&
+  !input_design &&
+  !input_security &&
+  !input_water_resistance &&
+  !input_high_performance_gaming_capability
+) {
+  var tableBody = document.querySelector("#search-results tbody");
+  tableBody.innerHTML = "";
+  return;
+}
+
+
+
+results.push(product);
+}
+
+
+
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+            if (results[i].product_name.toLowerCase() === uniqueResults[j].product_name.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+for (var i = 0; i < results.length; i++) {
+var product = results[i];
+var row = document.createElement("tr");
+row.innerHTML = "<td>" + product.product_name + "</td>" +
+"<td>" + product.company_name + "</td>" +
+"<td>" + product.operating_system + "</td>" +
+"<td>" + product.ports + "</td>" +
+"<td>" + product.charging_type + "</td>" +
+"<td>" + product.lock_type + "</td>" +
+"<td>" + product.weight + "</td>" +
+"<td>" + product.rom + "</td>" +
+"<td>" + product.ram + "</td>" +
+"<td>" + product.display_size + "</td>" +
+"<td>" + product.price + "</td>" +
+"<td>" + product.total_sales + "</td>" +
+"<td>" + product.release_date + "</td>" +
+"<td>" + product.rating + "</td>" +
+"<td>" + product.cpu_performance + "</td>" +
+"<td>" + product.display_performance + "</td>" +
+"<td>" + product.front_camera_performance + "</td>" +
+"<td>" + product.rear_camera_performance + "</td>" +
+"<td>" + product.speaker_performance + "</td>" +
+"<td>" + product.battery_life + "</td>" +
+"<td>" + product.durability + "</td>" +
+"<td>" + product.design + "</td>" +
+"<td>" + product.security + "</td>" +
+"<td>" + product.water_resistance + "</td>" +
+"<td>" + product.high_performance_gaming_capability + "</td>";
+tableBody.appendChild(row);
+}
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = parseFloat(x.innerHTML);
+        y = parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+
+    
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+
+
+    
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2880 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Search Travel(Leisure Activities)</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+
+		th {
+  		color: #0f0;  
+		}
+
+		th span {
+		color: #080;  
+		}
+
+
+
+
+</style>
+</head>
+<body>
+	<h1>Search Travel(Leisure Activities)</h1>
+	<img src="">
+
+	<canvas id="matrix-canvas"></canvas>
+
+
+	<form onsubmit="search(); return false;">
+		<input type="text" id="destination_name" placeholder="destination name">
+		<input type="text" id="language" placeholder="language">
+		<input type="text" id="types_of_natural_landscapes" placeholder="types of natural landscapes">
+		<input type="text" id="peak_season_weather" placeholder="peak season weather">
+		<input type="text" id="peak_season_dates" placeholder="peak season dates(1~12)">
+		<input type="number" id="ocean_sports" placeholder="ocean sports(0~100)">
+		<input type="number" id="mountain_sports" placeholder="mountain sports(0~100)">
+		<input type="number" id="air_sports" placeholder="air sports(0~100)">
+		<input type="number" id="winter_sports" placeholder="winter sports(0~100)">
+		<input type="number" id="amusement_parks" placeholder="amusement parks(0~100)">
+		<input type="number" id="museums" placeholder="museums(0~100)">
+		<input type="number" id="concerts" placeholder="concerts(0~100)">
+		<input type="number" id="live_cafes" placeholder="live cafes(0~100)">
+		<input type="number" id="traditional_markets" placeholder="traditional markets(0~100)">
+        
+
+        
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+<thead>
+<tr>
+<th onclick="sortTable(0)">Destination Name<span id="sortIndicator0">▲▼</span></th>
+<th onclick="sortTable(1)">Language<span id="sortIndicator1">▲▼</span></th>
+<th onclick="sortTable(2)">Types of Natural Landscapes<span id="sortIndicator2">▲▼</span></th>
+<th onclick="sortTable(3)">Peak Season Weather<span id="sortIndicator3">▲▼</span></th>
+<th onclick="sortTable(4)">Peak Season Dates(1~12)<span id="sortIndicator4">▲▼</span></th>
+<th onclick="sortTable(5)">Ocean Sports(0~100)<span id="sortIndicator5">▲▼</span></th>
+<th onclick="sortTable(6)">Mountain Sports(0~100)<span id="sortIndicator6">▲▼</span></th>
+<th onclick="sortTable(7)">Air Sports(0~100)<span id="sortIndicator7">▲▼</span></th>
+<th onclick="sortTable(8)">Winter Sports(0~100)<span id="sortIndicator8">▲▼</span></th>
+<th onclick="sortTable(9)">Amusement Parks(0~100)<span id="sortIndicator9">▲▼</span></th>
+<th onclick="sortTable(10)">Museums(0~100)<span id="sortIndicator10">▲▼</span></th>
+<th onclick="sortTable(11)">Concerts(0~100)<span id="sortIndicator11">▲▼</span></th>
+<th onclick="sortTable(12)">Live Cafes(0~100)<span id="sortIndicator12">▲▼</span></th>
+<th onclick="sortTable(13)">Traditional Markets(0~100)<span id="sortIndicator13">▲▼</span></th>
+
+
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<script>
+var trips = [
+{
+"destination_name": "Shibuya",
+"language": "Japanese",
+"types_of_natural_landscapes": "Urban",
+"peak_season_weather": "Mild",
+"peak_season_dates": "4,5,6",
+"ocean_sports": 50,
+"mountain_sports": 20,
+"air_sports": 30,
+"winter_sports": 10,
+"amusement_parks": 80,
+"museums": 70,
+"concerts": 90,
+"live_cafes": 95,
+"traditional_markets": 60
+},
+{
+"destination_name": "Kuwait City",
+"language": "Arabic",
+"types_of_natural_landscapes": "Desert",
+"peak_season_weather": "Hot",
+"peak_season_dates": "3,4,5",
+"ocean_sports": 10,
+"mountain_sports": 5,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 80,
+"concerts": 60,
+"live_cafes": 70,
+"traditional_markets": 90
+},
+{
+"destination_name": "Vernon-Sur-Oise",
+"language": "French",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 10,
+"mountain_sports": 15,
+"air_sports": 10,
+"winter_sports": 5,
+"amusement_parks": 20,
+"museums": 50,
+"concerts": 30,
+"live_cafes": 40,
+"traditional_markets": 70
+},
+{
+"destination_name": "Akasaka",
+"language": "Japanese",
+"types_of_natural_landscapes": "Urban",
+"peak_season_weather": "Mild",
+"peak_season_dates": "3,4,10,11",
+"ocean_sports": 30,
+"mountain_sports": 10,
+"air_sports": 20,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 90,
+"traditional_markets": 60
+},
+{
+"destination_name": "Iyer",
+"language": "Russian",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "7,8,9",
+"ocean_sports": 10,
+"mountain_sports": 80,
+"air_sports": 20,
+"winter_sports": 60,
+"amusement_parks": 40,
+"museums": 30,
+"concerts": 20,
+"live_cafes": 10,
+"traditional_markets": 50
+},
+{
+"destination_name": "Portugal",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "7,8,9",
+"ocean_sports": 90,
+"mountain_sports": 20,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 60,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Cordoba",
+"language": "Spanish",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Hot",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 20,
+"mountain_sports": 20,
+"air_sports": 10,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 90,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "Almeria",
+"language": "Spanish",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 70,
+"mountain_sports": 10,
+"air_sports": 30,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 40,
+"concerts": 50,
+"live_cafes": 60,
+"traditional_markets": 50
+},
+{
+"destination_name": "Riyadh",
+"language": "Arabic",
+"types_of_natural_landscapes": "Desert",
+"peak_season_weather": "Hot",
+"peak_season_dates": "4,5,6",
+"ocean_sports": 0,
+"mountain_sports": 0,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 50,
+"concerts": 40,
+"live_cafes": 30,
+"traditional_markets": 80
+},
+{
+"destination_name": "Warsaw",
+"language": "Polish",
+"types_of_natural_landscapes": "Forest",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 10,
+"mountain_sports": 30,
+"air_sports": 20,
+"winter_sports": 40,
+"amusement_parks": 50,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 60,
+"traditional_markets": 50
+},
+{
+"destination_name": "Paphos",
+"language": "Greek",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 10,
+"air_sports": 20,
+"winter_sports": 0,
+"amusement_parks": 40,
+"museums": 60,
+"concerts": 30,
+"live_cafes": 50,
+"traditional_markets": 70
+},
+
+{
+"destination_name": "Paul",
+"language": "Russian",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "7,8,9",
+"ocean_sports": 0,
+"mountain_sports": 70,
+"air_sports": 10,
+"winter_sports": 50,
+"amusement_parks": 30,
+"museums": 20,
+"concerts": 10,
+"live_cafes": 10,
+"traditional_markets": 40
+},
+{
+"destination_name": "Praia da Luz",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 10,
+"air_sports": 30,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 40,
+"concerts": 50,
+"live_cafes": 60,
+"traditional_markets": 30
+},
+{
+"destination_name": "Fraser's Hill",
+"language": "English",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Cool",
+"peak_season_dates": "11,12,1",
+"ocean_sports": 0,
+"mountain_sports": 60,
+"air_sports": 20,
+"winter_sports": 50,
+"amusement_parks": 10,
+"museums": 20,
+"concerts": 0,
+"live_cafes": 30,
+"traditional_markets": 40
+},
+{
+"destination_name": "Christiansand",
+"language": "Norwegian",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 70,
+"mountain_sports": 30,
+"air_sports": 20,
+"winter_sports": 40,
+"amusement_parks": 30,
+"museums": 50,
+"concerts": 60,
+"live_cafes": 40,
+"traditional_markets": 70
+},
+{
+"destination_name": "Rabat",
+"language": "Arabic",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 70,
+"mountain_sports": 10,
+"air_sports": 20,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 80,
+"concerts": 30,
+"live_cafes": 40,
+"traditional_markets": 80
+},
+
+{
+"destination_name": "Skiathos",
+"language": "Greek",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 20,
+"air_sports": 30,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 30,
+"concerts": 40,
+"live_cafes": 50,
+"traditional_markets": 60
+},
+{
+"destination_name": "Ho Chi Minh City",
+"language": "Vietnamese",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 30,
+"mountain_sports": 10,
+"air_sports": 20,
+"winter_sports": 0,
+"amusement_parks": 40,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 60,
+"traditional_markets": 80
+},
+{
+"destination_name": "Colonia del Sacramento",
+"language": "Spanish",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "11,12,1",
+"ocean_sports": 50,
+"mountain_sports": 0,
+"air_sports": 10,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 80,
+"concerts": 40,
+"live_cafes": 50,
+"traditional_markets": 60
+},
+{
+"destination_name": "Cologne",
+"language": "German",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 20,
+"mountain_sports": 20,
+"air_sports": 20,
+"winter_sports": 30,
+"amusement_parks": 30,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 70,
+"traditional_markets": 50
+},
+{
+"destination_name": "Brick Lane",
+"language": "English",
+"types_of_natural_landscapes": "None",
+"peak_season_weather": "Mild",
+"peak_season_dates": "4,5,6",
+"ocean_sports": 0,
+"mountain_sports": 0,
+"air_sports": 0,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 30,
+"concerts": 60,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Can Tho",
+"language": "Vietnamese",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "11,12,1",
+"ocean_sports": 20,
+"mountain_sports": 10,
+"air_sports": 20,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 50,
+"concerts": 40,
+"live_cafes": 60,
+"traditional_markets": 80
+},
+{
+"destination_name": "Lagos",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 90,
+"mountain_sports": 10,
+"air_sports": 30,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 40,
+"concerts": 60,
+"live_cafes": 70,
+"traditional_markets": 50
+},
+{
+"destination_name": "Salou",
+"language": "Spanish",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 20,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 90,
+"museums": 20,
+"concerts": 30,
+"live_cafes": 60,
+"traditional_markets": 40
+},
+{
+"destination_name": "Teheran",
+"language": "Persian",
+"types_of_natural_landscapes": "Desert",
+"peak_season_weather": "Mild",
+"peak_season_dates": "3,4,10,11",
+"ocean_sports": 0,
+"mountain_sports": 20,
+"air_sports": 30,
+"winter_sports": 0,
+"amusement_parks": 10,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 60,
+"traditional_markets": 90
+},
+{
+"destination_name": "Rocky Mountain National Park",
+"language": "English",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Cool",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 70,
+"amusement_parks": 10,
+"museums": 20,
+"concerts": 30,
+"live_cafes": 20,
+"traditional_markets": 0
+},
+{
+"destination_name": "Vatican City",
+"language": "Italian",
+"types_of_natural_landscapes": "None",
+"peak_season_weather": "Mild",
+"peak_season_dates": "4,5,6",
+"ocean_sports": 0,
+"mountain_sports": 0,
+"air_sports": 0,
+"winter_sports": 0,
+"amusement_parks": 10,
+"museums": 100,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 20
+},
+{
+"destination_name": "Milan",
+"language": "Italian",
+"types_of_natural_landscapes": "None",
+"peak_season_weather": "Mild",
+"peak_season_dates": "4,5,6",
+"ocean_sports": 0,
+"mountain_sports": 10,
+"air_sports": 20,
+"winter_sports": 0,
+"amusement_parks": 40,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 70,
+"traditional_markets": 50
+},
+{
+"destination_name": "Marrakesh",
+"language": "Arabic",
+"types_of_natural_landscapes": "Desert",
+"peak_season_weather": "Warm",
+"peak_season_dates": "3,4,10,11",
+"ocean_sports": 0,
+"mountain_sports": 20,
+"air_sports": 10,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 60,
+"concerts": 40,
+"live_cafes": 70,
+"traditional_markets": 90
+},
+{
+"destination_name": "Bremen",
+"language": "German",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 20,
+"mountain_sports": 10,
+"air_sports": 30,
+"winter_sports": 20,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 60,
+"live_cafes": 50,
+"traditional_markets": 60
+},
+{
+"destination_name": "Bidart",
+"language": "French",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "7,8",
+"ocean_sports": 80,
+"mountain_sports": 20,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 40,
+"concerts": 20,
+"live_cafes": 60,
+"traditional_markets": 50
+},
+{
+"destination_name": "Hanoi",
+"language": "Vietnamese",
+"types_of_natural_landscapes": "None",
+"peak_season_weather": "Mild",
+"peak_season_dates": "10,11,12,1",
+"ocean_sports": 10,
+"mountain_sports": 20,
+"air_sports": 30,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 70,
+"concerts": 40,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Louisville",
+"language": "English",
+"types_of_natural_landscapes": "None",
+"peak_season_weather": "Mild",
+"peak_season_dates": "5,6,7",
+"ocean_sports": 0,
+"mountain_sports": 20,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 50,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 40
+},
+{
+"destination_name": "Stuttgart",
+"language": "German",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 50,
+"air_sports": 30,
+"winter_sports":
+70,
+"amusement_parks": 60,
+"museums": 80,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "San Jose",
+"language": "Spanish",
+"types_of_natural_landscapes": "None",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 10,
+"mountain_sports": 30,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 40,
+"museums": 50,
+"concerts": 60,
+"live_cafes": 70,
+"traditional_markets": 40
+},
+{
+"destination_name": "Melbourne",
+"language": "English",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Mild",
+"peak_season_dates": "1,2,12",
+"ocean_sports": 80,
+"mountain_sports": 10,
+"air_sports": 40,
+"winter_sports": 60,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 50
+}
+,
+{
+"destination_name": "Bali",
+"language": "Indonesian",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 90,
+"mountain_sports": 40,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 40,
+"concerts": 30,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Salzburg",
+"language": "German",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 70,
+"air_sports": 50,
+"winter_sports": 80,
+"amusement_parks": 40,
+"museums": 80,
+"concerts": 90,
+"live_cafes": 70,
+"traditional_markets": 60
+},
+{
+"destination_name": "Porto",
+"language": "Portuguese",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 50,
+"mountain_sports": 30,
+"air_sports": 40,
+"winter_sports": 20,
+"amusement_parks": 40,
+"museums": 80,
+"concerts": 60,
+"live_cafes": 70,
+"traditional_markets": 70
+},
+{
+"destination_name": "Cape Town",
+"language": "English",
+"types_of_natural_landscapes": "Beach, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2,6,7,8",
+"ocean_sports": 90,
+"mountain_sports": 70,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 80,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 80
+},
+{
+"destination_name": "Lagos",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "7,8,9",
+"ocean_sports": 90,
+"mountain_sports": 20,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 60,
+"concerts": 30,
+"live_cafes": 80,
+"traditional_markets": 80
+},
+{
+"destination_name": "Santo Domingo",
+"language": "Spanish",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 90,
+"mountain_sports": 20,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 40,
+"museums": 60,
+"concerts": 40,
+"live_cafes": 70,
+"traditional_markets": 60
+},
+
+{
+"destination_name": "Seoul",
+"language": "Korean",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "3,4,10,11",
+"ocean_sports": 60,
+"mountain_sports": 80,
+"air_sports": 70,
+"winter_sports": 90,
+"amusement_parks": 80,
+"museums": 90,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 80
+},
+{
+"destination_name": "Osaka",
+"language": "Japanese",
+"types_of_natural_landscapes": "None",
+"peak_season_weather": "Mild",
+"peak_season_dates": "3,4,10,11",
+"ocean_sports": 60,
+"mountain_sports": 30,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 90,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Cusco",
+"language": "Spanish",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "5,6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 90,
+"air_sports": 80,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 60,
+"concerts": 40,
+"live_cafes": 70,
+"traditional_markets": 90
+},
+{
+"destination_name": "Havana",
+"language": "Spanish",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 80,
+"mountain_sports": 30,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 70,
+"concerts": 60,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Queenstown",
+"language": "English",
+"types_of_natural_landscapes": "Mountain, Lake",
+"peak_season_weather": "Mild",
+"peak_season_dates": "12,1,2,6,7,8",
+"ocean_sports": 60,
+"mountain_sports": 90,
+"air_sports": 90,
+"winter_sports": 90,
+"amusement_parks": 40,
+"museums": 50,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 40
+},
+{
+"destination_name": "Valletta",
+"language": "Maltese",
+"types_of_natural_landscapes": "Sea",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 90,
+"mountain_sports": 0,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 90,
+"concerts": 50,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+
+{
+"destination_name": "Dubrovnik",
+"language": "Croatian",
+"types_of_natural_landscapes": "Beach, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "7,8",
+"ocean_sports": 90,
+"mountain_sports": 70,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 50,
+"concerts": 60,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Zurich",
+"language": "German",
+"types_of_natural_landscapes": "Lake, Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 70,
+"air_sports": 80,
+"winter_sports": 90,
+"amusement_parks": 40,
+"museums": 80,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "Krakow",
+"language": "Polish",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "5,6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 80,
+"air_sports": 50,
+"winter_sports": 70,
+"amusement_parks": 40,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 70,
+"traditional_markets": 80
+},
+{
+"destination_name": "Barcelona",
+"language": "Spanish",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 90,
+"mountain_sports": 40,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 70,
+"museums": 90,
+"concerts": 90,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Amsterdam",
+"language": "Dutch",
+"types_of_natural_landscapes": "Canal",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 0,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 70,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Santorini",
+"language": "Greek",
+"types_of_natural_landscapes": "Island",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 90,
+"mountain_sports": 0,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 10,
+"museums": 40,
+"concerts": 30,
+"live_cafes": 90,
+"traditional_markets": 60
+}
+,
+{
+"destination_name": "Bangkok",
+"language": "Thai",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Warm",
+"peak_season_dates": "11,12,1,2",
+"ocean_sports": 50,
+"mountain_sports": 0,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 70,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 90,
+"traditional_markets": 90
+},
+{
+"destination_name": "Sydney",
+"language": "English",
+"types_of_natural_landscapes": "Beach, Harbour",
+"peak_season_weather": "Mild",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 90,
+"mountain_sports": 50,
+"air_sports": 70,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 40
+},
+{
+"destination_name": "Rio de Janeiro",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Beach, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "1,2,12",
+"ocean_sports": 90,
+"mountain_sports": 70,
+"air_sports": 80,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 60,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Istanbul",
+"language": "Turkish",
+"types_of_natural_landscapes": "Sea",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 0,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Edinburgh",
+"language": "English",
+"types_of_natural_landscapes": "Mountain, Lake",
+"peak_season_weather": "Mild",
+"peak_season_dates": "7,8",
+"ocean_sports": 50,
+"mountain_sports": 70,
+"air_sports": 40,
+"winter_sports": 70,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Helsinki",
+"language": "Finnish",
+"types_of_natural_landscapes": "Sea",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 60,
+"mountain_sports": 40,
+"air_sports": 50,
+"winter_sports": 80,
+"amusement_parks": 40,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 70,
+"traditional_markets": 50
+}
+,
+{
+"destination_name": "Toronto",
+"language": "English",
+"types_of_natural_landscapes": "Lake",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 20,
+"air_sports": 60,
+"winter_sports": 70,
+"amusement_parks": 80,
+"museums": 90,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Reykjavik",
+"language": "Icelandic",
+"types_of_natural_landscapes": "Mountain, Glacier",
+"peak_season_weather": "Cold",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 50,
+"mountain_sports": 80,
+"air_sports": 70,
+"winter_sports": 90,
+"amusement_parks": 20,
+"museums": 60,
+"concerts": 50,
+"live_cafes": 60,
+"traditional_markets": 50
+},
+{
+"destination_name": "Rio de Janeiro",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Beach, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "1,2,12",
+"ocean_sports": 90,
+"mountain_sports": 70,
+"air_sports": 80,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 60,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Sapporo",
+"language": "Japanese",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Cold",
+"peak_season_dates": "1,2",
+"ocean_sports": 0,
+"mountain_sports": 90,
+"air_sports": 60,
+"winter_sports": 95,
+"amusement_parks": 50,
+"museums": 70,
+"concerts": 50,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Vancouver",
+"language": "English",
+"types_of_natural_landscapes": "Mountain, Ocean",
+"peak_season_weather": "Mild",
+"peak_season_dates": "7,8",
+"ocean_sports": 80,
+"mountain_sports": 70,
+"air_sports": 60,
+"winter_sports": 80,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "Dubai",
+"language": "Arabic",
+"types_of_natural_landscapes": "Desert",
+"peak_season_weather": "Hot",
+"peak_season_dates": "11,12,1,2",
+"ocean_sports": 80,
+"mountain_sports": 0,
+"air_sports": 90,
+"winter_sports": 0,
+"amusement_parks": 70,
+"museums": 50,
+"concerts": 80,
+"live_cafes": 70,
+"traditional_markets": 80
+},
+{
+"destination_name": "Cape Town",
+"language": "English",
+"types_of_natural_landscapes": "Beach, Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "11,12,1,2",
+"ocean_sports": 90,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Budapest",
+"language": "Hungarian",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 20,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Krakow",
+"language": "Polish",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 80,
+"air_sports": 30,
+"winter_sports": 70,
+"amusement_parks": 60,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 70,
+"traditional_markets": 80
+},
+{
+"destination_name": "Santorini",
+"language": "Greek",
+"types_of_natural_landscapes": "Island",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 70,
+"mountain_sports": 0,
+"air_sports": 0,
+"winter_sports": 0,
+"amusement_parks": 20,
+"museums": 60,
+"concerts": 50,
+"live_cafes": 80,
+"traditional_markets": 80
+},
+{
+"destination_name": "Queenstown",
+"language": "English",
+"types_of_natural_landscapes": "Mountain, Lake",
+"peak_season_weather": "Mild",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 0,
+"mountain_sports": 90,
+"air_sports": 90,
+"winter_sports": 95,
+"amusement_parks": 50,
+"museums": 60,
+"concerts": 50,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "Buenos Aires",
+"language": "Spanish",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "10,11,12,1,2,3",
+"ocean_sports": 40,
+"mountain_sports": 30,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 90,
+"concerts": 90,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Marrakech",
+"language": "Arabic",
+"types_of_natural_landscapes": "Desert, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "3,4,5,9,10,11",
+"ocean_sports": 0,
+"mountain_sports": 80,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 80,
+"concerts": 50,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Kyoto",
+"language": "Japanese",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "3,4,5,9,10,11",
+"ocean_sports": 0,
+"mountain_sports": 80,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 90,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 80
+},
+{
+"destination_name": "Osaka",
+"language": "Japanese",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "3,4,5,9,10,11",
+"ocean_sports": 50,
+"mountain_sports": 20,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 90,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Stockholm",
+"language": "Swedish",
+"types_of_natural_landscapes": "Lake",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 50,
+"mountain_sports": 0,
+"air_sports": 60,
+"winter_sports": 70,
+"amusement_parks": 60,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Amsterdam",
+"language": "Dutch",
+"types_of_natural_landscapes": "Canal",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 50,
+"mountain_sports": 0,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 70,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 80
+}
+,
+{
+"destination_name": "Sydney",
+"language": "English",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 90,
+"mountain_sports": 50,
+"air_sports": 70,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 80,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Helsinki",
+"language": "Finnish",
+"types_of_natural_landscapes": "Lake",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 50,
+"mountain_sports": 0,
+"air_sports": 40,
+"winter_sports": 90,
+"amusement_parks": 50,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Barcelona",
+"language": "Spanish",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 20,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 80,
+"museums": 80,
+"concerts": 90,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Rio de Janeiro",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Beach, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 90,
+"mountain_sports": 70,
+"air_sports": 80,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 80
+},
+{
+"destination_name": "Vancouver",
+"language": "English",
+"types_of_natural_landscapes": "Mountain, Ocean",
+"peak_season_weather": "Mild",
+"peak_season_dates": "7,8",
+"ocean_sports": 90,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 90,
+"amusement_parks": 70,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Reykjavik",
+"language": "Icelandic",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Cold",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 70,
+"mountain_sports": 80,
+"air_sports": 40,
+"winter_sports": 90,
+"amusement_parks": 20,
+"museums": 80,
+"concerts": 60,
+"live_cafes": 70,
+"traditional_markets": 50
+},
+{
+"destination_name": "Sapporo",
+"language": "Japanese",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Cold",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 0,
+"mountain_sports": 90,
+"air_sports": 50,
+"winter_sports": 90,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 50,
+"live_cafes": 70,
+"traditional_markets": 70
+},
+{
+"destination_name": "Quebec City",
+"language": "French",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Cold",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 0,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 90,
+"amusement_parks": 40,
+"museums": 80,
+"concerts": 50,
+"live_cafes": 60,
+"traditional_markets": 60
+},
+{
+"destination_name": "Buenos Aires",
+"language": "Spanish",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "10,11,12,1,2",
+"ocean_sports": 40,
+"mountain_sports": 20,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 90,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Edinburgh",
+"language": "English",
+"types_of_natural_landscapes": "Hill",
+"peak_season_weather": "Mild",
+"peak_season_dates": "7,8",
+"ocean_sports": 50,
+"mountain_sports": 70,
+"air_sports": 30,
+"winter_sports": 70,
+"amusement_parks": 40,
+"museums": 80,
+"concerts": 80,
+"live_cafes": 70,
+"traditional_markets": 50
+},
+{
+"destination_name": "San Francisco",
+"language": "English",
+"types_of_natural_landscapes": "Ocean",
+"peak_season_weather": "Mild",
+"peak_season_dates": "7,8",
+"ocean_sports": 90,
+"mountain_sports": 20,
+"air_sports": 80,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 90,
+"concerts": 90,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Seoul",
+"language": "Korean",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "4,5,10,11",
+"ocean_sports": 60,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 70,
+"amusement_parks": 70,
+"museums": 80,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Bali",
+"language": "Indonesian",
+"types_of_natural_landscapes": 
+"Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 90,
+"mountain_sports": 70,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 40,
+"museums": 50,
+"concerts": 40,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Dubrovnik",
+"language": "Croatian",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "7,8",
+"ocean_sports": 80,
+"mountain_sports": 40,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 30,
+"museums": 60,
+"concerts": 60,
+"live_cafes": 70,
+"traditional_markets": 60
+},
+{
+"destination_name": "Cape Town",
+"language": "English",
+"types_of_natural_landscapes": "Mountain, Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2,3,4",
+"ocean_sports": 80,
+"mountain_sports": 80,
+"air_sports": 70,
+"winter_sports": 0,
+"amusement_parks": 40,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Bangkok",
+"language": "Thai",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Warm",
+"peak_season_dates": "11,12,1,2",
+"ocean_sports": 30,
+"mountain_sports": 0,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Dubai",
+"language": "Arabic",
+"types_of_natural_landscapes": "Desert",
+"peak_season_weather": "Hot",
+"peak_season_dates": "12,1,2,3,4",
+"ocean_sports": 60,
+"mountain_sports": 20,
+"air_sports": 80,
+"winter_sports": 0,
+"amusement_parks": 90,
+"museums": 70,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Auckland",
+"language": "English",
+"types_of_natural_landscapes": "Beach, Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 90,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 50,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "Rome",
+"language": "Italian",
+"types_of_natural_landscapes": "Hill",
+"peak_season_weather": "Mild",
+"peak_season_dates": "4,5,6,9,10",
+"ocean_sports": 40,
+"mountain_sports": 50,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 95,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Sydney",
+"language": "English",
+"types_of_natural_landscapes": "Beach, Harbor",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2,3,4",
+"ocean_sports": 90,
+"mountain_sports": 60,
+"air_sports": 70,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "Vancouver",
+"language": "English",
+"types_of_natural_landscapes": "Mountain, Sea",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 90,
+"amusement_parks": 70,
+"museums": 60,
+"concerts": 70,
+"live_cafes": 70,
+"traditional_markets": 50
+},
+{
+"destination_name": "Amsterdam",
+"language": "Dutch",
+"types_of_natural_landscapes": "Canal",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 40,
+"mountain_sports": 0,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Seoul",
+"language": "Korean",
+"types_of_natural_landscapes": "Mountain, River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "4,5,9,10",
+"ocean_sports": 40,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 90,
+"amusement_parks": 70,
+"museums": 80,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 90
+},
+{
+"destination_name": "Rio de Janeiro",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Beach, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "1,2,3,12",
+"ocean_sports": 90,
+"mountain_sports": 80,
+"air_sports": 50,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Hanoi",
+"language": "Vietnamese",
+"types_of_natural_landscapes": "Lake, River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "10,11,12,1,2,3",
+"ocean_sports": 50,
+"mountain_sports": 50,
+"air_sports": 40,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Cape Town",
+"language": "Afrikaans, English, Xhosa",
+"types_of_natural_landscapes": "Beach, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 90,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Valencia",
+"language": "Spanish",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "7,8,9",
+"ocean_sports": 90,
+"mountain_sports": 50,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 80,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Vienna",
+"language": "German",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 50,
+"air_sports": 60,
+"winter_sports": 90,
+"amusement_parks": 70,
+"museums": 90,
+"concerts": 95,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Toronto",
+"language": "English",
+"types_of_natural_landscapes": "Lake",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 40,
+"mountain_sports": 60,
+"air_sports": 60,
+"winter_sports": 90,
+"amusement_parks": 70,
+"museums": 80,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "San Diego",
+"language": "English, Spanish",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "7,8,9",
+"ocean_sports": 90,
+"mountain_sports": 50,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 80,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "Viareggio",
+"language": "Italian",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 90,
+"mountain_sports": 50,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 50,
+"museums": 70,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Chiang Mai",
+"language": "Thai",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Cool",
+"peak_season_dates": "11,12,1,2",
+"ocean_sports": 0,
+"mountain_sports": 90,
+"air_sports": 60,
+"winter_sports": 0,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 60,
+"live_cafes": 70,
+"traditional_markets": 90
+},
+{
+"destination_name": "Stuttgart",
+"language": "German",
+"types_of_natural_landscapes": "Hills",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 0,
+"mountain_sports": 50,
+"air_sports": 70,
+"winter_sports": 80,
+"amusement_parks": 60,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Melbourne",
+"language": "English",
+"types_of_natural_landscapes": "Beach",
+"peak_season_weather": "Mild",
+"peak_season_dates": "1,2,3,11,12",
+"ocean_sports": 80,
+"mountain_sports": 30,
+"air_sports": 60,
+"winter_sports": 90,
+"amusement_parks": 60,
+"museums": 80,
+"concerts": 90,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "London",
+"language": "English",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 50,
+"mountain_sports": 30,
+"air_sports": 40,
+"winter_sports": 20,
+"amusement_parks": 80,
+"museums": 95,
+"concerts": 90,
+"live_cafes": 85,
+"traditional_markets": 60
+},
+{
+"destination_name": "Rome",
+"language": "Italian",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "5,6,7",
+"ocean_sports": 40,
+"mountain_sports": 80,
+"air_sports": 30,
+"winter_sports": 20,
+"amusement_parks": 70,
+"museums": 95,
+"concerts": 85,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Barcelona",
+"language": "Catalan",
+"types_of_natural_landscapes": "Sea, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 60,
+"air_sports": 50,
+"winter_sports": 10,
+"amusement_parks": 90,
+"museums": 80,
+"concerts": 85,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Venice",
+"language": "Italian",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 60,
+"mountain_sports": 20,
+"air_sports": 30,
+"winter_sports": 20,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 75,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Sydney",
+"language": "English",
+"types_of_natural_landscapes": "Sea, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "1,2,12",
+"ocean_sports": 90,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 10,
+"amusement_parks": 75,
+"museums": 70,
+"concerts": 90,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Beijing",
+"language": "Mandarin",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "9,10",
+"ocean_sports": 10,
+"mountain_sports": 80,
+"air_sports": 70,
+"winter_sports": 80,
+"amusement_parks": 90,
+"museums": 85,
+"concerts": 80,
+"live_cafes": 75,
+"traditional_markets": 80
+},
+{
+"destination_name": "Seoul",
+"language": "Korean",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "9,10",
+"ocean_sports": 40,
+"mountain_sports": 70,
+"air_sports": 50,
+"winter_sports": 80,
+"amusement_parks": 90,
+"museums": 85,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 90
+},
+{
+"destination_name": "Munich",
+"language": "German",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 40,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 80,
+"amusement_parks": 70,
+"museums": 80,
+"concerts": 75,
+"live_cafes": 85,
+"traditional_markets": 70
+},
+{
+"destination_name": "Prague",
+"language": "Czech",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 10,
+"mountain_sports": 30,
+"air_sports": 30,
+"winter_sports": 20,
+"amusement_parks": 50,
+"museums": 90,
+"concerts": 85,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Budapest",
+"language": "Hungarian",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 20,
+"mountain_sports": 30,
+"air_sports": 30,
+"winter_sports": 20,
+"amusement_parks": 70,
+"museums": 80,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 90
+},
+{
+"destination_name": "Berlin",
+"language": "German",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 30,
+"mountain_sports": 20,
+"air_sports": 50,
+"winter_sports": 40,
+"amusement_parks": 80,
+"museums": 90,
+"concerts": 90,
+"live_cafes": 85,
+"traditional_markets": 70
+},
+{
+"destination_name": "Athens",
+"language": "Greek",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 60,
+"mountain_sports": 70,
+"air_sports": 50,
+"winter_sports": 10,
+"amusement_parks": 60,
+"museums": 95,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Reykjavik",
+"language": "Icelandic",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates":
+"6,7,8",
+"ocean_sports": 50,
+"mountain_sports": 90,
+"air_sports": 70,
+"winter_sports": 80,
+"amusement_parks": 40,
+"museums": 80,
+"concerts": 75,
+"live_cafes": 85,
+"traditional_markets": 60
+},
+{
+"destination_name": "São Paulo",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "5,6,7",
+"ocean_sports": 30,
+"mountain_sports": 60,
+"air_sports": 40,
+"winter_sports": 10,
+"amusement_parks": 70,
+"museums": 85,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Lisbon",
+"language": "Portuguese",
+"types_of_natural_landscapes": "Sea",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 90,
+"mountain_sports": 20,
+"air_sports": 50,
+"winter_sports": 10,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 80,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Vienna",
+"language": "German",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 20,
+"mountain_sports": 70,
+"air_sports": 60,
+"winter_sports": 80,
+"amusement_parks": 50,
+"museums": 90,
+"concerts": 95,
+"live_cafes": 85,
+"traditional_markets": 70
+},
+{
+"destination_name": "Adelaide",
+"language": "English",
+"types_of_natural_landscapes": "Sea, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 80,
+"mountain_sports": 50,
+"air_sports": 30,
+"winter_sports": 10,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 75,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "Warsaw",
+"language": "Polish",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 10,
+"mountain_sports": 20,
+"air_sports": 30,
+"winter_sports": 20,
+"amusement_parks": 60,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Dublin",
+"language": "English, Irish",
+"types_of_natural_landscapes": "Sea, Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 
+50,
+"mountain_sports": 60,
+"air_sports": 40,
+"winter_sports": 20,
+"amusement_parks": 70,
+"museums": 85,
+"concerts": 90,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Cape Town",
+"language": "Afrikaans, English, Xhosa",
+"types_of_natural_landscapes": "Sea, Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 80,
+"mountain_sports": 80,
+"air_sports": 70,
+"winter_sports": 20,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 75,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Edinburgh",
+"language": "English, Scots",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 40,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 70,
+"amusement_parks": 50,
+"museums": 80,
+"concerts": 75,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Amsterdam",
+"language": "Dutch",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 30,
+"mountain_sports": 20,
+"air_sports": 60,
+"winter_sports": 30,
+"amusement_parks": 70,
+"museums": 90,
+"concerts": 90,
+"live_cafes": 90,
+"traditional_markets": 80
+},
+{
+"destination_name": "Busan",
+"language": "Korean",
+"types_of_natural_landscapes": "Sea, Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "7,8",
+"ocean_sports": 90,
+"mountain_sports": 80,
+"air_sports": 50,
+"winter_sports": 10,
+"amusement_parks": 70,
+"museums": 70,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Moscow",
+"language": "Russian",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 10,
+"mountain_sports": 30,
+"air_sports": 30,
+"winter_sports": 90,
+"amusement_parks": 50,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Venice",
+"language": "Italian",
+"types_of_natural_landscapes": "Sea",
+"peak_season_weather": "Warm",
+"peak_season_dates": "5,6,7,8",
+"ocean_sports": 60,
+"mountain_sports":
+20,
+"air_sports": 40,
+"winter_sports": 10,
+"amusement_parks": 50,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Chicago",
+"language": "English",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 60,
+"mountain_sports": 20,
+"air_sports": 80,
+"winter_sports": 70,
+"amusement_parks": 70,
+"museums": 90,
+"concerts": 95,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Madrid",
+"language": "Spanish",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 30,
+"mountain_sports": 80,
+"air_sports": 70,
+"winter_sports": 20,
+"amusement_parks": 60,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 85,
+"traditional_markets": 70
+},
+{
+"destination_name": "Stockholm",
+"language": "Swedish",
+"types_of_natural_landscapes": "Sea",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 20,
+"air_sports": 40,
+"winter_sports": 70,
+"amusement_parks": 60,
+"museums": 90,
+"concerts": 85,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Osaka",
+"language": "Japanese",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "3,4,10,11",
+"ocean_sports": 40,
+"mountain_sports": 50,
+"air_sports": 30,
+"winter_sports": 20,
+"amusement_parks": 95,
+"museums": 90,
+"concerts": 85,
+"live_cafes": 90,
+"traditional_markets": 70
+},
+{
+"destination_name": "Lucerne",
+"language": "German",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 20,
+"mountain_sports": 80,
+"air_sports": 70,
+"winter_sports": 80,
+"amusement_parks": 50,
+"museums": 70,
+"concerts": 75,
+"live_cafes": 80,
+"traditional_markets": 60
+},
+{
+"destination_name": "Lyon",
+"language": "French",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 30,
+"mountain_sports": 40,
+"air_sports": 50,
+"winter_sports": 20,
+"amusement_parks": 60,
+"museums": 80,
+"concerts": 70,
+"live_cafes": 85,
+"traditional_markets": 80
+},
+{
+"destination_name": "Queenstown",
+"language": "English",
+"types_of_natural_landscapes": "Mountain, Lake",
+"peak_season_weather": "Mild",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 50,
+"mountain_sports": 90,
+"air_sports": 80,
+"winter_sports": 90,
+"amusement_parks": 40,
+"museums": 60,
+"concerts": 50,
+"live_cafes": 80,
+"traditional_markets": 50
+},
+{
+"destination_name": "Krakow",
+"language": "Polish",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 10,
+"mountain_sports": 80,
+"air_sports": 60,
+"winter_sports": 70,
+"amusement_parks": 50,
+"museums": 90,
+"concerts": 70,
+"live_cafes": 80,
+"traditional_markets": 80
+},
+{
+"destination_name": "Bogota",
+"language": "Spanish",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Mild",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 10,
+"mountain_sports": 60,
+"air_sports": 40,
+"winter_sports": 20,
+"amusement_parks": 70,
+"museums": 80,
+"concerts": 75,
+"live_cafes": 80,
+"traditional_markets": 90
+},
+{
+"destination_name": "Alborg",
+"language": "Danish",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 50,
+"mountain_sports": 20,
+"air_sports": 30,
+"winter_sports": 20,
+"amusement_parks": 40,
+"museums": 70,
+"concerts": 50,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Stockton-on-Tees",
+"language": "English",
+"types_of_natural_landscapes": "River",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 30,
+"mountain_sports": 10,
+"air_sports": 20,
+"winter_sports": 10,
+"amusement_parks": 50,
+"museums": 70,
+"concerts": 50,
+"live_cafes": 60,
+"traditional_markets": 60
+},
+{
+"destination_name": "Wilmington",
+"language": "English",
+"types_of_natural_landscapes": "Sea, River",
+"peak_season_weather": "Warm",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 80,
+"mountain_sports": 20,
+"air_sports": 60,
+"winter_sports": 10,
+"amusement_parks": 60,
+"museums": 70,
+"concerts": 60,
+"live_cafes": 70,
+"traditional_markets": 50
+},
+{
+"destination_name": "Miami",
+"language": "English",
+"types_of_natural_landscapes": "Sea",
+"peak_season_weather": "Warm",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 90,
+"mountain_sports": 10,
+"air_sports": 70,
+"winter_sports": 20,
+"amusement_parks": 70,
+"museums": 80,
+"concerts": 90,
+"live_cafes": 90,
+"traditional_markets": 50
+},
+{
+"destination_name": "Nomura",
+"language": "Japanese",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Cold",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 10,
+"mountain_sports": 80,
+"air_sports": 40,
+"winter_sports": 90,
+"amusement_parks": 20,
+"museums": 50,
+"concerts": 30,
+"live_cafes": 40,
+"traditional_markets": 70
+},
+{
+"destination_name": "Toronto",
+"language": "English",
+"types_of_natural_landscapes": "Lake",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 60,
+"mountain_sports": 20,
+"air_sports": 50,
+"winter_sports": 90,
+"amusement_parks": 70,
+"museums": 90,
+"concerts": 80,
+"live_cafes": 80,
+"traditional_markets": 70
+},
+{
+"destination_name": "Brasov",
+"language": "Romanian",
+"types_of_natural_landscapes": "Mountain",
+"peak_season_weather": "Cold",
+"peak_season_dates": "12,1,2",
+"ocean_sports": 10,
+"mountain_sports": 80,
+"air_sports": 30,
+"winter_sports": 90,
+"amusement_parks": 50,
+"museums": 70,
+"concerts": 50,
+"live_cafes": 60,
+"traditional_markets": 80
+},
+{
+"destination_name": "Versailles",
+"language": "French",
+"types_of_natural_landscapes": "Garden",
+"peak_season_weather": "Mild",
+"peak_season_dates": "6,7,8",
+"ocean_sports": 20,
+"mountain_sports": 10,
+"air_sports": 10,
+"winter_sports": 10,
+"amusement_parks": 30,
+"museums": 80,
+"concerts": 50,
+"live_cafes": 60,
+"traditional_markets": 40
+}
+
+
+
+];
+
+
+function search() {
+var input_destination_name = document.getElementById("destination_name").value.toLowerCase();
+var input_language = document.getElementById("language").value.toLowerCase();
+var input_types_of_natural_landscapes = document.getElementById("types_of_natural_landscapes").value.toLowerCase();
+var input_peak_season_weather = document.getElementById("peak_season_weather").value.toLowerCase();
+var input_peak_season_dates = document.getElementById("peak_season_dates").value.toLowerCase();
+var input_ocean_sports = document.getElementById("ocean_sports").value;
+var input_mountain_sports = document.getElementById("mountain_sports").value;
+var input_air_sports = document.getElementById("air_sports").value;
+var input_winter_sports = document.getElementById("winter_sports").value;
+var input_amusement_parks = document.getElementById("amusement_parks").value;
+var input_museums = document.getElementById("museums").value;
+var input_concerts = document.getElementById("concerts").value;
+var input_live_cafes = document.getElementById("live_cafes").value;
+var input_traditional_markets = document.getElementById("traditional_markets").value;
+
+var results = [];
+
+for (var i = 0; i < trips.length; i++) {
+var trip = trips[i];
+if (input_destination_name && !trip.destination_name.toLowerCase().includes(input_destination_name)) {
+continue;
+}
+if (input_language && !trip.language.toLowerCase().includes(input_language)) {
+continue;
+}
+if (input_types_of_natural_landscapes && !trip.types_of_natural_landscapes.toLowerCase().includes(input_types_of_natural_landscapes)) {
+continue;
+}
+if (input_peak_season_weather && !trip.peak_season_weather.toLowerCase().includes(input_peak_season_weather)) {
+continue;
+}
+if (input_peak_season_dates && !trip.peak_season_dates.toLowerCase().includes(input_peak_season_dates)) {
+continue;
+}
+if (input_ocean_sports && trip.ocean_sports < Number(input_ocean_sports)) {
+continue;
+}
+if (input_mountain_sports && trip.mountain_sports < Number(input_mountain_sports)) {
+continue;
+}
+if (input_air_sports && trip.air_sports < Number(input_air_sports)) {
+continue;
+}
+if (input_winter_sports && trip.winter_sports < Number(input_winter_sports)) {
+continue;
+}
+if (input_amusement_parks && trip.amusement_parks < Number(input_amusement_parks)) {
+continue;
+}
+if (input_museums && trip.museums < Number(input_museums)) {
+continue;
+}
+if (input_concerts && trip.concerts < Number(input_concerts)) {
+continue;
+}
+if (input_live_cafes && trip.live_cafes < Number(input_live_cafes)) {
+continue;
+}
+if (input_traditional_markets && trip.traditional_markets < Number(input_traditional_markets)) {
+continue;
+}
+
+
+
+
+if (
+        !input_destination_name && 
+        !input_language && 
+        !input_types_of_natural_landscapes && 
+        !input_peak_season_weather && 
+        !input_peak_season_dates && 
+        !input_ocean_sports && 
+        !input_mountain_sports && 
+        !input_air_sports && 
+        !input_winter_sports && 
+        !input_amusement_parks && 
+        !input_museums && 
+        !input_concerts && 
+        !input_live_cafes &&
+		!input_traditional_markets
+    ) {
+        
+        var tableBody = document.querySelector("#search-results tbody");
+        tableBody.innerHTML = "";
+        return;
+    }
+
+
+
+	results.push(trip);
+}
+
+
+
+
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+            if (results[i].destination_name.toLowerCase() === uniqueResults[j].destination_name.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+for (var i = 0; i < results.length; i++) {
+var trip = results[i];
+var row = document.createElement("tr");
+row.innerHTML = "<td>" + trip.destination_name + "</td>" +
+"<td>" + trip.language + "</td>" +
+"<td>" + trip.types_of_natural_landscapes + "</td>" +
+"<td>" + trip.peak_season_weather + "</td>" +
+"<td>" + trip.peak_season_dates + "</td>" +
+"<td>" + trip.ocean_sports + "</td>" +
+"<td>" + trip.mountain_sports + "</td>" +
+"<td>" + trip.air_sports + "</td>" +
+"<td>" + trip.winter_sports + "</td>" +
+"<td>" + trip.amusement_parks + "</td>" +
+"<td>" + trip.museums + "</td>" +
+"<td>" + trip.concerts + "</td>" +
+"<td>" + trip.live_cafes + "</td>" +
+"<td>" + trip.traditional_markets + "</td>";
+tableBody.appendChild(row);
+}
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = parseFloat(x.innerHTML);
+        y = parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+
+    
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+
+
+    
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+
+
+</script>
+
+</body>
+</html>

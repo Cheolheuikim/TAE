@@ -1,0 +1,3822 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Search Books</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+
+		th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+</style>
+</head>
+<body>
+	<h1>Search Books</h1>
+	<img src="">
+
+  <canvas id="matrix-canvas"></canvas>
+
+
+	<form onsubmit="search(); return false;">
+		<input type="text" id="title" placeholder="title">
+		<input type="text" id="genre" placeholder="genre">
+		<input type="text" id="sub_genre" placeholder="sub genre">
+		<input type="text" id="key_theme" placeholder="key theme">
+		<input type="text" id="author" placeholder="author">
+        <input type="text" id="language" placeholder="language">
+        <input type="text" id="publisher" placeholder="publisher">
+		<input type="number" id="age_restrictions" placeholder="age restrictions">
+		<input type="number" id="publication_date" placeholder="publication date(year)">
+        <input type="number" id="page_count" placeholder="page count">
+		<input type="number" id="total_sales" placeholder="total sales">
+		
+		<input type="number" id="rating" placeholder="rating(0~100)">
+		<input type="number" id="educational_value" placeholder="educational value(0~100)">
+		<input type="number" id="social_impact" placeholder="social impact(0~100)">
+		<input type="number" id="difficulty" placeholder="difficulty(0~100)">
+		<input type="number" id="fun_factor" placeholder="fun factor(0~100)">
+
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+<thead>
+<tr>
+<th onclick="sortTable(0)">Title<span id="sortIndicator0">▲▼</span></th>
+<th onclick="sortTable(1)">Genre<span id="sortIndicator1">▲▼</span></th>
+<th onclick="sortTable(2)">Sub Genre<span id="sortIndicator2">▲▼</span></th>
+<th onclick="sortTable(3)">Key Theme<span id="sortIndicator3">▲▼</span></th>
+<th onclick="sortTable(4)">Author<span id="sortIndicator4">▲▼</span></th>
+<th onclick="sortTable(5)">Language<span id="sortIndicator5">▲▼</span></th>
+<th onclick="sortTable(6)">Publisher<span id="sortIndicator6">▲▼</span></th>
+<th onclick="sortTable(7)">Age Restrictions<span id="sortIndicator7">▲▼</span></th>
+<th onclick="sortTable(8)">Publication Date(year)<span id="sortIndicator8">▲▼</span></th>
+<th onclick="sortTable(9)">Page Count<span id="sortIndicator9">▲▼</span></th>
+<th onclick="sortTable(10)">Total Sales<span id="sortIndicator10">▲▼</span></th>
+<th onclick="sortTable(11)">Rating(0~100)<span id="sortIndicator11">▲▼</span></th>
+<th onclick="sortTable(12)">Educational Value(0~100)<span id="sortIndicator12">▲▼</span></th>
+<th onclick="sortTable(13)">Social Impact(0~100)<span id="sortIndicator13">▲▼</span></th>
+<th onclick="sortTable(14)">Difficulty(0~100)<span id="sortIndicator14">▲▼</span></th>
+<th onclick="sortTable(15)">Fun Factor(0~100)<span id="sortIndicator15">▲▼</span></th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<script>
+var books = [
+{
+"title": "The Hunger Games",
+"genre": "young adult dystopian",
+"sub_genre": "action-adventure",
+"key_theme": "Survival, government control, rebellion",
+"author": "Suzanne Collins",
+"language": "English",
+"publisher": "Scholastic",
+"age_restrictions": 12,
+"publication_date": "2008-09-14",
+"page_count": 374,
+"total_sales": 23000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 90,
+"difficulty": 45,
+"fun_factor": 85
+},
+{
+"title": "The Fault in Our Stars",
+"genre": "young adult fiction",
+"sub_genre": "romance",
+"key_theme": "Cancer, love, death",
+"author": "John Green",
+"language": "English",
+"publisher": "Dutton Books",
+"age_restrictions": 12,
+"publication_date": "2012-01-10",
+"page_count": 313,
+"total_sales": 14000000,
+"rating": 80,
+"educational_value": 75,
+"social_impact": 80,
+"difficulty": 35,
+"fun_factor": 80
+},
+{
+"title": "The Girl on the Train",
+"genre": "mystery",
+"sub_genre": "psychological thriller",
+"key_theme": "Alcoholism, domestic abuse, memory",
+"author": "Paula Hawkins",
+"language": "English",
+"publisher": "Riverhead Books",
+"age_restrictions": 16,
+"publication_date": "2015-01-13",
+"page_count": 325,
+"total_sales": 11000000,
+"rating": 75,
+"educational_value": 70,
+"social_impact": 75,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Becoming",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Family, race, politics",
+"author": "Michelle Obama",
+"language": "English",
+"publisher": "Crown",
+"age_restrictions": 12,
+"publication_date": "2018-11-13",
+"page_count": 448,
+"total_sales": 10000000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 95,
+"difficulty": 55,
+"fun_factor": 80
+},
+{
+"title": "The Nightingale",
+"genre": "historical fiction",
+"sub_genre": "war",
+"key_theme": "Resistance, family, sacrifice",
+"author": "Kristin Hannah",
+"language": "English",
+"publisher": "St. Martin's Press",
+"age_restrictions": 16,
+"publication_date": "2015-02-03",
+"page_count": 440,
+"total_sales": 4000000,
+"rating": 80,
+"educational_value": 75,
+"social_impact": 85,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Where the Crawdads Sing",
+"genre": "mystery",
+"sub_genre": "coming-of-age",
+"key_theme": "Nature, isolation, prejudice",
+"author": "Delia Owens",
+"language": "English",
+"publisher": "G. P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "2018-08-14",
+"page_count": 384,
+"total_sales": 4000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 55,
+"fun_factor": 75
+},
+{
+"title": "Little Fires Everywhere",
+"genre": "contemporary fiction",
+"sub_genre": "domestic drama",
+"key_theme": "Motherhood, identity, privilege",
+"author": "Celeste Ng",
+"language": "English",
+"publisher": "Penguin Press",
+"age_restrictions": 16,
+"publication_date": "2017-09-12",
+"page_count": 338,
+"total_sales": 3000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 45,
+"fun_factor": 70
+},
+{
+"title": "The Testaments",
+"genre": "dystopian fiction",
+"sub_genre": "speculative fiction",
+"key_theme": "Oppression, resistance, female empowerment",
+"author": "Margaret Atwood",
+"language": "English",
+"publisher": "Nan A. Talese",
+"age_restrictions": 16,
+"publication_date": "2019-09-10",
+"page_count": 419,
+"total_sales": 2500000,
+"rating": 90,
+"educational_value": 90,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 75
+},
+{
+"title": "The Dutch House",
+"genre": "historical fiction",
+"sub_genre": "family saga",
+"key_theme": "Family, wealth, identity",
+"author": "Ann Patchett",
+"language": "English",
+"publisher": "Harper",
+"age_restrictions": 16,
+"publication_date": "2019-09-24",
+"page_count": 352,
+"total_sales": 2000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Caste: The Origins of Our Discontents",
+"genre": "nonfiction",
+"sub_genre": "social commentary",
+"key_theme": "Race, class, power",
+"author": "Isabel Wilkerson",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2020-08-04",
+"page_count": 496,
+"total_sales": 1000000,
+"rating": 95,
+"educational_value": 95,
+"social_impact": 95,
+"difficulty": 70,
+"fun_factor": 65
+}
+,
+{
+"title": "Where the Crawdads Sing",
+"genre": "mystery",
+"sub_genre": "southern gothic",
+"key_theme": "Isolation, prejudice, survival",
+"author": "Delia Owens",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "2018-08-14",
+"page_count": 384,
+"total_sales": 4000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 85,
+"difficulty": 50,
+"fun_factor": 75
+},
+{
+"title": "The Nightingale",
+"genre": "historical fiction",
+"sub_genre": "war drama",
+"key_theme": "Family, resistance, sacrifice",
+"author": "Kristin Hannah",
+"language": "English",
+"publisher": "St. Martin's Press",
+"age_restrictions": 16,
+"publication_date": "2015-02-03",
+"page_count": 440,
+"total_sales": 4000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 85,
+"difficulty": 55,
+"fun_factor": 70
+},
+{
+"title": "Becoming",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Identity, personal growth, politics",
+"author": "Michelle Obama",
+"language": "English",
+"publisher": "Crown Publishing Group",
+"age_restrictions": 16,
+"publication_date": "2018-11-13",
+"page_count": 448,
+"total_sales": 15000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 60,
+"fun_factor": 75
+},
+{
+"title": "Educated",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Family, education, resilience",
+"author": "Tara Westover",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2018-02-20",
+"page_count": 352,
+"total_sales": 4000000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 90,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "The Water Dancer",
+"genre": "historical fiction",
+"sub_genre": "magical realism",
+"key_theme": "Slavery, memory, freedom",
+"author": "Ta-Nehisi Coates",
+"language": "English",
+"publisher": "One World",
+"age_restrictions": 16,
+"publication_date": "2019-09-24",
+"page_count": 416,
+"total_sales": 1000000,
+"rating": 85,
+"educational_value": 90,
+"social_impact": 85,
+"difficulty": 60,
+"fun_factor": 70
+},
+
+{
+"title": "The Silent Patient",
+"genre": "thriller",
+"sub_genre": "psychological thriller",
+"key_theme": "Mental health, obsession, truth",
+"author": "Alex Michaelides",
+"language": "English",
+"publisher": "Celadon Books",
+"age_restrictions": 16,
+"publication_date": "2019-02-05",
+"page_count": 336,
+"total_sales": 3000000,
+"rating": 85,
+"educational_value": 70,
+"social_impact": 75,
+"difficulty": 65,
+"fun_factor": 80
+},
+{
+"title": "The Testaments",
+"genre": "dystopian fiction",
+"sub_genre": "speculative fiction",
+"key_theme": "Resistance, power, identity",
+"author": "Margaret Atwood",
+"language": "English",
+"publisher": "Nan A. Talese",
+"age_restrictions": 16,
+"publication_date": "2019-09-10",
+"page_count": 432,
+"total_sales": 2000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 75
+},
+{
+"title": "The Immortalists",
+"genre": "fiction",
+"sub_genre": "magical realism",
+"key_theme": "Fate, family, mortality",
+"author": "Chloe Benjamin",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "2018-01-09",
+"page_count": 352,
+"total_sales": 500000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 80,
+"difficulty": 60,
+"fun_factor": 75
+},
+{
+"title": "Little Fires Everywhere",
+"genre": "fiction",
+"sub_genre": "family drama",
+"key_theme": "Motherhood, identity, race",
+"author": "Celeste Ng",
+"language": "English",
+"publisher": "Penguin Press",
+"age_restrictions": 16,
+"publication_date": "2017-09-12",
+"page_count": 352,
+"total_sales": 2000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 55,
+"fun_factor": 75
+}
+,
+{
+"title": "Where the Crawdads Sing",
+"genre": "fiction",
+"sub_genre": "coming-of-age",
+"key_theme": "Isolation, nature, belonging",
+"author": "Delia Owens",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "2018-08-14",
+"page_count": 384,
+"total_sales": 7000000,
+"rating": 90,
+"educational_value": 75,
+"social_impact": 85,
+"difficulty": 50,
+"fun_factor": 80
+},
+{
+"title": "Becoming",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Empowerment, identity, public service",
+"author": "Michelle Obama",
+"language": "English",
+"publisher": "Crown Publishing Group",
+"age_restrictions": 16,
+"publication_date": "2018-11-13",
+"page_count": 448,
+"total_sales": 15000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 60,
+"fun_factor": 80
+},
+{
+"title": "The Water Dancer",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "Slavery, memory, freedom",
+"author": "Ta-Nehisi Coates",
+"language": "English",
+"publisher": "One World",
+"age_restrictions": 16,
+"publication_date": "2019-09-24",
+"page_count": 416,
+"total_sales": 500000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 60,
+"fun_factor": 75
+},
+{
+"title": "The Nickel Boys",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "Racism, injustice, resilience",
+"author": "Colson Whitehead",
+"language": "English",
+"publisher": "Doubleday",
+"age_restrictions": 16,
+"publication_date": "2019-07-16",
+"page_count": 224,
+"total_sales": 500000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 75
+},
+{
+"title": "The Dutch House",
+"genre": "fiction",
+"sub_genre": "family drama",
+"key_theme": "Family, inheritance, resilience",
+"author": "Ann Patchett",
+"language": "English",
+"publisher": "Harper",
+"age_restrictions": 16,
+"publication_date": "2019-09-24",
+"page_count": 352,
+"total_sales": 1000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 55,
+"fun_factor": 75
+},
+
+{
+"title": "The Southern Book Club's Guide to Slaying Vampires",
+"genre": "horror",
+"sub_genre": "supernatural",
+"key_theme": "Friendship, motherhood, fear",
+"author": "Grady Hendrix",
+"language": "English",
+"publisher": "Quirk Books",
+"age_restrictions": 18,
+"publication_date": "2020-04-07",
+"page_count": 400,
+"total_sales": 200000,
+"rating": 85,
+"educational_value": 60,
+"social_impact": 70,
+"difficulty": 70,
+"fun_factor": 90
+},
+{
+"title": "The Midnight Library",
+"genre": "fiction",
+"sub_genre": "magical realism",
+"key_theme": "Regret, choice, hope",
+"author": "Matt Haig",
+"language": "English",
+"publisher": "Canongate Books",
+"age_restrictions": 16,
+"publication_date": "2020-08-13",
+"page_count": 288,
+"total_sales": 2000000,
+"rating": 90,
+"educational_value": 70,
+"social_impact": 80,
+"difficulty": 55,
+"fun_factor": 85
+},
+{
+"title": "The Sanatorium",
+"genre": "mystery",
+"sub_genre": "thriller",
+"key_theme": "Isolation, obsession, secrets",
+"author": "Sarah Pearse",
+"language": "English",
+"publisher": "Bantam Press",
+"age_restrictions": 18,
+"publication_date": "2021-02-04",
+"page_count": 416,
+"total_sales": 500000,
+"rating": 80,
+"educational_value": 60,
+"social_impact": 70,
+"difficulty": 70,
+"fun_factor": 75
+},
+{
+"title": "Klara and the Sun",
+"genre": "science fiction",
+"sub_genre": "dystopian fiction",
+"key_theme": "Artificial intelligence, consciousness, mortality",
+"author": "Kazuo Ishiguro",
+"language": "English",
+"publisher": "Knopf",
+"age_restrictions": 16,
+"publication_date": "2021-03-02",
+"page_count": 320,
+"total_sales": 300000,
+"rating": 90,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 65,
+"fun_factor": 75
+},
+{
+"title": "Project Hail Mary",
+"genre": "science fiction",
+"sub_genre": "hard science fiction",
+"key_theme": "Space exploration, survival, memory",
+"author": "Andy Weir",
+"language": "English",
+"publisher": "Ballantine Books",
+"age_restrictions": 16,
+"publication_date": "2021-05-04",
+"page_count": 496,
+"total_sales": 1000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 75,
+"fun_factor": 85
+},
+{
+"title": "Empire of Pain",
+"genre": "non-fiction",
+"sub_genre": "investigative journalism",
+"key_theme": "Corporate greed, opioid crisis, healthcare system",
+"author": "Patrick Radden Keefe",
+"language": "English",
+"publisher": "Doubleday",
+"age_restrictions": 18,
+"publication_date": "2021-04-13",
+"page_count": 560,
+"total_sales": 300000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 90,
+"difficulty": 75,
+"fun_factor": 60
+},
+{
+"title": "The Code Breaker",
+"genre": "non-fiction",
+"sub_genre": "science",
+"key_theme": "Gene editing, bioethics, medical advancements",
+"author": "Walter Isaacson",
+"language": "English",
+"publisher": "Simon & Schuster",
+"age_restrictions": 16,
+"publication_date": "2021-03-09",
+"page_count": 560,
+"total_sales": 500000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 90,
+"difficulty": 75,
+"fun_factor": 60
+},
+{
+"title": "The Body Keeps the Score",
+"genre": "non-fiction",
+"sub_genre": "psychology",
+"key_theme": "Trauma, mental health, healing",
+"author": "Bessel van der Kolk",
+"language": "English",
+"publisher": "Penguin Books",
+"age_restrictions": 16,
+"publication_date": "2014-09-25",
+"page_count": 464,
+"total_sales": 1000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 70,
+"fun_factor": 50
+},
+{
+"title": "Caste",
+"genre": "non-fiction",
+"sub_genre": "social commentary",
+"key_theme": "Racism, discrimination, social hierarchy",
+"author": "Isabel Wilkerson",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2020-08-04",
+"page_count": 496,
+"total_sales": 500000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 65,
+"fun_factor": 50
+},
+{
+"title": "How to Be an Antiracist",
+"genre": "non-fiction",
+"sub_genre": "social commentary",
+"key_theme": "Race, equity, activism",
+"author": "Ibram X. Kendi",
+"language": "English",
+"publisher": "One World",
+"age_restrictions": 16,
+"publication_date": "2019-08-13",
+"page_count": 320,
+"total_sales": 1000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 95,
+"difficulty": 60,
+"fun_factor": 50
+},
+{
+"title": "White Fragility",
+"genre": "non-fiction",
+"sub_genre": "social commentary",
+"key_theme": "Race, racism, white privilege",
+"author": "Robin DiAngelo",
+"language": "English",
+"publisher": "Beacon Press",
+"age_restrictions": 16,
+"publication_date": "2018-06-26",
+"page_count": 192,
+"total_sales": 2000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 50,
+"fun_factor": 50
+},
+{
+"title": "Becoming",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Personal growth, identity, politics",
+"author": "Michelle Obama",
+"language": "English",
+"publisher": "Crown Publishing Group",
+"age_restrictions": 16,
+"publication_date": "2018-11-13",
+"page_count": 448,
+"total_sales": 15000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "Educated",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Family, education, identity",
+"author": "Tara Westover",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2018-02-20",
+"page_count": 352,
+"total_sales": 5000000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 90,
+"difficulty": 70,
+"fun_factor": 50
+},
+{
+"title": "Little Fires Everywhere",
+"genre": "fiction",
+"sub_genre": "domestic fiction",
+"key_theme": "Motherhood, identity, race",
+"author": "Celeste Ng",
+"language": "English",
+"publisher": "Penguin Press",
+"age_restrictions": 14,
+"publication_date": "2017-09-12",
+"page_count": 352,
+"total_sales": 2000000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Where the Crawdads Sing",
+"genre": "fiction",
+"sub_genre": "mystery",
+"key_theme": "Nature, survival, prejudice",
+"author": "Delia Owens",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 14,
+"publication_date": "2018-08-14",
+"page_count": 384,
+"total_sales": 7000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 80
+},
+{
+"title": "The Nightingale",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "War, family, sisterhood",
+"author": "Kristin Hannah",
+"language": "English",
+"publisher": "St. Martin's Press",
+"age_restrictions": 14,
+"publication_date": "2015-02-03",
+"page_count": 440,
+"total_sales": 4000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Testaments",
+"genre": "fiction",
+"sub_genre": "dystopian fiction",
+"key_theme": "Totalitarianism, gender, power",
+"author": "Margaret Atwood",
+"language": "English",
+"publisher": "McClelland & Stewart",
+"age_restrictions": 16,
+"publication_date": "2019-09-10",
+"page_count": 432,
+"total_sales": 3000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "Daisy Jones & The Six",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "Music, fame, relationships",
+"author": "Taylor Jenkins Reid",
+"language": "English",
+"publisher": "Ballantine Books",
+"age_restrictions": 14,
+"publication_date": "2019-03-05",
+"page_count": 368,
+"total_sales": 2000000,
+"rating": 85,
+"educational_value": 70,
+"social_impact": 75,
+"difficulty": 55,
+"fun_factor": 85
+},
+{
+"title": "The Silent Patient",
+"genre": "fiction",
+"sub_genre": "psychological thriller",
+"key_theme": "Mental health, trauma, mystery",
+"author": "Alex Michaelides",
+"language": "English",
+"publisher": "Celadon Books",
+"age_restrictions": 16,
+"publication_date": "2019-02-05",
+"page_count": 336,
+"total_sales": 4000000,
+"rating": 85,
+"educational_value": 70,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 75
+},
+{
+"title": "American Dirt",
+"genre": "fiction",
+"sub_genre": "thriller",
+"key_theme": "Immigration, family, survival",
+"author": "Jeanine Cummins",
+"language": "English",
+"publisher": "Flatiron Books",
+"age_restrictions": 16,
+"publication_date": "2020-01-21",
+"page_count": 400,
+"total_sales": 2000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "Normal People",
+"genre": "fiction",
+"sub_genre": "coming-of-age",
+"key_theme": "Relationships, identity, class",
+"author": "Sally Rooney",
+"language": "English",
+"publisher": "Faber and Faber",
+"age_restrictions": 16,
+"publication_date": "2018-08-28",
+"page_count": 266,
+"total_sales": 2000000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Becoming",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Personal growth, identity, social justice",
+"author": "Michelle Obama",
+"language": "English",
+"publisher": "Crown Publishing Group",
+"age_restrictions": 12,
+"publication_date": "2018-11-13",
+"page_count": 426,
+"total_sales": 15000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 55,
+"fun_factor": 80
+},
+{
+"title": "Educated",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Education, family, identity",
+"author": "Tara Westover",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2018-02-20",
+"page_count": 352,
+"total_sales": 5500000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 60
+},
+{
+"title": "The Immortal Life of Henrietta Lacks",
+"genre": "non-fiction",
+"sub_genre": "science",
+"key_theme": "Medical ethics, racial injustice, scientific discovery",
+"author": "Rebecca Skloot",
+"language": "English",
+"publisher": "Crown Publishing Group",
+"age_restrictions": 16,
+"publication_date": "2010-02-02",
+"page_count": 370,
+"total_sales": 2500000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 95,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "The New Jim Crow",
+"genre": "non-fiction",
+"sub_genre": "politics",
+"key_theme": "Mass incarceration, racial justice, criminal justice reform",
+"author": "Michelle Alexander",
+"language": "English",
+"publisher": "The New Press",
+"age_restrictions": 18,
+"publication_date": "2010-01-05",
+"page_count": 352,
+"total_sales": 2000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 70,
+"fun_factor": 40
+},
+{
+"title": "Just Mercy",
+"genre": "non-fiction",
+"sub_genre": "memoir",
+"key_theme": "Criminal justice system, racial injustice, human rights",
+"author": "Bryan Stevenson",
+"language": "English",
+"publisher": "Spiegel & Grau",
+"age_restrictions": 16,
+"publication_date": "2014-10-21",
+"page_count": 336,
+"total_sales": 1800000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 60,
+"fun_factor": 50
+},
+{
+"title": "The Warmth of Other Suns",
+"genre": "non-fiction",
+"sub_genre": "history",
+"key_theme": "The Great Migration, racial injustice, American history",
+"author": "Isabel Wilkerson",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2010-09-07",
+"page_count": 622,
+"total_sales": 1500000,
+"rating":
+90,
+"educational_value": 95,
+"social_impact": 90,
+"difficulty": 70,
+"fun_factor": 50
+},
+{
+"title": "Hidden Figures",
+"genre": "non-fiction",
+"sub_genre": "history",
+"key_theme": "Women in STEM, racial segregation, space race",
+"author": "Margot Lee Shetterly",
+"language": "English",
+"publisher": "William Morrow and Company",
+"age_restrictions": 12,
+"publication_date": "2016-09-06",
+"page_count": 368,
+"total_sales": 1300000,
+"rating": 90,
+"educational_value": 90,
+"social_impact": 85,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Glass Castle",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Family, poverty, resilience",
+"author": "Jeannette Walls",
+"language": "English",
+"publisher": "Scribner",
+"age_restrictions": 16,
+"publication_date": "2005-01-17",
+"page_count": 288,
+"total_sales": 1000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 55,
+"fun_factor": 60
+},
+{
+"title": "Between the World and Me",
+"genre": "non-fiction",
+"sub_genre": "memoir",
+"key_theme": "Racial injustice, identity, American history",
+"author": "Ta-Nehisi Coates",
+"language": "English",
+"publisher": "Spiegel & Grau",
+"age_restrictions": 16,
+"publication_date": "2015-07-14",
+"page_count": 176,
+"total_sales": 900000,
+"rating": 90,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 70,
+"fun_factor": 40
+},
+{
+"title": "Bad Blood",
+"genre": "non-fiction",
+"sub_genre": "true crime",
+"key_theme": "Corporate fraud, Silicon Valley, entrepreneurship",
+"author": "John Carreyrou",
+"language": "English",
+"publisher": "Knopf",
+"age_restrictions": 16,
+"publication_date": "2018-05-21",
+"page_count": 352,
+"total_sales": 700000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "Hillbilly Elegy",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Rural poverty, family, identity",
+"author": "J.D. Vance",
+"language": "English",
+"publisher": "HarperCollins",
+"age_restrictions": 16,
+"publication_date": "2016-06-28",
+"page_count": 288,
+"total_sales": 600000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 50
+},
+{
+"title": "Becoming",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Personal growth, identity, social justice",
+"author": "Michelle Obama",
+"language": "English",
+"publisher": "Crown Publishing Group",
+"age_restrictions": 12,
+"publication_date": "2018-11-13",
+"page_count": 426,
+"total_sales": 15000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 55,
+"fun_factor": 80
+},
+{
+"title": "Educated",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Education, family, identity",
+"author": "Tara Westover",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2018-02-20",
+"page_count": 352,
+"total_sales": 5500000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 60
+},
+{
+"title": "The Immortal Life of Henrietta Lacks",
+"genre": "non-fiction",
+"sub_genre": "science",
+"key_theme": "Medical ethics, racial injustice, scientific discovery",
+"author": "Rebecca Skloot",
+"language": "English",
+"publisher": "Crown Publishing Group",
+"age_restrictions": 16,
+"publication_date": "2010-02-02",
+"page_count": 370,
+"total_sales": 2500000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 95,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "The New Jim Crow",
+"genre": "non-fiction",
+"sub_genre": "politics",
+"key_theme": "Mass incarceration, racial justice, criminal justice reform",
+"author": "Michelle Alexander",
+"language": "English",
+"publisher": "The New Press",
+"age_restrictions": 18,
+"publication_date": "2010-01-05",
+"page_count": 352,
+"total_sales": 2000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 70,
+"fun_factor": 40
+},
+{
+"title": "Just Mercy",
+"genre": "non-fiction",
+"sub_genre": "memoir",
+"key_theme": "Criminal justice system, racial injustice, human rights",
+"author": "Bryan Stevenson",
+"language": "English",
+"publisher": "Spiegel & Grau",
+"age_restrictions": 16,
+"publication_date": "2014-10-21",
+"page_count": 336,
+"total_sales": 1800000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 60,
+"fun_factor": 50
+},
+{
+"title": "The Warmth of Other Suns",
+"genre": "non-fiction",
+"sub_genre": "history",
+"key_theme": "The Great Migration, racial injustice, American history",
+"author": "Isabel Wilkerson",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2010-09-07",
+"page_count": 622,
+"total_sales": 1500000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 90,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "Stamped from the Beginning",
+"genre": "non-fiction",
+"sub_genre": "history",
+"key_theme": "Racial discrimination, anti-racism, American history",
+"author": "Ibram X. Kendi",
+"language": "English",
+"publisher": "Nation Books",
+"age_restrictions": 16,
+"publication_date": "2016-04-12",
+"page_count": 582,
+"total_sales": 1000000,
+"rating": 95,
+"educational_value": 95,
+"social_impact": 95,
+"difficulty": 70,
+"fun_factor": 50
+},
+{
+"title": "The Water Dancer",
+"genre": "fiction",
+"sub_genre": "historical fantasy",
+"key_theme": "Slavery, family, memory",
+"author": "Ta-Nehisi Coates",
+"language": "English",
+"publisher": "One World",
+"age_restrictions": 16,
+"publication_date": "2019-09-24",
+"page_count": 416,
+"total_sales": 800000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "The Underground Railroad",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "Slavery, freedom, perseverance",
+"author": "Colson Whitehead",
+"language": "English",
+"publisher": "Doubleday",
+"age_restrictions": 16,
+"publication_date": "2016-08-02",
+"page_count": 306,
+"total_sales": 700000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "The Hate U Give",
+"genre": "young adult fiction",
+"sub_genre": "realistic fiction",
+"key_theme": "Police brutality, racism, activism",
+"author": "Angie Thomas",
+"language": "English",
+"publisher": "Balzer + Bray",
+"age_restrictions": 14,
+"publication_date": "2017-02-28",
+"page_count": 464,
+"total_sales": 4000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 95,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "When Breath Becomes Air",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Life, death, purpose",
+"author": "Paul Kalanithi",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2016-01-12",
+"page_count": 256,
+"total_sales": 4000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 90,
+"difficulty": 50,
+"fun_factor": 40
+},
+{
+"title": "The Dutch House",
+"genre": "fiction",
+"sub_genre": "family drama",
+"key_theme": "Family, relationships, nostalgia",
+"author": "Ann Patchett",
+"language": "English",
+"publisher": "Harper",
+"age_restrictions": 16,
+"publication_date": "2019-09-24",
+"page_count": 352,
+"total_sales": 700000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 45,
+"fun_factor": 70
+},
+{
+"title": "The Testaments",
+"genre": "fiction",
+"sub_genre": "dystopian fiction",
+"key_theme": "Oppression, rebellion, power",
+"author": "Margaret Atwood",
+"language": "English",
+"publisher": "Nan A. Talese",
+"age_restrictions": 16,
+"publication_date": "2019-09-10",
+"page_count": 432,
+"total_sales": 600000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 60
+},
+{
+"title": "The Institute",
+"genre": "fiction",
+"sub_genre": "horror",
+"key_theme": "Institutional abuse, psychic powers, survival",
+"author": "Stephen King",
+"language": "English",
+"publisher": "Scribner",
+"age_restrictions": 18,
+"publication_date": "2019-09-10",
+"page_count": 576,
+"total_sales": 500000,
+"rating": 85,
+"educational_value": 60,
+"social_impact": 60,
+"difficulty": 70,
+"fun_factor": 80
+},
+{
+"title": "The Overstory",
+"genre": "fiction",
+"sub_genre": "environmental fiction",
+"key_theme": "Environmentalism, activism, interconnectedness",
+"author": "Richard Powers",
+"language": "English",
+"publisher": "W.W. Norton & Company",
+"age_restrictions": 16,
+"publication_date": "2018-04-03",
+"page_count": 512,
+"total_sales": 300000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 70,
+"fun_factor": 60
+},
+{
+"title": "Normal People",
+"genre": "fiction",
+"sub_genre": "romance",
+"key_theme": "Love, friendship, class",
+"author": "Sally Rooney",
+"language": "English",
+"publisher": "Hogarth Press",
+"age_restrictions": 16,
+"publication_date": "2018-08-28",
+"page_count": 273,
+"total_sales": 250000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 45,
+"fun_factor": 70
+},
+{
+"title": "The Nickel Boys",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "Racial injustice, abuse, resilience",
+"author": "Colson Whitehead",
+"language": "English",
+"publisher": "Doubleday",
+"age_restrictions": 16,
+"publication_date": "2019-07-16",
+"page_count": 224,
+"total_sales": 200000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 60
+},
+{
+"title": "Becoming",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Identity, race, politics",
+"author": "Michelle Obama",
+"language": "English",
+"publisher": "Crown",
+"age_restrictions": 16,
+"publication_date": "2018-11-13",
+"page_count": 448,
+"total_sales": 15000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Little Fires Everywhere",
+"genre": "fiction",
+"sub_genre": "family drama",
+"key_theme": "Motherhood, identity, privilege",
+"author": "Celeste Ng",
+"language": "English",
+"publisher": "Penguin Press",
+"age_restrictions": 16,
+"publication_date": "2017-09-12",
+"page_count": 338,
+"total_sales": 1500000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Educated",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Education, family, resilience",
+"author": "Tara Westover",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2018-02-20",
+"page_count": 334,
+"total_sales": 1000000,
+"rating": 90,
+"educational_value": 90,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 60
+},
+{
+"title": "The Immortalists",
+"genre": "fiction",
+"sub_genre": "family drama",
+"key_theme": "Family, destiny, mortality",
+"author": "Chloe Benjamin",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "2018-01-09",
+"page_count": 352,
+"total_sales": 500000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Americanah",
+"genre": "fiction",
+"sub_genre": "romance",
+"key_theme": "Race, identity, love",
+"author": "Chimamanda Ngozi Adichie",
+"language": "English",
+"publisher": "Alfred A. Knopf",
+"age_restrictions": 16,
+"publication_date": "2013-05-14",
+"page_count": 588,
+"total_sales": 500000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Water Dancer",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "Slavery, memory, freedom",
+"author": "Ta-Nehisi Coates",
+"language": "English",
+"publisher": "One World",
+"age_restrictions": 16,
+"publication_date": "2019-09-24",
+"page_count": 416,
+"total_sales": 400000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "Where the Crawdads Sing",
+"genre": "fiction",
+"sub_genre": "mystery",
+"key_theme": "Nature, isolation, belonging",
+"author": "Delia Owens",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "2018-08-14",
+"page_count": 384,
+"total_sales": 4000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 85,
+"difficulty": 50,
+"fun_factor": 75
+},
+{
+"title": "The Guest Book",
+"genre": "fiction",
+"sub_genre": "family saga",
+"key_theme": "Legacy, race, privilege",
+"author": "Sarah Blake",
+"language": "English",
+"publisher": "Flatiron Books",
+"age_restrictions": 16,
+"publication_date": "2019-05-07",
+"page_count": 448,
+"total_sales": 300000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "A Woman Is No Man",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "Culture, gender, identity",
+"author": "Etaf Rum",
+"language": "English",
+"publisher": "Harper",
+"age_restrictions": 16,
+"publication_date": "2019-03-05",
+"page_count": 336,
+"total_sales": 250000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "City of Girls",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "Sexuality, freedom, womanhood",
+"author": "Elizabeth Gilbert",
+"language": "English",
+"publisher": "Riverhead Books",
+"age_restrictions": 16,
+"publication_date": "2019-06-04",
+"page_count": 480,
+"total_sales": 200000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "The Test",
+"genre": "non-fiction",
+"sub_genre": "science",
+"key_theme": "Testing, bias, inequality",
+"author": "Adam Alter",
+"language": "English",
+"publisher": "St. Martin's Press",
+"age_restrictions": 16,
+"publication_date": "2022-04-19",
+"page_count": 320,
+"total_sales": 50000,
+"rating": 90,
+"educational_value": 95,
+"social_impact": 95,
+"difficulty": 70,
+"fun_factor": 60
+},
+{
+"title": "Becoming",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Identity, race, politics",
+"author": "Michelle Obama",
+"language": "English",
+"publisher": "Crown",
+"age_restrictions": 16,
+"publication_date": "2018-11-13",
+"page_count": 448,
+"total_sales": 15000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Little Fires Everywhere",
+"genre": "fiction",
+"sub_genre": "family drama",
+"key_theme": "Motherhood, identity, privilege",
+"author": "Celeste Ng",
+"language": "English",
+"publisher": "Penguin Press",
+"age_restrictions": 16,
+"publication_date": "2017-09-12",
+"page_count": 338,
+"total_sales": 1500000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Educated",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Education, family, resilience",
+"author": "Tara Westover",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2018-02-20",
+"page_count": 334,
+"total_sales": 1000000,
+"rating": 90,
+"educational_value": 90,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 60
+},
+{
+"title": "The Immortalists",
+"genre": "fiction",
+"sub_genre": "family drama",
+"key_theme": "Family, destiny, mortality",
+"author": "Chloe Benjamin",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "2018-01-09",
+"page_count": 352,
+"total_sales": 500000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Americanah",
+"genre": "fiction",
+"sub_genre": "romance",
+"key_theme": "Race, identity, love",
+"author": "Chimamanda Ngozi Adichie",
+"language": "English",
+"publisher": "Alfred A. Knopf",
+"age_restrictions": 16,
+"publication_date": "2013-05-14",
+"page_count": 588,
+"total_sales": 500000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Water Dancer",
+"genre": "fiction",
+"sub_genre": "historical fiction",
+"key_theme": "Slavery, memory, freedom",
+"author": "Ta-Nehisi Coates",
+"language": "English",
+"publisher": "One World",
+"age_restrictions": 16,
+"publication_date": "2019-09-24",
+"page_count": 416,
+"total_sales": 400000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "A Promised Land",
+"genre": "memoir",
+"sub_genre": "autobiography",
+"key_theme": "Leadership, politics, memoir",
+"author": "Barack Obama",
+"language": "English",
+"publisher": "Crown",
+"age_restrictions": 16,
+"publication_date": "2020-11-17",
+"page_count": 768,
+"total_sales": 4000000,
+"rating": 95,
+"educational_value": 90,
+"social_impact": 95,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Vanishing Half",
+"genre": "fiction",
+"sub_genre": "family drama",
+"key_theme": "Race, identity, family",
+"author": "Brit Bennett",
+"language": "English",
+"publisher": "Riverhead Books",
+"age_restrictions": 16,
+"publication_date": "2020-06-02",
+"page_count": 352,
+"total_sales": 1000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "The Girl with the Louding Voice",
+"genre": "fiction",
+"sub_genre": "coming-of-age",
+"key_theme": "Gender, education, identity",
+"author": "Abi Daré",
+"language": "English",
+"publisher": "Dutton",
+"age_restrictions": 16,
+"publication_date": "2020-02-04",
+"page_count": 384,
+"total_sales": 500000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "The Girl with the Dragon Tattoo",
+"genre": "novel",
+"sub_genre": "crime fiction",
+"key_theme": "Violence against women, corruption, family secrets",
+"author": "Stieg Larsson",
+"language": "Swedish",
+"publisher": "Norstedts Förlag",
+"age_restrictions": 18,
+"publication_date": "2005-08-19",
+"page_count": 672,
+"total_sales": 11000000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Girl Who Played with Fire",
+"genre": "novel",
+"sub_genre": "crime fiction",
+"key_theme": "Sexual violence, journalism, government corruption",
+"author": "Stieg Larsson",
+"language": "Swedish",
+"publisher": "Norstedts Förlag",
+"age_restrictions": 18,
+"publication_date": "2006-09-01",
+"page_count": 576,
+"total_sales": 9000000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Girl Who Kicked the Hornet's Nest",
+"genre": "novel",
+"sub_genre": "crime fiction",
+"key_theme": "Justice, government corruption, media ethics",
+"author": "Stieg Larsson",
+"language": "Swedish",
+"publisher": "Norstedts Förlag",
+"age_restrictions": 18,
+"publication_date": "2007-05-23",
+"page_count": 864,
+"total_sales": 8000000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 90,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Da Vinci Code",
+"genre": "novel",
+"sub_genre": "thriller",
+"key_theme": "Religion, symbolism, conspiracy",
+"author": "Dan Brown",
+"language": "English",
+"publisher": "Doubleday",
+"age_restrictions": 16,
+"publication_date": "2003-03-18",
+"page_count": 689,
+"total_sales": 82000000,
+"rating": 75,
+"educational_value": 65,
+"social_impact": 70,
+"difficulty": 65,
+"fun_factor": 80
+},
+{
+"title": "Angels and Demons",
+"genre": "novel",
+"sub_genre": "thriller",
+"key_theme": "Religion, science, secret societies",
+"author": "Dan Brown",
+"language": "English",
+"publisher": "Pocket Books",
+"age_restrictions": 16,
+"publication_date": "2000-05-01",
+"page_count": 736,
+"total_sales": 30000000,
+"rating": 75,
+"educational_value": 65,
+"social_impact": 70,
+"difficulty": 65,
+"fun_factor": 80
+},
+
+{
+"title": "The Shadow of the Wind",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Books, love, mystery",
+"author": "Carlos Ruiz Zafón",
+"language": "Spanish",
+"publisher": "Planeta",
+"age_restrictions": 16,
+"publication_date": "2001-04-01",
+"page_count": 487,
+"total_sales": 15000000,
+"rating": 90,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 50,
+"fun_factor": 80
+},
+{
+"title": "The Angel's Game",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Writing, obsession, death",
+"author": "Carlos Ruiz Zafón",
+"language": "Spanish",
+"publisher": "Planeta",
+"age_restrictions": 16,
+"publication_date": "2008-04-01",
+"page_count": 544,
+"total_sales": 6000000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 80,
+"difficulty": 55,
+"fun_factor": 75
+},
+{
+"title": "The Prisoner of Heaven",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Friendship, secrets, redemption",
+"author": "Carlos Ruiz Zafón",
+"language": "Spanish",
+"publisher": "Planeta",
+"age_restrictions": 16,
+"publication_date": "2011-04-01",
+"page_count": 312,
+"total_sales": 4000000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 80,
+"difficulty": 55,
+"fun_factor": 75
+},
+{
+"title": "The Alchemist",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "Personal legend, destiny, spiritual journey",
+"author": "Paulo Coelho",
+"language": "Portuguese",
+"publisher": "Editora Rocco",
+"age_restrictions": 16,
+"publication_date": "1988-01-01",
+"page_count": 208,
+"total_sales": 65000000,
+"rating": 80,
+"educational_value": 70,
+"social_impact": 75,
+"difficulty": 40,
+"fun_factor": 75
+},
+{
+"title": "Eleven Minutes",
+"genre": "novel",
+"sub_genre": "erotic romance",
+"key_theme": "Love, sex, self-discovery",
+"author": "Paulo Coelho",
+"language": "Portuguese",
+"publisher": "Editora Rocco",
+"age_restrictions": 18,
+"publication_date": "2003-01-01",
+"page_count": 320,
+"total_sales": 3500000,
+"rating": 70,
+"educational_value": 60,
+"social_impact": 65,
+"difficulty": 45,
+"fun_factor": 70
+},
+
+{
+"title": "The Unbearable Lightness of Being",
+"genre": "novel",
+"sub_genre": "philosophical fiction",
+"key_theme": "Love, politics, freedom",
+"author": "Milan Kundera",
+"language": "Czech",
+"publisher": "Gaston Gallimard",
+"age_restrictions": 18,
+"publication_date": "1984-10-22",
+"page_count": 312,
+"total_sales": 8000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 60
+},
+{
+"title": "Immortality",
+"genre": "novel",
+"sub_genre": "postmodern fiction",
+"key_theme": "Memory, identity, mortality",
+"author": "Milan Kundera",
+"language": "Czech",
+"publisher": "Gaston Gallimard",
+"age_restrictions": 18,
+"publication_date": "1990-10-02",
+"page_count": 358,
+"total_sales": 6000000,
+"rating": 80,
+"educational_value": 75,
+"social_impact": 70,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "The Book of Laughter and Forgetting",
+"genre": "novel",
+"sub_genre": "postmodern fiction",
+"key_theme": "Memory, history, politics",
+"author": "Milan Kundera",
+"language": "Czech",
+"publisher": "Gaston Gallimard",
+"age_restrictions": 18,
+"publication_date": "1979-04-21",
+"page_count": 320,
+"total_sales": 5000000,
+"rating": 75,
+"educational_value": 70,
+"social_impact": 65,
+"difficulty": 60,
+"fun_factor": 60
+},
+{
+"title": "Perfume: The Story of a Murderer",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Identity, obsession, mortality",
+"author": "Patrick Süskind",
+"language": "German",
+"publisher": "Diogenes Verlag",
+"age_restrictions": 18,
+"publication_date": "1985-09-17",
+"page_count": 255,
+"total_sales": 20000000,
+"rating": 90,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 55,
+"fun_factor": 75
+},
+{
+"title": "The Tin Drum",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "History, politics, individualism",
+"author": "Günter Grass",
+"language": "German",
+"publisher": "Danziger Verlagsgesellschaft mbH",
+"age_restrictions": 18,
+"publication_date": "1959-08-29",
+"page_count": 592,
+"total_sales": 10000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 80,
+"difficulty": 75,
+"fun_factor": 60
+},
+
+{
+"title": "Dog Years",
+"genre": "novel",
+"sub_genre": "autobiographical fiction",
+"key_theme": "Identity, memory, mortality",
+"author": "Günter Grass",
+"language": "German",
+"publisher": "Steidl",
+"age_restrictions": 18,
+"publication_date": "1963-01-01",
+"page_count": 288,
+"total_sales": 3000000,
+"rating": 75,
+"educational_value": 70,
+"social_impact": 65,
+"difficulty": 70,
+"fun_factor": 60
+},
+{
+"title": "My Name is Red",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Art, religion, identity",
+"author": "Orhan Pamuk",
+"language": "Turkish",
+"publisher": "Can Yayınları",
+"age_restrictions": 18,
+"publication_date": "1998-09-01",
+"page_count": 480,
+"total_sales": 4000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 65,
+"fun_factor": 70
+},
+{
+"title": "Snow",
+"genre": "novel",
+"sub_genre": "political fiction",
+"key_theme": "Politics, religion, identity",
+"author": "Orhan Pamuk",
+"language": "Turkish",
+"publisher": "İletişim Yayınları",
+"age_restrictions": 18,
+"publication_date": "2002-11-01",
+"page_count": 436,
+"total_sales": 3500000,
+"rating": 80,
+"educational_value": 75,
+"social_impact": 70,
+"difficulty": 70,
+"fun_factor": 60
+},
+{
+"title": "The Museum of Innocence",
+"genre": "novel",
+"sub_genre": "romance",
+"key_theme": "Love, identity, memory",
+"author": "Orhan Pamuk",
+"language": "Turkish",
+"publisher": "İletişim Yayınları",
+"age_restrictions": 18,
+"publication_date": "2008-08-29",
+"page_count": 536,
+"total_sales": 3000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 65,
+"fun_factor": 70
+},
+{
+"title": "The Name of the Rose",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Religion, philosophy, power",
+"author": "Umberto Eco",
+"language": "Italian",
+"publisher": "Bompiani",
+"age_restrictions": 18,
+"publication_date": "1980-09-01",
+"page_count": 536,
+"total_sales": 15000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 75,
+"fun_factor": 70
+},
+{
+"title": "Foucault's Pendulum",
+"genre": "novel",
+"sub_genre": "postmodern fiction",
+"key_theme": "Philosophy, conspiracy, power",
+"author": "Umberto Eco",
+"language": "Italian",
+"publisher": "Bompiani",
+"age_restrictions": 18,
+"publication_date": "1988-05-10",
+"page_count": 656,
+"total_sales": 5000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 80,
+"fun_factor": 70
+},
+{
+"title": "The Prague Cemetery",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Conspiracy, history, identity",
+"author": "Umberto Eco",
+"language": "Italian",
+"publisher": "Bompiani",
+"age_restrictions": 18,
+"publication_date": "2010-10-13",
+"page_count": 496,
+"total_sales": 3000000,
+"rating": 80,
+"educational_value": 75,
+"social_impact": 70,
+"difficulty": 75,
+"fun_factor": 65
+},
+{
+"title": "The Elegance of the Hedgehog",
+"genre": "novel",
+"sub_genre": "philosophical fiction",
+"key_theme": "Class, philosophy, beauty",
+"author": "Muriel Barbery",
+"language": "French",
+"publisher": "Gallimard",
+"age_restrictions": 14,
+"publication_date": "2006-08-30",
+"page_count": 336,
+"total_sales": 4000000,
+"rating": 80,
+"educational_value": 75,
+"social_impact": 70,
+"difficulty": 65,
+"fun_factor": 75
+},
+{
+"title": "The Book Thief",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Death, love, storytelling",
+"author": "Markus Zusak",
+"language": "English",
+"publisher": "Picador",
+"age_restrictions": 12,
+"publication_date": "2005-03-14",
+"page_count": 584,
+"total_sales": 16000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "All the Light We Cannot See",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "War, survival, humanity",
+"author": "Anthony Doerr",
+"language": "English",
+"publisher": "Scribner",
+"age_restrictions": 14,
+"publication_date": "2014-05-06",
+"page_count": 544,
+"total_sales": 7000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 65,
+"fun_factor": 70
+},
+{
+"title": "The Miniaturist",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Mystery, power, rebellion",
+"author": "Jessie Burton",
+"language": "English",
+"publisher": "Ecco",
+"age_restrictions": 12,
+"publication_date": "2014-07-03",
+"page_count": 432,
+"total_sales": 1500000,
+"rating": 75,
+"educational_value": 70,
+"social_impact": 65,
+"difficulty": 60,
+"fun_factor": 70
+},
+
+{
+"title": "Conversations with Friends",
+"genre": "novel",
+"sub_genre": "literary fiction",
+"key_theme": "Love, friendship, sexuality",
+"author": "Sally Rooney",
+"language": "English",
+"publisher": "Faber & Faber",
+"age_restrictions": 16,
+"publication_date": "2017-05-01",
+"page_count": 304,
+"total_sales": 2000000,
+"rating": 80,
+"educational_value": 75,
+"social_impact": 70,
+"difficulty": 55,
+"fun_factor": 65
+},
+{
+"title": "The Bear and the Nightingale",
+"genre": "novel",
+"sub_genre": "historical fantasy",
+"key_theme": "Folklore, magic, female empowerment",
+"author": "Katherine Arden",
+"language": "English",
+"publisher": "Del Rey Books",
+"age_restrictions": 14,
+"publication_date": "2017-01-10",
+"page_count": 336,
+"total_sales": 1000000,
+"rating": 80,
+"educational_value": 70,
+"social_impact": 65,
+"difficulty": 60,
+"fun_factor": 75
+},
+{
+"title": "The Night Circus",
+"genre": "novel",
+"sub_genre": "fantasy",
+"key_theme": "Magic, competition, love",
+"author": "Erin Morgenstern",
+"language": "English",
+"publisher": "Doubleday",
+"age_restrictions": 14,
+"publication_date": "2011-09-13",
+"page_count": 387,
+"total_sales": 5000000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 70,
+"difficulty": 65,
+"fun_factor": 80
+},
+{
+"title": "A Gentleman in Moscow",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Class, politics, resilience",
+"author": "Amor Towles",
+"language": "English",
+"publisher": "Viking Press",
+"age_restrictions": 14,
+"publication_date": "2016-09-06",
+"page_count": 480,
+"total_sales": 3000000,
+"rating": 90,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 75
+},
+{
+"title": "The Goldfinch",
+"genre": "novel",
+"sub_genre": "coming-of-age",
+"key_theme": "Loss, art, identity",
+"author": "Donna Tartt",
+"language": "English",
+"publisher": "Little, Brown and Company",
+"age_restrictions": 16,
+"publication_date": "2013-10-22",
+"page_count": 771,
+"total_sales": 2000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 70,
+"fun_factor": 70
+},
+{
+"title": "The Secret History",
+"genre": "novel",
+"sub_genre": "mystery",
+"key_theme": "Morality, elitism, murder",
+"author": "Donna Tartt",
+"language": "English",
+"publisher": "Alfred A. Knopf",
+"age_restrictions": 16,
+"publication_date": "1992-09-05",
+"page_count": 559,
+"total_sales": 1000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 75,
+"fun_factor": 70
+},
+{
+"title": "Wuthering Heights",
+"genre": "novel",
+"sub_genre": "Gothic romance",
+"key_theme": "Love, revenge, class",
+"author": "Emily Bronte",
+"language": "English",
+"publisher": "Thomas Cautley Newby",
+"age_restrictions": 14,
+"publication_date": "1847-12-29",
+"page_count": 300,
+"total_sales": 5000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "Jane Eyre",
+"genre": "novel",
+"sub_genre": "Gothic romance",
+"key_theme": "Love, independence, morality",
+"author": "Charlotte Bronte",
+"language": "English",
+"publisher": "Smith, Elder & Co.",
+"age_restrictions": 14,
+"publication_date": "1847-10-16",
+"page_count": 624,
+"total_sales": 6000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 75
+},
+{
+"title": "Pride and Prejudice",
+"genre": "novel",
+"sub_genre": "regency romance",
+"key_theme": "Love, marriage, class",
+"author": "Jane Austen",
+"language": "English",
+"publisher": "T. Egerton, Whitehall",
+"age_restrictions": 12,
+"publication_date": "1813-01-28",
+"page_count": 279,
+"total_sales": 26000000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 35,
+"fun_factor": 80
+},
+{
+"title": "Sense and Sensibility",
+"genre": "novel",
+"sub_genre": "regency romance",
+"key_theme": "Love, family, society",
+"author": "Jane Austen",
+"language": "English",
+"publisher": "Thomas Egerton, Military Library",
+"age_restrictions": 12,
+"publication_date": "1811-10-30",
+"page_count": 409,
+"total_sales": 1000000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 35,
+"fun_factor": 75
+},
+{
+"title": "Norwegian Wood",
+"genre": "novel",
+"sub_genre": "romance",
+"key_theme": "Love, loss, mental health",
+"author": "Haruki Murakami",
+"language": "Japanese",
+"publisher": "Kodansha",
+"age_restrictions": 16,
+"publication_date": "1987-09-01",
+"page_count": 296,
+"total_sales": 4500000,
+"rating": 90,
+"educational_value": 75,
+"social_impact": 80,
+"difficulty": 55,
+"fun_factor": 70
+},
+{
+"title": "1Q84",
+"genre": "novel",
+"sub_genre": "speculative fiction",
+"key_theme": "Parallel universes, cults, destiny",
+"author": "Haruki Murakami",
+"language": "Japanese",
+"publisher": "Shinchosha",
+"age_restrictions": 18,
+"publication_date": "2009-05-29",
+"page_count": 1157,
+"total_sales": 3000000,
+"rating": 85,
+"educational_value": 70,
+"social_impact": 75,
+"difficulty": 75,
+"fun_factor": 65
+},
+{
+"title": "Kafka on the Shore",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "Identity, fate, consciousness",
+"author": "Haruki Murakami",
+"language": "Japanese",
+"publisher": "Kodansha",
+"age_restrictions": 16,
+"publication_date": "2002-09-20",
+"page_count": 505,
+"total_sales": 2500000,
+"rating": 90,
+"educational_value": 70,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 80
+},
+{
+"title": "Pachinko",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Identity, family, discrimination",
+"author": "Min Jin Lee",
+"language": "English",
+"publisher": "Grand Central Publishing",
+"age_restrictions": 14,
+"publication_date": "2017-02-07",
+"page_count": 496,
+"total_sales": 1500000,
+"rating": 95,
+"educational_value": 85,
+"social_impact": 90,
+"difficulty": 50,
+"fun_factor": 75
+},
+{
+"title": "The Vegetarian",
+"genre": "novel",
+"sub_genre": "psychological fiction",
+"key_theme": "Identity, mental health, societal pressure",
+"author": "Han Kang",
+"language": "Korean",
+"publisher": "Portobello Books",
+"age_restrictions": 18,
+"publication_date": "2007-10-30",
+"page_count": 183,
+"total_sales": 1200000,
+"rating": 85,
+"educational_value": 75,
+"social_impact": 80,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "Please Look After Mom",
+"genre": "novel",
+"sub_genre": "family drama",
+"key_theme": "Motherhood, family, memory",
+"author": "Kyung-sook Shin",
+"language": "Korean",
+"publisher": "Vintage Books",
+"age_restrictions": 14,
+"publication_date": "2008-04-03",
+"page_count": 272,
+"total_sales": 1000000,
+"rating": 90,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 40,
+"fun_factor": 70
+},
+{
+"title": "The Wind-Up Bird Chronicle",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "Identity, memory, trauma",
+"author": "Haruki Murakami",
+"language": "Japanese",
+"publisher": "Shinchosha",
+"age_restrictions": 16,
+"publication_date": "1994-06-01",
+"page_count": 607,
+"total_sales": 900000,
+"rating": 95,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 65,
+"fun_factor": 75
+},
+{
+"title": "Convenience Store Woman",
+"genre": "novel",
+"sub_genre": "contemporary fiction",
+"key_theme": "Conformity, societal expectations, identity",
+"author": "Sayaka Murata",
+"language": "Japanese",
+"publisher": "Grove Press",
+"age_restrictions": 16,
+"publication_date": "2016-07-27",
+"page_count": 176,
+"total_sales": 800000,
+"rating": 85,
+"educational_value": 70,
+"social_impact": 75,
+"difficulty": 45,
+"fun_factor": 80
+},
+{
+"title": "The Three-Body Problem",
+"genre": "novel",
+"sub_genre": "science fiction",
+"key_theme": "Alien contact, technology, politics",
+"author": "Liu Cixin",
+"language": "Chinese",
+"publisher": "Chongqing Publishing House",
+"age_restrictions": 16,
+"publication_date": "2008-06-01",
+"page_count": 400,
+"total_sales": 700000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 70,
+"fun_factor": 75
+},
+{
+"title": "The Poppy War",
+"genre": "novel",
+"sub_genre": "fantasy",
+"key_theme": "War, power, identity",
+"author": "R.F. Kuang",
+"language": "English",
+"publisher": "Harper Voyager",
+"age_restrictions": 16,
+"publication_date": "2018-05-01",
+"page_count": 544,
+"total_sales": 600000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 80
+},
+{
+"title": "The God of Small Things",
+"genre": "novel",
+"sub_genre": "family saga",
+"key_theme": "Love, family, social norms",
+"author": "Arundhati Roy",
+"language": "English",
+"publisher": "IndiaInk",
+"age_restrictions": 16,
+"publication_date": "1997-04-04",
+"page_count": 340,
+"total_sales": 500000,
+"rating": 90,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 55,
+"fun_factor": 70
+}
+,
+{
+"title": "The Glass Palace",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Colonialism, identity, class",
+"author": "Amitav Ghosh",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 14,
+"publication_date": "2000-09-01",
+"page_count": 528,
+"total_sales": 450000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The White Tiger",
+"genre": "novel",
+"sub_genre": "satirical fiction",
+"key_theme": "Social mobility, corruption, inequality",
+"author": "Aravind Adiga",
+"language": "English",
+"publisher": "Atlantic Books",
+"age_restrictions": 16,
+"publication_date": "2008-09-22",
+"page_count": 321,
+"total_sales": 400000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 75
+},
+{
+"title": "The Joy Luck Club",
+"genre": "novel",
+"sub_genre": "family saga",
+"key_theme": "Mother-daughter relationships, cultural identity",
+"author": "Amy Tan",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 12,
+"publication_date": "1989-03-01",
+"page_count": 288,
+"total_sales": 250000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 40,
+"fun_factor": 70
+},
+{
+"title": "The Satanic Verses",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "Religion, identity, immigration",
+"author": "Salman Rushdie",
+"language": "English",
+"publisher": "Viking Press",
+"age_restrictions": 18,
+"publication_date": "1988-09-26",
+"page_count": 576,
+"total_sales": 200000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 85,
+"difficulty": 75,
+"fun_factor": 60
+},
+{
+"title": "Midnight's Children",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "National identity, history, family",
+"author": "Salman Rushdie",
+"language": "English",
+"publisher": "Jonathan Cape",
+"age_restrictions": 16,
+"publication_date": "1981-09-24",
+"page_count": 647,
+"total_sales": 180000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 65,
+"fun_factor": 75
+},
+{
+"title": "The Joy Luck Club",
+"genre": "novel",
+"sub_genre": "family saga",
+"key_theme": "Mother-daughter relationships, cultural identity",
+"author": "Amy Tan",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 12,
+"publication_date": "1989-03-01",
+"page_count": 288,
+"total_sales": 250000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 40,
+"fun_factor": 70
+},
+{
+"title": "The Ground Beneath Her Feet",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "Love, music, fame",
+"author": "Salman Rushdie",
+"language": "English",
+"publisher": "Henry Holt and Company",
+"age_restrictions": 16,
+"publication_date": "1999-09-01",
+"page_count": 592,
+"total_sales": 150000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Inheritance of Loss",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Identity, globalization, social class",
+"author": "Kiran Desai",
+"language": "English",
+"publisher": "Grove Press",
+"age_restrictions": 16,
+"publication_date": "2006-02-16",
+"page_count": 384,
+"total_sales": 120000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 55,
+"fun_factor": 70
+},
+{
+"title": "The Hungry Tide",
+"genre": "novel",
+"sub_genre": "contemporary fiction",
+"key_theme": "Identity, nature, history",
+"author": "Amitav Ghosh",
+"language": "English",
+"publisher": "Houghton Mifflin Harcourt",
+"age_restrictions": 16,
+"publication_date": "2004-10-07",
+"page_count": 352,
+"total_sales": 100000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "Sea of Poppies",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Identity, colonialism, opium trade",
+"author": "Amitav Ghosh",
+"language": "English",
+"publisher": "Farrar, Straus and Giroux",
+"age_restrictions": 16,
+"publication_date": "2008-10-14",
+"page_count": 528,
+"total_sales": 90000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 65,
+"fun_factor": 70
+},
+{
+"title": "River of Smoke",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Identity, colonialism, opium trade",
+"author": "Amitav Ghosh",
+"language": "English",
+"publisher": "Farrar, Straus and Giroux",
+"age_restrictions": 16,
+"publication_date": "2011-09-27",
+"page_count": 528,
+"total_sales": 80000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 65,
+"fun_factor": 70
+},
+
+{
+"title": "The Poppy War",
+"genre": "novel",
+"sub_genre": "fantasy",
+"key_theme": "War, power, identity",
+"author": "R.F. Kuang",
+"language": "English",
+"publisher": "Harper Voyager",
+"age_restrictions": 16,
+"publication_date": "2018-05-01",
+"page_count": 544,
+"total_sales": 70000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 70,
+"fun_factor": 80
+},
+{
+"title": "Pachinko",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Family, identity, discrimination",
+"author": "Min Jin Lee",
+"language": "English",
+"publisher": "Grand Central Publishing",
+"age_restrictions": 16,
+"publication_date": "2017-02-07",
+"page_count": 496,
+"total_sales": 60000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "The Calligrapher's Daughter",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Family, identity, tradition",
+"author": "Eugenia Kim",
+"language": "English",
+"publisher": "Henry Holt and Company",
+"age_restrictions": 16,
+"publication_date": "2009-08-04",
+"page_count": 416,
+"total_sales": 50000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Convenience Store Woman",
+"genre": "novel",
+"sub_genre": "contemporary fiction",
+"key_theme": "Identity, societal norms, acceptance",
+"author": "Sayaka Murata",
+"language": "Japanese",
+"publisher": "Ginza Sony Park",
+"age_restrictions": 16,
+"publication_date": "2016-07-27",
+"page_count": 163,
+"total_sales": 45000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 45,
+"fun_factor": 75
+},
+{
+"title": "The Three-Body Problem",
+"genre": "novel",
+"sub_genre": "science fiction",
+"key_theme": "Alien contact, physics, politics",
+"author": "Liu Cixin",
+"language": "Chinese",
+"publisher": "Chongqing Publishing House",
+"age_restrictions": 16,
+"publication_date": "2008-06-01",
+"page_count": 416,
+"total_sales": 40000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 75,
+"fun_factor": 80
+},
+
+{
+"title": "The White Tiger",
+"genre": "novel",
+"sub_genre": "satire",
+"key_theme": "Social inequality, corruption, ambition",
+"author": "Aravind Adiga",
+"language": "English",
+"publisher": "Atlantic Books",
+"age_restrictions": 16,
+"publication_date": "2008-09-30",
+"page_count": 304,
+"total_sales": 30000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 50,
+"fun_factor": 75
+},
+{
+"title": "The Palace of Illusions",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Mythology, identity, gender roles",
+"author": "Chitra Banerjee Divakaruni",
+"language": "English",
+"publisher": "Doubleday",
+"age_restrictions": 16,
+"publication_date": "2008-02-12",
+"page_count": 384,
+"total_sales": 25000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 55,
+"fun_factor": 70
+},
+{
+"title": "A Fine Balance",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Poverty, caste system, political corruption",
+"author": "Rohinton Mistry",
+"language": "English",
+"publisher": "McClelland and Stewart",
+"age_restrictions": 16,
+"publication_date": "1995-01-01",
+"page_count": 624,
+"total_sales": 20000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 70,
+"fun_factor": 70
+},
+{
+"title": "The God of Small Things",
+"genre": "novel",
+"sub_genre": "postcolonial fiction",
+"key_theme": "Family, caste system, forbidden love",
+"author": "Arundhati Roy",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "1997-04-04",
+"page_count": 336,
+"total_sales": 15000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 45,
+"fun_factor": 70
+}
+,
+{
+"title": "The Joy Luck Club",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Family, culture, identity",
+"author": "Amy Tan",
+"language": "English",
+"publisher": "G. P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "1989-03-28",
+"page_count": 288,
+"total_sales": 10000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 40,
+"fun_factor": 75
+},
+{
+"title": "Heart of Darkness",
+"genre": "novel",
+"sub_genre": "modernist literature",
+"key_theme": "Colonialism, imperialism, human nature",
+"author": "Joseph Conrad",
+"language": "English",
+"publisher": "Blackwood's Magazine",
+"age_restrictions": 16,
+"publication_date": "1899-02-10",
+"page_count": 98,
+"total_sales": 8000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "Kim",
+"genre": "novel",
+"sub_genre": "adventure fiction",
+"key_theme": "Identity, colonialism, espionage",
+"author": "Rudyard Kipling",
+"language": "English",
+"publisher": "Macmillan Publishers",
+"age_restrictions": 16,
+"publication_date": "1901-10-01",
+"page_count": 366,
+"total_sales": 7000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "A Passage to India",
+"genre": "novel",
+"sub_genre": "modernist literature",
+"key_theme": "Racial tension, cultural clash, colonialism",
+"author": "E.M. Forster",
+"language": "English",
+"publisher": "Edward Arnold",
+"age_restrictions": 16,
+"publication_date": "1924-06-04",
+"page_count": 322,
+"total_sales": 6000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 55,
+"fun_factor": 70
+},
+{
+"title": "The Tale of Genji",
+"genre": "novel",
+"sub_genre": "classic literature",
+"key_theme": "Love, relationships, court life",
+"author": "Murasaki Shikibu",
+"language": "Japanese",
+"publisher": "Unknown",
+"age_restrictions": 16,
+"publication_date": "1008",
+"page_count": 1220,
+"total_sales": 5000,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 80,
+"fun_factor": 65
+},
+{
+"title": "The Red Chamber",
+"genre": "novel",
+"sub_genre": "classic literature",
+"key_theme": "Love, relationships, family",
+"author": "Pauline A. Chen",
+"language": "English",
+"publisher": "Anchor Books",
+"age_restrictions": 16,
+"publication_date": "2012-01-17",
+"page_count": 384,
+"total_sales": 4000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "Balzac and the Little Chinese Seamstress",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Cultural revolution, censorship, intellectual freedom",
+"author": "Dai Sijie",
+"language": "French",
+"publisher": "Gallimard",
+"age_restrictions": 16,
+"publication_date": "2000-08-31",
+"page_count": 184,
+"total_sales": 3500,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "Snow Falling on Cedars",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Racism, love, justice",
+"author": "David Guterson",
+"language": "English",
+"publisher": "Harcourt Brace",
+"age_restrictions": 16,
+"publication_date": "1994-09-12",
+"page_count": 460,
+"total_sales": 3000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 50,
+"fun_factor": 70
+},
+{
+"title": "A Dark Night's Passing",
+"genre": "novel",
+"sub_genre": "psychological fiction",
+"key_theme": "Sexuality, identity, existentialism",
+"author": "Naoya Shiga",
+"language": "Japanese",
+"publisher": "Iwanami Shoten",
+"age_restrictions": 16,
+"publication_date": "1921-01-01",
+"page_count": 400,
+"total_sales": 2500,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 70,
+"fun_factor": 60
+},
+{
+"title": "The Hunting Gun",
+"genre": "novel",
+"sub_genre": "family drama",
+"key_theme": "Love, family, tragedy",
+"author": "Yasushi Inoue",
+"language": "Japanese",
+"publisher": "Shinchosha",
+"age_restrictions": 16,
+"publication_date": "1949-01-01",
+"page_count": 168,
+"total_sales": 2000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 65
+},
+{
+"title": "Kokoro",
+"genre": "novel",
+"sub_genre": "psychological fiction",
+"key_theme": "Friendship, love, cultural clash",
+"author": "Natsume Soseki",
+"language": "Japanese",
+"publisher": "Kokumin no Tomo",
+"age_restrictions": 16,
+"publication_date": "1914-08-20",
+"page_count": 248,
+"total_sales": 1500,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 65,
+"fun_factor": 60
+}
+,
+{
+"title": "Spring Snow",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Love, tradition, modernity",
+"author": "Yukio Mishima",
+"language": "Japanese",
+"publisher": "Shinchosha",
+"age_restrictions": 16,
+"publication_date": "1969-01-01",
+"page_count": 389,
+"total_sales": 1000,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 70
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+"title": "Interpreter of Maladies",
+"genre": "short story collection",
+"sub_genre": "realistic fiction",
+"key_theme": "Cultural identity, communication, relationships",
+"author": "Jhumpa Lahiri",
+"language": "English",
+"publisher": "Houghton Mifflin",
+"age_restrictions": 14,
+"publication_date": "1999-05-22",
+"page_count": 198,
+"total_sales": 900,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 45,
+"fun_factor": 70
+},
+{
+"title": "The Joy Luck Club",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Mother-daughter relationships, cultural identity, family",
+"author": "Amy Tan",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "1989-03-01",
+"page_count": 288,
+"total_sales": 800,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 40,
+"fun_factor": 70
+},
+{
+"title": "Heart of Darkness",
+"genre": "novella",
+"sub_genre": "modernist literature",
+"key_theme": "Colonialism, imperialism, morality",
+"author": "Joseph Conrad",
+"language": "English",
+"publisher": "Blackwood's Magazine",
+"age_restrictions": 16,
+"publication_date": "1899-02-01",
+"page_count": 96,
+"total_sales": 700,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 65,
+"fun_factor": 60
+},
+{
+"title": "Kim",
+"genre": "novel",
+"sub_genre": "picaresque",
+"key_theme": "Identity, colonialism, espionage",
+"author": "Rudyard Kipling",
+"language": "English",
+"publisher": "Macmillan",
+"age_restrictions": 14,
+"publication_date": "1901-10-01",
+"page_count": 324,
+"total_sales": 600,
+"rating": 80,
+"educational_value": 75,
+"social_impact": 70,
+"difficulty": 50,
+"fun_factor": 70
+},
+
+{
+"title": "The Wind-Up Bird Chronicle",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "Identity, memory, war",
+"author": "Haruki Murakami",
+"language": "Japanese",
+"publisher": "Shinchosha",
+"age_restrictions": 16,
+"publication_date": "1994-01-01",
+"page_count": 607,
+"total_sales": 300,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 65,
+"fun_factor": 70
+},
+{
+"title": "The Joy Luck Club",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Mother-daughter relationships, cultural identity, family",
+"author": "Amy Tan",
+"language": "English",
+"publisher": "G.P. Putnam's Sons",
+"age_restrictions": 16,
+"publication_date": "1989-03-01",
+"page_count": 288,
+"total_sales": 200,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 40,
+"fun_factor": 70
+},
+{
+"title": "The White Tiger",
+"genre": "novel",
+"sub_genre": "satire",
+"key_theme": "Class, corruption, ambition",
+"author": "Aravind Adiga",
+"language": "English",
+"publisher": "Atlantic Books",
+"age_restrictions": 16,
+"publication_date": "2008-09-30",
+"page_count": 304,
+"total_sales": 150,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 55,
+"fun_factor": 70
+},
+{
+"title": "Pachinko",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Family, identity, discrimination",
+"author": "Min Jin Lee",
+"language": "English",
+"publisher": "Grand Central Publishing",
+"age_restrictions": 16,
+"publication_date": "2017-02-07",
+"page_count": 496,
+"total_sales": 100,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 75
+},
+
+{
+"title": "The Glass Palace",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Colonialism, war, identity",
+"author": "Amitav Ghosh",
+"language": "English",
+"publisher": "Random House",
+"age_restrictions": 16,
+"publication_date": "2000-09-12",
+"page_count": 496,
+"total_sales": 30,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 60,
+"fun_factor": 70
+},
+{
+"title": "A Fine Balance",
+"genre": "novel",
+"sub_genre": "historical fiction",
+"key_theme": "Social justice, caste, poverty",
+"author": "Rohinton Mistry",
+"language": "English",
+"publisher": "McClelland & Stewart",
+"age_restrictions": 16,
+"publication_date": "1995-06-01",
+"page_count": 624,
+"total_sales": 25,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 70,
+"fun_factor": 60
+},
+{
+"title": "Midnight's Children",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "Identity, history, nationalism",
+"author": "Salman Rushdie",
+"language": "English",
+"publisher": "Jonathan Cape",
+"age_restrictions": 16,
+"publication_date": "1981-09-28",
+"page_count": 536,
+"total_sales": 20,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 70,
+"fun_factor": 70
+},
+{
+"title": "The Ministry of Utmost Happiness",
+"genre": "novel",
+"sub_genre": "magical realism",
+"key_theme": "Identity, politics, social justice",
+"author": "Arundhati Roy",
+"language": "English",
+"publisher": "Hamish Hamilton",
+"age_restrictions": 16,
+"publication_date": "2017-06-06",
+"page_count": 464,
+"total_sales": 10,
+"rating": 85,
+"educational_value": 80,
+"social_impact": 75,
+"difficulty": 65,
+"fun_factor": 60
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+"title": "The God of Small Things",
+"genre": "novel",
+"sub_genre": "postcolonial literature",
+"key_theme": "Family, caste, love",
+"author": "Arundhati Roy",
+"language": "English",
+"publisher": "IndiaInk",
+"age_restrictions": 16,
+"publication_date": "1997-04-04",
+"page_count": 340,
+"total_sales": 400,
+"rating": 90,
+"educational_value": 85,
+"social_impact": 80,
+"difficulty": 50,
+"fun_factor": 75
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+];
+
+
+function search() {
+  var input_title = document.getElementById("title").value.toLowerCase();
+  var input_genre = document.getElementById("genre").value.toLowerCase();
+  var input_sub_genre = document.getElementById("sub_genre").value.toLowerCase();
+  var input_key_theme = document.getElementById("key_theme").value.toLowerCase();
+  var input_author = document.getElementById("author").value.toLowerCase();
+  var input_language = document.getElementById("language").value.toLowerCase();
+  var input_publisher = document.getElementById("publisher").value.toLowerCase();
+  var input_age_restrictions = document.getElementById("age_restrictions").value;
+  var input_publication_date = document.getElementById("publication_date").value;
+  var input_page_count = document.getElementById("page_count").value;
+  var input_total_sales = document.getElementById("total_sales").value;
+  var input_rating = document.getElementById("rating").value;
+  var input_educational_value = document.getElementById("educational_value").value;
+  var input_social_impact = document.getElementById("social_impact").value;
+  var input_difficulty = document.getElementById("difficulty").value;
+  var input_fun_factor = document.getElementById("fun_factor").value;
+
+
+  var results = [];
+
+  for (var i = 0; i < books.length; i++) {
+    var book = books[i];
+    if (input_title && !book.title.toLowerCase().includes(input_title)) {
+continue;
+}
+if (input_genre && !book.genre.toLowerCase().includes(input_genre)) {
+continue;
+}
+if (input_sub_genre && !book.sub_genre.toLowerCase().includes(input_sub_genre)) {
+continue;
+}
+if (input_key_theme && !book.key_theme.toLowerCase().includes(input_key_theme)) {
+continue;
+}
+if (input_author && !book.author.toLowerCase().includes(input_author)) {
+continue;
+}
+if (input_language && !book.language.toLowerCase().includes(input_language)) {
+continue;
+}
+if (input_publisher && !book.publisher.toLowerCase().includes(input_publisher)) {
+continue;
+}
+if (input_age_restrictions && book.age_restrictions < Number(input_age_restrictions)) {
+continue;
+}
+
+
+if (input_publication_date && !String(book.publication_date).startsWith(input_publication_date)) {
+continue;
+}
+if (input_page_count && book.page_count < Number(input_page_count)) {
+continue;
+}
+if (input_total_sales && book.total_sales < Number(input_total_sales)) {
+continue;
+}
+
+if (input_rating && book.rating < Number(input_rating)) {
+continue;
+}
+if (input_educational_value && book.educational_value < Number(input_educational_value)) {
+continue;
+}
+if (input_social_impact && book.social_impact < Number(input_social_impact)) {
+continue;
+}
+if (input_difficulty && book.difficulty < Number(input_difficulty)) {
+continue;
+}
+if (input_fun_factor && book.fun_factor < Number(input_fun_factor)) {
+continue;
+}
+
+
+
+if (
+  !input_title &&
+  !input_genre &&
+  !input_sub_genre &&
+  !input_key_theme &&
+  !input_author &&
+  !input_language &&
+  !input_publisher &&
+  !input_age_restrictions &&
+  !input_publication_date &&
+  !input_page_count &&
+  !input_total_sales &&
+  !input_rating &&
+  !input_educational_value &&
+  !input_social_impact &&
+  !input_difficulty &&
+  !input_fun_factor
+) {
+  var tableBody = document.querySelector("#search-results tbody");
+  tableBody.innerHTML = "";
+  return;
+}
+
+
+
+
+results.push(book);
+}
+
+
+
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+            if (results[i].title.toLowerCase() === uniqueResults[j].title.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+for (var i = 0; i < results.length; i++) {
+var book = results[i];
+var row = document.createElement("tr");
+row.innerHTML = "<td>" + book.title + "</td>" +
+"<td>" + book.genre + "</td>" +
+"<td>" + book.sub_genre + "</td>" +
+"<td>" + book.key_theme + "</td>" +
+"<td>" + book.author + "</td>" +
+"<td>" + book.language + "</td>" +
+"<td>" + book.publisher + "</td>" +
+"<td>" + book.age_restrictions + "</td>" +
+"<td>" + book.publication_date + "</td>" +
+"<td>" + book.page_count + "</td>" +
+"<td>" + book.total_sales + "</td>" +
+"<td>" + book.rating + "</td>" +
+"<td>" + book.educational_value + "</td>" +
+"<td>" + book.social_impact + "</td>" +
+"<td>" + book.difficulty + "</td>" +
+"<td>" + book.fun_factor + "</td>";
+tableBody.appendChild(row);
+}
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = parseFloat(x.innerHTML);
+        y = parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+
+    
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+
+
+    
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+
+</script>
+
+</body>
+</html>

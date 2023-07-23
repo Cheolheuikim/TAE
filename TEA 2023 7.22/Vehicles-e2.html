@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Search Electric Car</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+	background-color: #000;
+	font-family: 'Orbitron', sans-serif;
+	color: #0f0;
+	position: relative;
+}
+
+#matrix-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40%;
+	z-index: 1;
+}
+
+h1, form, table {
+	position: relative;
+	z-index: 2;
+}
+
+h1 {
+	text-align: center;
+	padding: 20px;
+	color: #0f0;
+	font-size: 2.5em;
+	border-bottom: 1px solid #0f0;
+}
+
+		img {
+			border-radius: 4px;
+			padding: 5px;
+			width: 350px;
+		}
+
+		input[type="text"],
+		input[type="number"] {
+			padding: 10px;
+			margin: 10px;
+			width: 200px;
+			border: 1px solid #0f0;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+			background: #000;
+			color: #0f0;
+		}
+
+		button[type="submit"] {
+			padding: 10px;
+			margin: 10px;
+			background-color: #000;
+			border: 2px solid #0f0;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			color: #0f0;
+		}
+
+		table {
+			border-collapse: collapse;
+			margin: 10px auto;
+			font-size: 16px;
+			color: #0f0;
+			width: 90%;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #0f0;
+		}
+
+		th {
+			background-color: #000;
+			cursor: pointer;
+		}
+
+		td:nth-child(2n+1) {
+			background-color: #111;
+		}
+
+		td:nth-child(2n) {
+			background-color: #222;
+		}
+
+
+    th {
+  color: #0f0;  
+}
+
+th span {
+  color: #080;  
+}
+
+
+
+</style>
+</head>
+<body>
+	<h1>Search Electric Car</h1>
+	<img src="">
+
+  <canvas id="matrix-canvas"></canvas>
+
+
+	<form onsubmit="search(); return false;">
+        <input type="text" id="car_type" placeholder="car type">
+        <input type="text" id="model" placeholder="model">
+        <input type="text" id="company" placeholder="company">
+        <input type="text" id="safety_features" placeholder="safety features">
+        <input type="text" id="driving_mode" placeholder="driving mode">
+        <input type="text" id="battery_type" placeholder="battery type">
+        <input type="number" id="rating" placeholder="rating(0~100)">
+        <input type="number" id="driving_stability" placeholder="driving stability(0~100)">
+        <input type="number" id="braking_performance" placeholder="braking performance(0~100)">
+        <input type="number" id="durability" placeholder="durability(0~100)">
+        <input type="number" id="seating_capacity" placeholder="seating capacity">
+        <input type="number" id="total_sales" placeholder="total sales">
+        <input type="number" id="release_date" placeholder="release date(year)">
+        <input type="number" id="price" placeholder="price($)">
+        <input type="number" id="top_speed" placeholder="top speed(km/h)">
+        <input type="number" id="acceleration" placeholder="acceleration(s)">
+        <input type="number" id="driving_range" placeholder="driving range(km)">
+        <input type="number" id="charging_time" placeholder="charging time(h)">
+        <input type="number" id="maximum_power_output" placeholder="maximum power output(kW)">
+        <input type="number" id="maximum_torque" placeholder="maximum torque(Nm)">
+        <input type="number" id="maximum_trunk_volume" placeholder="maximum trunk volume(l)">
+        <input type="number" id="wheel_size" placeholder="wheel size(inches)">
+<button type="submit">Search</button>
+</form>
+<table id="search-results">
+<thead>
+<tr>
+  <th onclick="sortTable(0)">Car Type<span id="sortIndicator0">▲▼</span></th>
+  <th onclick="sortTable(1)">Model<span id="sortIndicator1">▲▼</span></th>
+  <th onclick="sortTable(2)">Company<span id="sortIndicator2">▲▼</span></th>
+  <th onclick="sortTable(3)">Safety Features<span id="sortIndicator3">▲▼</span></th>
+  <th onclick="sortTable(4)">Driving Mode<span id="sortIndicator4">▲▼</span></th>
+  <th onclick="sortTable(5)">Battery Type<span id="sortIndicator5">▲▼</span></th>
+  <th onclick="sortTable(6)">Rating(0~100)<span id="sortIndicator6">▲▼</span></th>
+  <th onclick="sortTable(7)">Driving Stability(0~100)<span id="sortIndicator7">▲▼</span></th>
+  <th onclick="sortTable(8)">Braking Performance(0~100)<span id="sortIndicator8">▲▼</span></th>
+  <th onclick="sortTable(9)">Durability(0~100)<span id="sortIndicator9">▲▼</span></th>
+  <th onclick="sortTable(10)">Seating Capacity<span id="sortIndicator10">▲▼</span></th>
+  <th onclick="sortTable(11)">Total Sales<span id="sortIndicator11">▲▼</span></th>
+  <th onclick="sortTable(12)">Release Date<span id="sortIndicator12">▲▼</span></th>
+  <th onclick="sortTable(13)">Price($)<span id="sortIndicator13">▲▼</span></th>
+  <th onclick="sortTable(14)">Top Speed(Km/h)<span id="sortIndicator14">▲▼</span></th>
+  <th onclick="sortTable(15)">Acceleration(s)<span id="sortIndicator15">▲▼</span></th>
+  <th onclick="sortTable(16)">Driving Range(km)<span id="sortIndicator16">▲▼</span></th>
+  <th onclick="sortTable(17)">Charging Time(h)<span id="sortIndicator17">▲▼</span></th>
+  <th onclick="sortTable(18)">Maximum Power Output(kW)<span id="sortIndicator18">▲▼</span></th>
+  <th onclick="sortTable(19)">Maximum Torque(Nm)<span id="sortIndicator19">▲▼</span></th>
+  <th onclick="sortTable(20)">Maximum Trunk Volume(l)<span id="sortIndicator20">▲▼</span></th>
+  <th onclick="sortTable(21)">Wheel Size(inches)<span id="sortIndicator21">▲▼</span></th>
+  
+  </tr>
+  </thead>
+  <tbody id="search-results-body"></tbody>
+  </table>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<script>
+var cars = [
+{
+"car_type": "Hatchback",
+"model": "Honda e",
+"company": "Honda",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Rear Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 86,
+"driving_stability": 80,
+"braking_performance": 78,
+"durability": 85,
+"seating_capacity": 4,
+"total_sales": 15000,
+"release_date": "2020-10-01",
+"price": 31490,
+"top_speed": 145,
+"acceleration": 8.3,
+"driving_range": 220,
+"charging_time": 5.0,
+"maximum_power_output": 152,
+"maximum_torque": 232,
+"maximum_trunk_volume": 1716,
+"wheel_size": 16
+},
+{
+"car_type": "SUV",
+"model": "Mach-E GT",
+"company": "Ford",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 90,
+"driving_stability": 88,
+"braking_performance": 87,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2021-06-15",
+"price": 61000,
+"top_speed": 200,
+"acceleration": 3.5,
+"driving_range": 270,
+"charging_time": 10.5,
+"maximum_power_output": 480,
+"maximum_torque": 634,
+"maximum_trunk_volume": 1392,
+"wheel_size": 20
+},
+{
+"car_type": "Sedan",
+"model": "Lucid Air Dream",
+"company": "Lucid Motors",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 97,
+"driving_stability": 94,
+"braking_performance": 93,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 1000,
+"release_date": "2022-01-01",
+"price": 169000,
+"top_speed": 270,
+"acceleration": 2.5,
+"driving_range": 520,
+"charging_time": 9.5,
+"maximum_power_output": 1080,
+"maximum_torque": 1010,
+"maximum_trunk_volume": 739,
+"wheel_size": 21
+},
+{
+"car_type": "SUV",
+"model": "GMC Hummer EV SUV",
+"company": "General Motors",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Ultium",
+"rating": 92,
+"driving_stability": 90,
+"braking_performance": 89,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2023-06-01",
+"price": "null",
+"top_speed": 160,
+"acceleration": 3.5,
+"driving_range": 300,
+"charging_time": 12.0,
+"maximum_power_output": 830,
+"maximum_torque": 1115,
+"maximum_trunk_volume": 635,
+"wheel_size": 22
+},
+{
+"car_type": "Hatchback",
+"model": "Renault Zoe Iconic",
+"company": "Renault",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 82,
+"driving_stability": 78,
+"braking_performance": 76,
+"durability": 85,
+"seating_capacity": 5,
+"total_sales": 50000,
+"release_date": "2020-09-01",
+"price": 32890,
+"top_speed": 135,
+"acceleration": 11.4,
+"driving_range": 245,
+"charging_time": 7.5,
+"maximum_power_output": 108,
+"maximum_torque": 225,
+"maximum_trunk_volume": 1225,
+"wheel_size": 17
+},
+{
+"car_type": "SUV",
+"model": "NIO ES8",
+"company": "NIO",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 91,
+"driving_stability": 88,
+"braking_performance": 87,
+"durability": 90,
+"seating_capacity": 7,
+"total_sales": 10000,
+"release_date": "2018-12-28",
+"price": 68000,
+"top_speed": 200,
+"acceleration": 4.9,
+"driving_range": 580,
+"charging_time": 8.5,
+"maximum_power_output": 653,
+"maximum_torque": 725,
+"maximum_trunk_volume": 2145,
+"wheel_size": 20
+},
+{
+"car_type": "Sedan",
+"model": "Lexus LS 500h",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Nickel-metal hydride",
+"rating": 89,
+"driving_stability": 87,
+"braking_performance": 86,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 5000,
+"release_date": "2018-10-01",
+"price": 83400,
+"top_speed": 250,
+"acceleration": 5.4,
+"driving_range": 650,
+"charging_time": "null",
+"maximum_power_output": 354,
+"maximum_torque": 257,
+"maximum_trunk_volume": 430,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Jeep Wrangler 4xe",
+"company": "Jeep",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Four Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 83,
+"driving_stability": 80,
+"braking_performance": 78,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 5000,
+"release_date": "2020-11-16",
+"price": 51225,
+"top_speed": 130,
+"acceleration": 6.0,
+"driving_range": 370,
+"charging_time": 2.0,
+"maximum_power_output": 375,
+"maximum_torque": 470,
+"maximum_trunk_volume": 548,
+"wheel_size": 18
+},
+{
+"car_type": "Sedan",
+"model": "Genesis G90",
+"company": "Genesis",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Rear Wheel Drive",
+"battery_type": "null",
+"rating": 91,
+"driving_stability": 90,
+"braking_performance": 88,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 5000,
+"release_date": "2019-08-08",
+"price": 72500,
+"top_speed": 250,
+"acceleration": 5.4,
+"driving_range": "null",
+"charging_time": "null",
+"maximum_power_output": 420,
+"maximum_torque": 383,
+"maximum_trunk_volume": 433,
+"wheel_size": 19
+},
+{
+"car_type": "Crossover",
+"model": "Toyota RAV4 Hybrid",
+"company": "Toyota",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Nickel-metal hydride",
+"rating": 87,
+"driving_stability": 84,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 150000,
+"release_date": "2019-03-18",
+"price": 28825,
+"top_speed": 177,
+"acceleration": 8.1,
+"driving_range": 580,
+"charging_time": "null",
+"maximum_power_output": 219,
+"maximum_torque": 163,
+"maximum_trunk_volume": 1685,
+"wheel_size": 17
+},
+{
+"car_type": "SUV",
+"model": "Volvo XC90 Recharge Plug-in Hybrid",
+"company": "Volvo",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 90,
+"driving_stability": 87,
+"braking_performance": 85,
+"durability": 90,
+"seating_capacity": 7,
+"total_sales": 20000,
+"release_date": "2020-06-01",
+"price": 63200,
+"top_speed": 180,
+"acceleration": 5.5,
+"driving_range": 520,
+"charging_time": 2.5,
+"maximum_power_output": 400,
+"maximum_torque": 472,
+"maximum_trunk_volume": 1868,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "Acura MDX",
+"company": "Acura",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 89,
+"driving_stability": 86,
+"braking_performance": 85,
+"durability": 90,
+"seating_capacity": 7,
+"total_sales": 30000,
+"release_date": "2021-02-02",
+"price": 47900,
+"top_speed": 131,
+"acceleration": 6.0,
+"driving_range": 347,
+"charging_time": "null",
+"maximum_power_output": 290,
+"maximum_torque": 267,
+"maximum_trunk_volume": 447,
+"wheel_size": 19
+},
+{
+"car_type": "Hatchback",
+"model": "MINI Cooper SE",
+"company": "MINI",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 83,
+"driving_stability": 82,
+"braking_performance": 80,
+"durability": 90,
+"seating_capacity": 4,
+"total_sales": 10000,
+"release_date": "2020-03-01",
+"price": 29900,
+"top_speed": 150,
+"acceleration": 7.3,
+"driving_range": 177,
+"charging_time": 4.0,
+"maximum_power_output": 181,
+"maximum_torque": 199,
+"maximum_trunk_volume": 211,
+"wheel_size": 16
+},
+{
+"car_type": "Crossover",
+"model": "Subaru Outback",
+"company": "Subaru",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 87,
+"driving_stability": 85,
+"braking_performance": 83,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 100000,
+"release_date": "2020-01-01",
+"price": 27745,
+"top_speed": 220,
+"acceleration": 9.5,
+"driving_range": "null",
+"charging_time": "null",
+"maximum_power_output": 182,
+"maximum_torque": 176,
+"maximum_trunk_volume": 2776,
+"wheel_size": 17
+},
+
+{
+"car_type": "Hatchback",
+"model": "Toyota Corolla Cross Hybrid",
+"company": "Toyota",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 82,
+"driving_stability": 80,
+"braking_performance": 80,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 5000,
+"release_date": "2020-10-01",
+"price": 24000,
+"top_speed": 170,
+"acceleration": 11.0,
+"driving_range": 1600,
+"charging_time": 2.0,
+"maximum_power_output": 97,
+"maximum_torque": 142,
+"maximum_trunk_volume": 487,
+"wheel_size": 17
+},
+{
+"car_type": "Sedan",
+"model": "Lexus LS 500h",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Rear Wheel Drive",
+"battery_type": "null",
+"rating": 91,
+"driving_stability": 89,
+"braking_performance": 88,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2020-08-01",
+"price": 79900,
+"top_speed": 250,
+"acceleration": 5.2,
+"driving_range": 528,
+"charging_time": "null",
+"maximum_power_output": 354,
+"maximum_torque": 348,
+"maximum_trunk_volume": 430,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "Mazda CX-5",
+"company": "Mazda",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 86,
+"driving_stability": 84,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 150000,
+"release_date": "2021-01-01",
+"price": 26190,
+"top_speed": 196,
+"acceleration": 7.6,
+"driving_range": "null",
+"charging_time": "null",
+"maximum_power_output": 187,
+"maximum_torque": 186,
+"maximum_trunk_volume": 1686,
+"wheel_size": 17
+},
+
+{
+"car_type": "Hatchback",
+"model": "Honda Civic Hatchback",
+"company": "Honda",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "null",
+"rating": 84,
+"driving_stability": 82,
+"braking_performance": 80,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 20000,
+"release_date": "2021-01-01",
+"price": 23500,
+"top_speed": 200,
+"acceleration": 7.0,
+"driving_range": 400,
+"charging_time": "null",
+"maximum_power_output": 180,
+"maximum_torque": 177,
+"maximum_trunk_volume": 616,
+"wheel_size": 18
+},
+{
+"car_type": "SUV",
+"model": "Ford Bronco Sport",
+"company": "Ford",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 86,
+"driving_stability": 84,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 50000,
+"release_date": "2020-11-01",
+"price": 26600,
+"top_speed": 180,
+"acceleration": 7.4,
+"driving_range": 480,
+"charging_time": "null",
+"maximum_power_output": 181,
+"maximum_torque": 190,
+"maximum_trunk_volume": 1429,
+"wheel_size": 17
+},
+{
+"car_type": "Sedan",
+"model": "Volvo S60 T8",
+"company": "Volvo",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 90,
+"driving_stability": 88,
+"braking_performance": 86,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 12000,
+"release_date": "2020-05-01",
+"price": 56100,
+"top_speed": 155,
+"acceleration": 4.4,
+"driving_range": 520,
+"charging_time": 2.5,
+"maximum_power_output": 400,
+"maximum_torque": 472,
+"maximum_trunk_volume": 391,
+"wheel_size": 19
+},
+
+{
+"car_type": "SUV",
+"model": "Acura RDX",
+"company": "Acura",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 88,
+"driving_stability": 86,
+"braking_performance": 84,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 30000,
+"release_date": "2019-06-01",
+"price": 38800,
+"top_speed": 210,
+"acceleration": 6.6,
+"driving_range": 450,
+"charging_time": "null",
+"maximum_power_output": 272,
+"maximum_torque": 280,
+"maximum_trunk_volume": 793,
+"wheel_size": 19
+},
+{
+"car_type": "Pickup Truck",
+"model": "GMC Sierra 1500",
+"company": "GMC",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 82,
+"driving_stability": 80,
+"braking_performance": 78,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 60000,
+"release_date": "2020-09-01",
+"price": 29200,
+"top_speed": 180,
+"acceleration": 7.3,
+"driving_range": 640,
+"charging_time": "null",
+"maximum_power_output": 355,
+"maximum_torque": 383,
+"maximum_trunk_volume": 2273,
+"wheel_size": 18
+},
+{
+"car_type": "Hatchback",
+"model": "Mazda3",
+"company": "Mazda",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "null",
+"rating": 86,
+"driving_stability": 84,
+"braking_performance": 82,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 35000,
+"release_date": "2019-03-01",
+"price": 20750,
+"top_speed": 200,
+"acceleration": 7.4,
+"driving_range": 450,
+"charging_time": "null",
+"maximum_power_output": 186,
+"maximum_torque": 186,
+"maximum_trunk_volume": 444,
+"wheel_size": 16
+},
+{
+"car_type": "Sedan",
+"model": "Lexus ES",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "null",
+"rating": 90,
+"driving_stability": 88,
+"braking_performance": 86,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 45000,
+"release_date": "2020-09-01",
+"price": 40900,
+"top_speed": 210,
+"acceleration": 8.1,
+"driving_range": 555,
+"charging_time": "null",
+"maximum_power_output": 215,
+"maximum_torque": 163,
+"maximum_trunk_volume": 473,
+"wheel_size": 18
+},
+{
+"car_type": "SUV",
+"model": "Jeep Grand Cherokee L",
+"company": "Jeep",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 85,
+"driving_stability": 83,
+"braking_performance": 81,
+"durability": 90,
+"seating_capacity": 7,
+"total_sales": 10000,
+"release_date": "2021-06-01",
+"price": 36750,
+"top_speed": 193,
+"acceleration": 7.6,
+"driving_range": 400,
+"charging_time": "null",
+"maximum_power_output": 293,
+"maximum_torque": 260,
+"maximum_trunk_volume": 2181,
+"wheel_size": 18
+},
+{
+"car_type": "Sedan",
+"model": "Genesis G70",
+"company": "Genesis",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Rear Wheel Drive",
+"battery_type": "null",
+"rating": 92,
+"driving_stability": 90,
+"braking_performance": 88,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 25000,
+"release_date": "2018-09-01",
+"price": 37950,
+"top_speed": 270,
+"acceleration": 4.5,
+"driving_range": 400,
+"charging_time": "null",
+"maximum_power_output": 365,
+"maximum_torque": 376,
+"maximum_trunk_volume": 297,
+"wheel_size": 19
+},
+{
+"car_type": "Crossover",
+"model": "Kia Seltos",
+"company": "Kia",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 84,
+"driving_stability": 82,
+"braking_performance": 80,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 60000,
+"release_date": "2020-03-01",
+"price": 23190,
+"top_speed": 177,
+"acceleration": 9.7,
+"driving_range": 470,
+"charging_time": "null",
+"maximum_power_output": 147,
+"maximum_torque": 132,
+"maximum_trunk_volume": 1433,
+"wheel_size": 17
+},
+{
+"car_type": "Hatchback",
+"model": "Mini Cooper SE",
+"company": "Mini",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 82,
+"driving_stability": 80,
+"braking_performance": 78,
+"durability": 85,
+"seating_capacity": 4,
+"total_sales": 10000,
+"release_date": "2020-03-01",
+"price": 29500,
+"top_speed": 150,
+"acceleration": 7.3,
+"driving_range": 110,
+"charging_time": 4.2,
+"maximum_power_output": 135,
+"maximum_torque": 162,
+"maximum_trunk_volume": 211,
+"wheel_size": 16
+},
+{
+"car_type": "SUV",
+"model": "Acura MDX",
+"company": "Acura",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 87,
+"driving_stability": 85,
+"braking_performance": 83,
+"durability": 90,
+"seating_capacity": 7,
+"total_sales": 50000,
+"release_date": "2021-02-02",
+"price": 47100,
+"top_speed": 192,
+"acceleration": 6.4,
+"driving_range": 420,
+"charging_time": "null",
+"maximum_power_output": 290,
+"maximum_torque": 267,
+"maximum_trunk_volume": 480,
+"wheel_size": 20
+},
+{
+"car_type": "Crossover",
+"model": "Nissan Ariya",
+"company": "Nissan",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 89,
+"driving_stability": 87,
+"braking_performance": 85,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2021-09-01",
+"price": 40250,
+"top_speed": 160,
+"acceleration": 7.5,
+"driving_range": 300,
+"charging_time": 7.2,
+"maximum_power_output": 389,
+"maximum_torque": 443,
+"maximum_trunk_volume": 408,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Mazda CX-5",
+"company": "Mazda",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 85,
+"driving_stability": 83,
+"braking_performance": 80,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 80000,
+"release_date": "2017-02-01",
+"price": 27900,
+"top_speed": 196,
+"acceleration": 7.6,
+"driving_range": 348,
+"charging_time": "null",
+"maximum_power_output": 187,
+"maximum_torque": 186,
+"maximum_trunk_volume": 1648,
+"wheel_size": 17
+},
+{
+"car_type": "Sedan",
+"model": "Lexus LS",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Rear Wheel Drive",
+"battery_type": "null",
+"rating": 94,
+"driving_stability": 92,
+"braking_performance": 90,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 12000,
+"release_date": "2022-03-15",
+"price": 76500,
+"top_speed": 250,
+"acceleration": 4.4,
+"driving_range": 400,
+"charging_time": "null",
+"maximum_power_output": 500,
+"maximum_torque": 650,
+"maximum_trunk_volume": 430,
+"wheel_size": 20
+},
+{
+"car_type": "SUV",
+"model": "Subaru Outback",
+"company": "Subaru",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 84,
+"driving_stability": 82,
+"braking_performance": 80,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 60000,
+"release_date": "2020-10-01",
+"price": 26745,
+"top_speed": 220,
+"acceleration": 9.5,
+"driving_range": 500,
+"charging_time": "null",
+"maximum_power_output": 260,
+"maximum_torque": 277,
+"maximum_trunk_volume": 2207,
+"wheel_size": 18
+},
+{
+"car_type": "Crossover",
+"model": "Toyota RAV4 Prime",
+"company": "Toyota",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 88,
+"driving_stability": 86,
+"braking_performance": 84,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 40000,
+"release_date": "2020-07-01",
+"price": 38490,
+"top_speed": 180,
+"acceleration": 5.7,
+"driving_range": 600,
+"charging_time": "null",
+"maximum_power_output": 302,
+"maximum_torque": 315,
+"maximum_trunk_volume": 1793,
+"wheel_size": 19
+},
+{
+"car_type": "Hatchback",
+"model": "Honda Civic Type R Limited Edition",
+"company": "Honda",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "null",
+"rating": 92,
+"driving_stability": 90,
+"braking_performance": 87,
+"durability": 90,
+"seating_capacity": 4,
+"total_sales": 1000,
+"release_date": "2021-02-01",
+"price": 43750,
+"top_speed": 272,
+"acceleration": 5.0,
+"driving_range": 300,
+"charging_time": "null",
+"maximum_power_output": 306,
+"maximum_torque": 295,
+"maximum_trunk_volume": 414,
+"wheel_size": 20
+},
+
+{
+"car_type": "Crossover",
+"model": "Nissan Ariya",
+"company": "Nissan",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 90,
+"driving_stability": 88,
+"braking_performance": 86,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 15000,
+"release_date": "2021-12-01",
+"price": 45000,
+"top_speed": 200,
+"acceleration": 5.1,
+"driving_range": 300,
+"charging_time": 7.0,
+"maximum_power_output": 389,
+"maximum_torque": 600,
+"maximum_trunk_volume": 468,
+"wheel_size": 19
+},
+{
+"car_type": "Sedan",
+"model": "Genesis G70",
+"company": "Genesis",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Rear Wheel Drive",
+"battery_type": "null",
+"rating": 92,
+"driving_stability": 90,
+"braking_performance": 88,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 8000,
+"release_date": "2021-01-01",
+"price": 36900,
+"top_speed": 240,
+"acceleration": 4.5,
+"driving_range": 350,
+"charging_time": "null",
+"maximum_power_output": 365,
+"maximum_torque": 376,
+"maximum_trunk_volume": 297,
+"wheel_size": 19
+},
+{
+"car_type": "Hatchback",
+"model": "Ford Focus RS",
+"company": "Ford",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 88,
+"driving_stability": 86,
+"braking_performance": 83,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 5000,
+"release_date": "2020-12-01",
+"price": 43700,
+"top_speed": 266,
+"acceleration": 4.5,
+"driving_range": 300,
+"charging_time": "null",
+"maximum_power_output": 350,
+"maximum_torque": 440,
+"maximum_trunk_volume": 341,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Ford Bronco",
+"company": "Ford",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Four Wheel Drive",
+"battery_type": "null",
+"rating": 87,
+"driving_stability": 85,
+"braking_performance": 84,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 20000,
+"release_date": "2021-07-13",
+"price": 29215,
+"top_speed": 180,
+"acceleration": 7.7,
+"driving_range": 240,
+"charging_time": "null",
+"maximum_power_output": 270,
+"maximum_torque": 310,
+"maximum_trunk_volume": 1073,
+"wheel_size": 17
+},
+{
+"car_type": "Crossover",
+"model": "Lexus UX 300e",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 89,
+"driving_stability": 87,
+"braking_performance": 85,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2021-03-01",
+"price": 43900,
+"top_speed": 160,
+"acceleration": 7.5,
+"driving_range": 400,
+"charging_time": 8.0,
+"maximum_power_output": 150,
+"maximum_torque": 300,
+"maximum_trunk_volume": 486,
+"wheel_size": 17
+},
+{
+"car_type": "Sedan",
+"model": "Lexus ES 350",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "null",
+"rating": 91,
+"driving_stability": 89,
+"braking_performance": 87,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 20000,
+"release_date": "2021-05-01",
+"price": 40240,
+"top_speed": 210,
+"acceleration": 6.6,
+"driving_range": 400,
+"charging_time": "null",
+"maximum_power_output": 302,
+"maximum_torque": 267,
+"maximum_trunk_volume": 473,
+"wheel_size": 18
+},
+{
+"car_type": "Crossover",
+"model": "Lexus NX 350h",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 88,
+"driving_stability": 86,
+"braking_performance": 84,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 18000,
+"release_date": "2021-11-01",
+"price": 42500,
+"top_speed": 180,
+"acceleration": 7.2,
+"driving_range": 430,
+"charging_time": "null",
+"maximum_power_output": 239,
+"maximum_torque": 352,
+"maximum_trunk_volume": 1545,
+"wheel_size": 18
+},
+{
+"car_type": "SUV",
+"model": "Land Rover Defender",
+"company": "Land Rover",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 88,
+"driving_stability": 85,
+"braking_performance": 86,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 45000,
+"release_date": "2020-09-10",
+"price": 50000,
+"top_speed": 191,
+"acceleration": 8.1,
+"driving_range": 395,
+"charging_time": "null",
+"maximum_power_output": 296,
+"maximum_torque": 295,
+"maximum_trunk_volume": 1075,
+"wheel_size": 18
+},
+{
+"car_type": "SUV",
+"model": "Jeep Wrangler 4xe",
+"company": "Jeep",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Four Wheel Drive",
+"battery_type": "null",
+"rating": 87,
+"driving_stability": 84,
+"braking_performance": 83,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2020-12-15",
+"price": 49390,
+"top_speed": 130,
+"acceleration": 6.0,
+"driving_range": 370,
+"charging_time": 2.0,
+"maximum_power_output": 375,
+"maximum_torque": 470,
+"maximum_trunk_volume": 551,
+"wheel_size": 17
+},
+{
+"car_type": "Hatchback",
+"model": "Kia Niro EV",
+"company": "Kia",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 86,
+"driving_stability": 83,
+"braking_performance": 82,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 30000,
+"release_date": "2020-12-23",
+"price": 39990,
+"top_speed": 167,
+"acceleration": 7.8,
+"driving_range": 239,
+"charging_time": 9.5,
+"maximum_power_output": 201,
+"maximum_torque": 291,
+"maximum_trunk_volume": 451,
+"wheel_size": 17
+},
+{
+"car_type": "Crossover",
+"model": "Kia Sorento Hybrid",
+"company": "Kia",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "null",
+"rating": 84,
+"driving_stability": 82,
+"braking_performance": 80,
+"durability": 90,
+"seating_capacity": 6,
+"total_sales": 15000,
+"release_date": "2020-09-01",
+"price": 35990,
+"top_speed": 193,
+"acceleration": 8.4,
+"driving_range": 436,
+"charging_time": "null",
+"maximum_power_output": 227,
+"maximum_torque": 258,
+"maximum_trunk_volume": 1875,
+"wheel_size": 17
+},
+{
+"car_type": "Sedan",
+"model": "Kia Stinger",
+"company":
+"Kia",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Rear Wheel Drive",
+"battery_type": "null",
+"rating": 88,
+"driving_stability": 87,
+"braking_performance": 85,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2020-10-15",
+"price": 37490,
+"top_speed": 240,
+"acceleration": 6.0,
+"driving_range": 384,
+"charging_time": "null",
+"maximum_power_output": 368,
+"maximum_torque": 376,
+"maximum_trunk_volume": 406,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Lexus UX 300e",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 90,
+"driving_stability": 87,
+"braking_performance": 88,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 20000,
+"release_date": "2020-11-20",
+"price": 39990,
+"top_speed": 160,
+"acceleration": 7.5,
+"driving_range": 300,
+"charging_time": 7.0,
+"maximum_power_output": 150,
+"maximum_torque": 300,
+"maximum_trunk_volume": 367,
+"wheel_size": 18
+},
+
+{
+"car_type": "SUV",
+"model": "Mazda CX-30 EV",
+"company": "Mazda",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 92,
+"driving_stability": 89,
+"braking_performance": 88,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 15000,
+"release_date": "2022-01-20",
+"price": 36995,
+"top_speed": 140,
+"acceleration": 8.5,
+"driving_range": 200,
+"charging_time": 9.5,
+"maximum_power_output": 143,
+"maximum_torque": 264,
+"maximum_trunk_volume": 400,
+"wheel_size": 18
+},
+{
+"car_type": "Crossover",
+"model": "Volvo C40 Recharge",
+"company": "Volvo",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 91,
+"driving_stability": 88,
+"braking_performance": 88,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 20000,
+"release_date": "2021-09-15",
+"price": 55800,
+"top_speed": 180,
+"acceleration": 4.9,
+"driving_range": 420,
+"charging_time": 8.5,
+"maximum_power_output": 300,
+"maximum_torque": 486,
+"maximum_trunk_volume": 413,
+"wheel_size": 19
+},
+{
+"car_type": "Pickup Truck",
+"model": "GMC Hummer EV Edition 1",
+"company": "GMC",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 90,
+"driving_stability": 89,
+"braking_performance": 88,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": "null",
+"release_date": "2022-03-01",
+"price": 112595,
+"top_speed": 160,
+"acceleration": 3.5,
+"driving_range": 300,
+"charging_time": 12.0,
+"maximum_power_output": 1000,
+"maximum_torque": 110,
+"maximum_trunk_volume": 3199,
+"wheel_size": 35
+},
+{
+"car_type": "Sedan",
+"model": "Genesis G80 Electric",
+"company": "Genesis",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Rear Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 94,
+"driving_stability": 92,
+"braking_performance": 92,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 5000,
+"release_date": "2022-02-10",
+"price": 59900,
+"top_speed": 200,
+"acceleration": 4.9,
+"driving_range": 265,
+"charging_time": 7.0,
+"maximum_power_output": 365,
+"maximum_torque": 516,
+"maximum_trunk_volume": 371,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Kia EV6 GT",
+"company": "Kia",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 90,
+"driving_stability": 88,
+"braking_performance": 86,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2021-09-01",
+"price": 58500,
+"top_speed": 260,
+"acceleration": 3.5,
+"driving_range": 250,
+"charging_time": 18.0,
+"maximum_power_output": 577,
+"maximum_torque": 546,
+"maximum_trunk_volume": 490,
+"wheel_size": 20
+},
+{
+"car_type": "Crossover",
+"model": "Lexus UX 300e",
+"company": "Lexus",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 88,
+"driving_stability": 85,
+"braking_performance": 83,
+"durability": 90,
+"seating_capacity": 5,
+"total_sales": 20000,
+"release_date": "2021-12-20",
+"price": 39900,
+"top_speed": 160,
+"acceleration": 7.5,
+"driving_range": 300,
+"charging_time": 7.0,
+"maximum_power_output": 150,
+"maximum_torque": 300,
+"maximum_trunk_volume": 486,
+"wheel_size": 18
+},
+{
+"car_type": "SUV",
+"model": "Rivian R1S",
+"company": "Rivian",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 90,
+"driving_stability": 88,
+"braking_performance": 87,
+"durability": 92,
+"seating_capacity": 7,
+"total_sales": 5000,
+"release_date": "2021-06-01",
+"price": 72900,
+"top_speed": 201,
+"acceleration": 3.0,
+"driving_range": 300,
+"charging_time": 11.0,
+"maximum_power_output": 750,
+"maximum_torque": 829,
+"maximum_trunk_volume": 490,
+"wheel_size": 20
+},
+{
+"car_type": "Crossover",
+"model": "Volvo C40 Recharge",
+"company": "Volvo",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 89,
+"driving_stability": 87,
+"braking_performance": 85,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2022-03-01",
+"price": 55000,
+"top_speed": 180,
+"acceleration": 4.7,
+"driving_range": 210,
+"charging_time": 8.0,
+"maximum_power_output": 402,
+"maximum_torque": 487,
+"maximum_trunk_volume": 413,
+"wheel_size": 19
+},
+{
+"car_type": "Sedan",
+"model": "Lucid Air Dream Edition",
+"company": "Lucid Motors",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 98,
+"driving_stability": 96,
+"braking_performance": 96,
+"durability": 93,
+"seating_capacity": 5,
+"total_sales": 500,
+"release_date": "2021-12-20",
+"price": 169000,
+"top_speed": 168,
+"acceleration": 2.5,
+"driving_range": 503,
+"charging_time": 34.0,
+"maximum_power_output": 1080,
+"maximum_torque": 1091,
+"maximum_trunk_volume": 507,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Audi Q4 e-tron",
+"company": "Audi",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 89,
+"driving_stability": 87,
+"braking_performance": 85,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2021-06-01",
+"price": 45900,
+"top_speed": 180,
+"acceleration": 6.2,
+"driving_range": 250,
+"charging_time": 7.5,
+"maximum_power_output": 201,
+"maximum_torque": 229,
+"maximum_trunk_volume": 520,
+"wheel_size": 19
+},
+{
+"car_type": "Crossover",
+"model": "Kia EV6",
+"company": "Kia",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 91,
+"driving_stability": 89,
+"braking_performance": 87,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2021-05-21",
+"price": 44000,
+"top_speed": 260,
+"acceleration": 5.1,
+"driving_range": 300,
+"charging_time": 18.0,
+"maximum_power_output": 576,
+"maximum_torque": 546,
+"maximum_trunk_volume": 1300,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "Ford Mustang Mach-E GT",
+"company": "Ford",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 93,
+"driving_stability": 91,
+"braking_performance": 90,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 10000,
+"release_date": "2021-06-01",
+"price": 59900,
+"top_speed": 160,
+"acceleration": 3.5,
+"driving_range": 250,
+"charging_time": 9.0,
+"maximum_power_output": 480,
+"maximum_torque": 634,
+"maximum_trunk_volume": 590,
+"wheel_size": 20
+},
+{
+"car_type": "Crossover",
+"model": "Nissan Ariya",
+"company": "Nissan",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 89,
+"driving_stability": 87,
+"braking_performance": 86,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2021-12-01",
+"price": 40000,
+"top_speed": 200,
+"acceleration": 7.5,
+"driving_range": 300,
+"charging_time": 9.0,
+"maximum_power_output": 389,
+"maximum_torque": 443,
+"maximum_trunk_volume": 468,
+"wheel_size": 19
+},
+{
+"car_type": "SUV",
+"model": "BMW iX",
+"company": "BMW",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 92,
+"driving_stability": 89,
+"braking_performance": 87,
+"durability": 92,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2021-12-01",
+"price": 85000,
+"top_speed": 200,
+"acceleration": 4.6,
+"driving_range": 300,
+"charging_time": 11.0,
+"maximum_power_output": 516,
+"maximum_torque": 630,
+"maximum_trunk_volume": 500,
+"wheel_size": 20
+},
+{
+"car_type": "Crossover",
+"model": "Audi Q4 e-tron",
+"company": "Audi",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 90,
+"driving_stability": 88,
+"braking_performance": 86,
+"durability": 91,
+"seating_capacity": 5,
+"total_sales": 0,
+"release_date": "2021-07-01",
+"price": 45000,
+"top_speed": 180,
+"acceleration": 6.3,
+"driving_range": 300,
+"charging_time": 9.0,
+"maximum_power_output": 201,
+"maximum_torque": 310,
+"maximum_trunk_volume": 520,
+"wheel_size": 19
+},
+{
+"car_type": "Sedan",
+"model": "Lucid Air Dream Edition",
+"company": "Lucid Motors",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 98,
+"driving_stability": 96,
+"braking_performance": 94,
+"durability": 93,
+"seating_capacity": 5,
+"total_sales": 1000,
+"release_date": "2021-10-30",
+"price": 169000,
+"top_speed": 168,
+"acceleration": 2.5,
+"driving_range": 517,
+"charging_time": 34.0,
+"maximum_power_output": 1080,
+"maximum_torque": 1133,
+"maximum_trunk_volume": 509,
+"wheel_size": 19
+},
+{
+"car_type": "Crossover",
+"model": "Mazda MX-30 EV",
+"company": "Mazda",
+"safety_features": "Automatic Emergency Braking, Lane Departure Warning, Blind Spot Detection, Adaptive Cruise Control",
+"driving_mode": "Front Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 85,
+"driving_stability": 82,
+"braking_performance": 80,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 5000,
+"release_date": "2020-12-30",
+"price": 34000,
+"top_speed": 140,
+"acceleration": 9.7,
+"driving_range": 124,
+"charging_time": 7.5,
+"maximum_power_output": 143,
+"maximum_torque": 264,
+"maximum_trunk_volume": 366,
+"wheel_size": 18
+},
+{
+"car_type": "Sedan",
+"model": "Model 3 Standard Range Plus",
+"company": "Tesla",
+"safety_features": "Automatic Emergency Braking, Forward Collision Warning, Blind Spot Detection, Adaptive Cruise Control, Autosteer",
+"driving_mode": "Rear Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 88,
+"driving_stability": 90,
+"braking_performance": 90,
+"durability": 85,
+"seating_capacity": 5,
+"total_sales": 800000, 
+"release_date": "2017-07-28",
+"price": 39000, 
+"top_speed": 140,
+"acceleration": 5.3, 
+"driving_range": 423.5, 
+"charging_time": null,
+"maximum_power_output": 283,
+"maximum_torque": 375,
+"maximum_trunk_volume": 425,
+"wheel_size": 18
+},
+{
+"car_type": "Sedan",
+"model": "Model S Long Range",
+"company": "Tesla",
+"safety_features": "Automatic Emergency Braking, Forward Collision Warning, Blind Spot Detection, Adaptive Cruise Control, Autosteer",
+"driving_mode": "All Wheel Drive",
+"battery_type": "Lithium-ion",
+"rating": 96,
+"driving_stability": 98,
+"braking_performance": 96,
+"durability": 88,
+"seating_capacity": 5,
+"total_sales": 300000,
+"release_date": "2012-06-22",
+"price": 79990,
+"top_speed": 155,
+"acceleration": 3.1,
+"driving_range": 652.7,
+"charging_time": null,
+"maximum_power_output": null,
+"maximum_torque": null,
+"maximum_trunk_volume": 794,
+"wheel_size": 19
+}
+
+];
+
+
+
+
+
+function search() {
+    
+  var input_car_type = document.getElementById("car_type").value.toLowerCase();
+  var input_model = document.getElementById("model").value.toLowerCase();
+  var input_company = document.getElementById("company").value.toLowerCase();
+  var input_safety_features = document.getElementById("safety_features").value.toLowerCase();
+  var input_driving_mode = document.getElementById("driving_mode").value.toLowerCase();
+  var input_battery_type = document.getElementById("battery_type").value.toLowerCase();
+  var input_rating = document.getElementById("rating").value.toLowerCase();
+  var input_driving_stability = document.getElementById("driving_stability").value.toLowerCase();
+  var input_braking_performance = document.getElementById("braking_performance").value.toLowerCase();
+  var input_durability = document.getElementById("durability").value.toLowerCase();
+  var input_seating_capacity = document.getElementById("seating_capacity").value;
+  var input_total_sales = document.getElementById("total_sales").value;
+  var input_release_date = document.getElementById("release_date").value;
+  var input_price = document.getElementById("price").value;
+  var input_top_speed = document.getElementById("top_speed").value;
+  var input_acceleration = document.getElementById("acceleration").value;
+  var input_driving_range = document.getElementById("driving_range").value;
+  var input_charging_time = document.getElementById("charging_time").value;
+  var input_maximum_power_output = document.getElementById("maximum_power_output").value;
+  var input_maximum_torque = document.getElementById("maximum_torque").value;
+  var input_maximum_trunk_volume = document.getElementById("maximum_trunk_volume").value;
+  var input_wheel_size = document.getElementById("wheel_size").value;
+
+  var results = [];
+
+  for (var i = 0; i < cars.length; i++) {
+    var car = cars[i];
+    if (input_car_type && !car.car_type.toLowerCase().includes(input_car_type)) {
+      continue;
+    }
+    if (input_model && !car.model.toLowerCase().includes(input_model)) {
+      continue;
+    }
+    if (input_company && !car.company.toLowerCase().includes(input_company)) {
+      continue;
+    }
+    if (input_safety_features && !car.safety_features.toLowerCase().includes(input_safety_features)) {
+      continue;
+    }
+    if (input_driving_mode && !car.driving_mode.toLowerCase().includes(input_driving_mode)) {
+      continue;
+    }
+    if (input_battery_type && !car.battery_type.toLowerCase().includes(input_battery_type)) {
+      continue;
+    }
+    if (input_rating && car.rating < Number(input_rating)) {
+      continue;
+    }
+    if (input_driving_stability && car.driving_stability < Number(input_driving_stability)) {
+      continue;
+    }
+    if (input_braking_performance && car.braking_performance < Number(input_braking_performance)) {
+      continue;
+    }
+    if (input_durability && car.durability < Number(input_durability)) {
+      continue;
+    }
+    if (input_seating_capacity && car.seating_capacity < Number(input_seating_capacity)) {
+      continue;
+    }
+    if (input_total_sales && car.total_sales < Number(input_total_sales)) {
+      continue;
+    }
+    if (input_release_date && !String(car.release_date).startsWith(input_release_date)) {
+      continue;
+    }
+    if (input_price && car.price < Number(input_price)) {
+      continue;
+    }
+    if (input_top_speed && car.top_speed < Number(input_top_speed)) {
+      continue;
+    }
+    if (input_acceleration && car.acceleration > Number(input_acceleration)) {
+      continue;  
+
+}
+if (input_driving_range && car.driving_range < Number(input_driving_range)) {
+continue;
+}
+if (input_charging_time && car.charging_time > Number(input_charging_time)) {
+continue;
+}
+if (input_maximum_power_output && car.maximum_power_output < Number(input_maximum_power_output)) {
+continue;
+}
+if (input_maximum_torque && car.maximum_torque < Number(input_maximum_torque)) {
+continue;
+}
+if (input_maximum_trunk_volume && car.maximum_trunk_volume < Number(input_maximum_trunk_volume)) {
+continue;
+}
+if (input_wheel_size && car.wheel_size < Number(input_wheel_size)) {
+continue;
+}
+
+
+
+if (
+        !input_car_type && 
+        !input_model && 
+        !input_company && 
+        !input_safety_features && 
+        !input_driving_mode && 
+        !input_battery_type && 
+        !input_rating && 
+        !input_driving_stability && 
+        !input_braking_performance && 
+        !input_durability && 
+        !input_seating_capacity && 
+        !input_total_sales && 
+        !input_release_date &&
+        !input_price &&
+        !input_top_speed &&
+        !input_acceleration &&
+        !input_driving_range &&
+        !input_charging_time &&
+        !input_maximum_power_output &&
+        !input_maximum_torque &&
+        !input_maximum_trunk_volume &&
+        !input_wheel_size
+
+
+    ) {
+        
+        var tableBody = document.querySelector("#search-results tbody");
+        tableBody.innerHTML = "";
+        return;
+    }
+
+    
+
+
+
+
+results.push(car);
+}
+
+
+
+
+var uniqueResults = [];
+
+    for(var i = 0; i < results.length; i++) {
+        var unique = true;
+        for(var j = 0; j < uniqueResults.length; j++) {
+          if (results[i].model.toLowerCase() === uniqueResults[j].model.toLowerCase()) {
+    unique = false;
+    break;
+}
+        }
+        if(unique) {
+            uniqueResults.push(results[i]);
+        }
+    }
+
+    displayResults(uniqueResults);
+}
+
+
+
+
+function displayResults(results) {
+var tableBody = document.querySelector("#search-results tbody");
+tableBody.innerHTML = "";
+
+for (var i = 0; i < results.length; i++) {
+var car = results[i];
+var row = document.createElement("tr");
+row.innerHTML =
+"<td>" + car.car_type + "</td>" +
+"<td>" + car.model + "</td>" +
+"<td>" + car.company + "</td>" +
+"<td>" + car.safety_features + "</td>" +
+"<td>" + car.driving_mode + "</td>" +
+"<td>" + car.battery_type + "</td>" +
+"<td>" + car.rating + "</td>" +
+"<td>" + car.driving_stability + "</td>" +
+"<td>" + car.braking_performance + "</td>" +
+"<td>" + car.durability + "</td>" +
+"<td>" + car.seating_capacity + "</td>" +
+"<td>" + car.total_sales + "</td>" +
+"<td>" + car.release_date + "</td>" +
+"<td>" + car.price + "</td>" +
+"<td>" + car.top_speed + "</td>" +
+"<td>" + car.acceleration + "</td>" +
+"<td>" + car.driving_range + "</td>" +
+"<td>" + car.charging_time + "</td>" +
+"<td>" + car.maximum_power_output + "</td>" +
+"<td>" + car.maximum_torque + "</td>" +
+"<td>" + car.maximum_trunk_volume + "</td>" +
+"<td>" + car.wheel_size + "</td>";
+tableBody.appendChild(row);
+}
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("search-results");
+  switching = true;
+  dir = "asc";
+  
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("td")[n];
+      y = rows[i + 1].getElementsByTagName("td")[n];
+      
+      if (n >= 4) { 
+        x = parseFloat(x.innerHTML);
+        y = parseFloat(y.innerHTML);
+      } else {
+        x = x.innerHTML.toLowerCase();
+        y = y.innerHTML.toLowerCase();
+      }
+
+      if (dir == "asc") {
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x < y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+
+
+
+
+    var sortIndicators = ["▲", "▼"];  
+      var indicatorElement = document.getElementById("sortIndicator" + n);
+
+      if (dir == "asc") {
+        indicatorElement.innerHTML = "<span style='color: #0f0;'>▲</span>▼";
+      } else if (dir == "desc") {
+        indicatorElement.innerHTML = "▲<span style='color: #0f0;'>▼</span>";
+      }
+
+
+
+    
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+
+
+var canvas = document.getElementById('matrix-canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.height = window.innerHeight * 0.4;
+canvas.width = window.innerWidth;
+
+
+var letters = 'ATCG'.split('');
+var fontSize = 16;
+var columns = canvas.width / fontSize;
+
+var drops = [];
+
+for (var i = 0; i < columns; i++)
+  drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#0f0';  
+  ctx.font = fontSize + 'px arial';
+
+  for (var i = 0; i < drops.length; i++) {
+    var text = letters[Math.floor(Math.random() * letters.length)];
+
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+
+
+</script>
+
+</body>
+</html>

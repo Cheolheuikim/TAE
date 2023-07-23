@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bridge</title>
+    <style type="text/css">
+        body {
+            background-color: #111;
+            color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .category {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            background: linear-gradient(145deg, #1c1b5e, #9d8df1);
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+            width: 200px;
+            height: 200px;
+        }
+        .category:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 5px #00ffff, 0 0 25px #00ffff, 0 0 50px #00ffff, 0 0 200px #00ffff;
+        }
+        .category img {
+            margin-bottom: 10px;
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+        .category h2 {
+            font-size: 20px;
+            text-align: center;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="http://127.0.0.1:5500/Books.html">
+            <div class="category">
+                <img src="https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA0L2pvYjk3MC1lbGVtZW50LTE1OS5qcGc.jpg">
+                <h2>Info</h2>
+            </div>
+        </a>
+        <a href="http://127.0.0.1:5500/Books(Mood1).html">
+            <div class="category">
+                <img src="https://p1.pxfuel.com/preview/778/1010/485/emoticons-smiley-emotions-joy-sadness-a-smile.jpg">
+                <h2>Emotion1</h2>
+            </div>
+        </a>
+        <a href="http://127.0.0.1:5500/Books(Mood2).html">
+            <div class="category">
+                <img src="https://p1.pxfuel.com/preview/778/1010/485/emoticons-smiley-emotions-joy-sadness-a-smile.jpg">
+                <h2>Emotion2</h2>
+            </div>
+        </a>
+        
+    </div>
+</body>
+</html>
